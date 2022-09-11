@@ -1,0 +1,5 @@
+yarn init -y
+yarn add gastby react react-dom
+make package json and add scripts
+create gatsby-config.ts
+yarn add @mui/material @emotion/react @emotion/styled gatsby-theme-material-ui
