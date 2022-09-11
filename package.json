@@ -1,0 +1,13 @@
+{
+  "name": "lotr-tcg-scrapper",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/arabovs/lotr-tcg-scrapper.git",
+  "author": "arabovs <arabov.simeon1990@gmail.com>",
+  "license": "MIT",
+  "private": "true",
+  "workspaces": [
+    "apps/fe",
+    "apps/be"
+  ]
+}
