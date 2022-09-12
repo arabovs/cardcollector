@@ -1,18 +1,7 @@
 import React from "react";
 import { gql, useSubscription } from "@apollo/client";
 import { CardTable } from "../components/CardTable";
-import {
-  Chip,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { TextField, Typography } from "@mui/material";
 
 import {
   ApolloClient,

@@ -1,7 +1,6 @@
 import React from "react";
 import { gql, useSubscription } from "@apollo/client";
 import {
-  Chip,
   Paper,
   Table,
   TableBody,
@@ -9,7 +8,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   Typography,
 } from "@mui/material";
 
