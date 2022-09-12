@@ -6,7 +6,6 @@ from gql.transport.requests import RequestsHTTPTransport
 from datetime import datetime
 import re
 
-
 source = "ccgcastle"
 URL = "https://lotrtcgwiki.com/wiki/grand" 
 URL_PRICING = "https://www.ccgcastle.com/product/lotr-tcg/" 
@@ -60,26 +59,29 @@ editions_dict = {
 
 client = Client(transport=transport, fetch_schema_from_transport=True)
 
-
-def htmlParser(page_price): 
-  page_price_url = requests.get(page_price)
+#get price from url, 0 if no valid url
+def getPriceFromURL(page_url): 
+  page_price_url = requests.get(page_url)
   soup_price = BeautifulSoup(page_price_url.content, "html.parser")
   card_price = soup_price.find(class_='item-price')
   card_price_formatted = cleanPrice(card_price)
   return card_price_formatted
 
-
+#removes and format's card name
 def cleanCardName( card_name ):
   return str(card_name).replace(",","").replace(" ","-").replace("•","").replace("(", "").replace(")", "")
 
+#cleans html tag from span
 def cleanPrice( card_price ):
   if card_price is None:
     return 0
   return str(card_price).replace("<span class=\"item-price\">$","").replace("<span class=\"sub-price\">","").replace("</span></span>","")  
 
+#create base url from pricing website
 def createNewURL(edition, card_name_cleaned):
   return URL_PRICING + editions_dict[edition] + "/" + card_name_cleaned
 
+#insert row in db pricing table
 def runGQL(card_name, card_edition, card_price, card_price_foil, card_price_tng, source):
     query = gql("""mutation MyMutation($card_name: String!, $card_edition: String!, $card_price: float8!, $card_price_foil: float8!, $card_price_tng: float8!, $source: String!) {
       insert_lotr_all_cards_pricing(objects: {card_name: $card_name,
@@ -114,14 +116,10 @@ for cards in cards_table:
     rows = cards.find_all('tr')
     for row in rows:
         card_id = str(row.find('td').string)
-        card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string)
-        #mitky code fix if needed 
-       
+        card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string)       
         card_id_regex_number = re.compile(r"^([^a-zA-Z]*)") #Monk code kepp
         edition = re.search(card_id_regex_number, card_id).group(0)
 
-       
-        
         # skipping here as we need to handle promo cards better
         if  "Title" in card_name_cleaned:
           print("Skipping: " + card_name_cleaned)
@@ -129,9 +127,9 @@ for cards in cards_table:
         
         URL_PRICE = createNewURL(edition, card_name_cleaned)
         
-        card_price = htmlParser(URL_PRICE) 
-        card_price_foil = htmlParser(URL_PRICE + "-foil") 
-        card_price_tng = htmlParser(URL_PRICE + "-tengwar")
+        card_price      = getPriceFromURL(URL_PRICE) 
+        card_price_foil = getPriceFromURL(URL_PRICE + "-foil") 
+        card_price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
        
           
         print(f"Card " + card_name_cleaned + " price: " + str(card_price) + " Foil card " + str(card_price_foil) + " tengwar card " + str(card_price_tng))
