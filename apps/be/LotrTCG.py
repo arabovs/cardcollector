@@ -104,8 +104,8 @@ for cards in cards_table:
     for row in rows:
         card_id = str(row.find('td').string)
         card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string)
-        #mitky code fix if needed
-        card_id_regex_letter = re.findall(r"\D+", card_id) 
+        #mitky code fix if needed 
+        card_id_regex_letter = re.compile(r"\D+", card_id) 
         if card_id_regex_letter == "P" or card_id_regex_letter == "W" or card_id_regex_letter == "D" or card_id_regex_letter =="SPD" or card_id_regex_letter =="AFD":
               card_name_cleaned = card_name_cleaned + "-" + card_id_regex_letter
               edition = "lotr-promotional"
