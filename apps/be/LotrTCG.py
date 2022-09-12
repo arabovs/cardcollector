@@ -61,19 +61,15 @@ editions_dict = {
 client = Client(transport=transport, fetch_schema_from_transport=True)
 
 def cleanCardName( card_name ):
-   
   return str(card_name).replace(",","").replace(" ","-").replace("•","").replace("(", "").replace(")", "")
 
 def cleanPrice( card_price ):
+  if card_price is None:
+    return 0
   return str(card_price).replace("<span class=\"item-price\">$","").replace("<span class=\"sub-price\">","").replace("</span></span>","")  
 
 def createNewURL(edition, card_name_cleaned):
   return URL_PRICING + editions_dict[edition] + "/" + card_name_cleaned
-
-
-def promoEdition(edition):
-
-  return   
 
 def runGQL(card_name, card_edition, card_price, card_price_foil, card_price_tng, source):
     query = gql("""mutation MyMutation($card_name: String!, $card_edition: String!, $card_price: float8!, $card_price_foil: float8!, $card_price_tng: float8!, $source: String!) {
@@ -133,27 +129,21 @@ for cards in cards_table:
         page_price = requests.get(URL_PRICE) 
         soup_price = BeautifulSoup(page_price.content, "html.parser")
         card_price = soup_price.find(class_='item-price')
-        card_price_formatted  = cleanPrice(card_price)
+        card_price_formatted = cleanPrice(card_price)
         
         page_price_foil = requests.get(URL_PRICE + "-foil") 
         soup_price_foil = BeautifulSoup(page_price_foil.content, "html.parser")
         card_price_foil = soup_price_foil.find(class_='item-price')
-        if card_price_foil is None:
-          card_price_formatted_foil = 0
-        else:
-          card_price_formatted_foil  = cleanPrice(card_price_foil)
+        card_price_formatted_foil = cleanPrice(card_price_foil)
 
 
         page_price_tng = requests.get(URL_PRICE + "-tengwar")
         soup_price_tng = BeautifulSoup(page_price_tng.content, "html.parser")
         card_price_tng = soup_price_tng.find(class_='item-price')
-        if card_price_tng is None:
-          card_price_formatted_tng = 0
-        else:
-          card_price_formatted_tng  = cleanPrice(card_price_tng)
+        card_price_formatted_tng = cleanPrice(card_price_tng)
         
           
-        print(f"Card " + card_name_cleaned + " price: " + card_price_formatted + " Foil card " + str(card_price_formatted_foil) + " tengwar card " + str(card_price_formatted_tng))
+        print(f"Card " + card_name_cleaned + " price: " + str(card_price_formatted) + " Foil card " + str(card_price_formatted_foil) + " tengwar card " + str(card_price_formatted_tng))
         runGQL(card_name_cleaned,editions_dict[edition].replace(" ","-"),card_price_formatted, card_price_formatted_foil, card_price_formatted_tng,  source)
 
 
