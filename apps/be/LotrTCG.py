@@ -60,6 +60,15 @@ editions_dict = {
 
 client = Client(transport=transport, fetch_schema_from_transport=True)
 
+
+def htmlParser(page_price): 
+  page_price_url = requests.get(page_price)
+  soup_price = BeautifulSoup(page_price_url.content, "html.parser")
+  card_price = soup_price.find(class_='item-price')
+  card_price_formatted = cleanPrice(card_price)
+  return card_price_formatted
+
+
 def cleanCardName( card_name ):
   return str(card_name).replace(",","").replace(" ","-").replace("•","").replace("(", "").replace(")", "")
 
@@ -107,15 +116,9 @@ for cards in cards_table:
         card_id = str(row.find('td').string)
         card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string)
         #mitky code fix if needed 
-        card_id_regex = re.compile(r"\D+")
-        card_id_regex_letter = re.search(card_id_regex, card_id).group(0)
-        if card_id_regex_letter == "P" or card_id_regex_letter == "W" or card_id_regex_letter == "D" or card_id_regex_letter =="SPD" or card_id_regex_letter =="AFD":
-              #card_name_cleaned = card_name_cleaned + "-" + card_id_regex_letter
-              edition = "lotr-promotional"
-            
-        else:
-              card_id_regex_number = re.compile(r"^([^a-zA-Z]*)") #Monk code kepp
-              edition = re.search(card_id_regex_number, card_id).group(0)
+       
+        card_id_regex_number = re.compile(r"^([^a-zA-Z]*)") #Monk code kepp
+        edition = re.search(card_id_regex_number, card_id).group(0)
 
        
         
@@ -126,25 +129,13 @@ for cards in cards_table:
         
         URL_PRICE = createNewURL(edition, card_name_cleaned)
         
-        page_price = requests.get(URL_PRICE) 
-        soup_price = BeautifulSoup(page_price.content, "html.parser")
-        card_price = soup_price.find(class_='item-price')
-        card_price_formatted = cleanPrice(card_price)
-        
-        page_price_foil = requests.get(URL_PRICE + "-foil") 
-        soup_price_foil = BeautifulSoup(page_price_foil.content, "html.parser")
-        card_price_foil = soup_price_foil.find(class_='item-price')
-        card_price_formatted_foil = cleanPrice(card_price_foil)
-
-
-        page_price_tng = requests.get(URL_PRICE + "-tengwar")
-        soup_price_tng = BeautifulSoup(page_price_tng.content, "html.parser")
-        card_price_tng = soup_price_tng.find(class_='item-price')
-        card_price_formatted_tng = cleanPrice(card_price_tng)
-        
+        card_price = htmlParser(URL_PRICE) 
+        card_price_foil = htmlParser(URL_PRICE + "-foil") 
+        card_price_tng = htmlParser(URL_PRICE + "-tengwar")
+       
           
-        print(f"Card " + card_name_cleaned + " price: " + str(card_price_formatted) + " Foil card " + str(card_price_formatted_foil) + " tengwar card " + str(card_price_formatted_tng))
-        runGQL(card_name_cleaned,editions_dict[edition].replace(" ","-"),card_price_formatted, card_price_formatted_foil, card_price_formatted_tng,  source)
+        print(f"Card " + card_name_cleaned + " price: " + str(card_price) + " Foil card " + str(card_price_foil) + " tengwar card " + str(card_price_tng))
+        runGQL(card_name_cleaned,editions_dict[edition].replace(" ","-"),page_price, page_price_foil, page_price_tng,  source)
 
 
 # PROCESS END
