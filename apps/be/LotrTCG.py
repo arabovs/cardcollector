@@ -68,6 +68,11 @@ def cleanPrice( card_price ):
 def createNewURL(edition, card_name_cleaned):
   return URL_PRICING + editions_dict[edition] + "/" + card_name_cleaned
 
+
+def promoEdition(edition):
+
+  return   
+
 def runGQL(card_name, card_edition, card_price, source):
     query = gql("""mutation MyMutation($card_name: String!, $card_edition: String!, $card_price: float8!, $source: String!) {
       insert_lotr_all_cards_pricing(objects: {card_name: $card_name,
@@ -99,8 +104,17 @@ for cards in cards_table:
     for row in rows:
         card_id = str(row.find('td').string)
         card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string)
-        card_id_regex = re.compile(r"^([^a-zA-Z]*)")
-        edition = re.search(card_id_regex, card_id).group(0)
+        #mitky code fix if needed
+        card_id_regex_letter = re.findall(r"\D+", card_id) 
+        if card_id_regex_letter == "P" or card_id_regex_letter == "W" or card_id_regex_letter == "D" or card_id_regex_letter =="SPD" or card_id_regex_letter =="AFD":
+              card_name_cleaned = card_name_cleaned + "-" + card_id_regex_letter
+              edition = "lotr-promotional"
+            
+        else:
+              card_id_regex_number = re.compile(r"^([^a-zA-Z]*)") #Monk code kepp
+              edition = re.search(card_id_regex_number, card_id).group(0)
+
+       
         
         # skipping here as we need to handle promo cards better
         if edition == '0' or "("  in card_name_cleaned or "Title" in card_name_cleaned:
