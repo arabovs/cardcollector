@@ -55,17 +55,17 @@ export const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-export const CardTable = ({ inputText }) => {
+export const TopTenTng = ({ inputText }) => {
   const { data, loading, error } = useSubscription(
     gql`
       subscription($where: lotr_all_cards_pricing_bool_exp) {
         lotr_all_cards_pricing: lotr_all_cards_pricing(
           where: $where
+          order_by: { card_price_tng: desc }
           limit: 5
         ) {
           card_name
-          card_price
-          card_price_foil
+          card_edition
           card_price_tng
         }
       }
@@ -89,8 +89,8 @@ export const CardTable = ({ inputText }) => {
             <TableRow>
               <TableCell>Post</TableCell>
               <TableCell align="right">Card Name</TableCell>
-              <TableCell align="right">Card Price</TableCell>
-              <TableCell align="right">Last Update</TableCell>
+              <TableCell align="right">Card Edition</TableCell>
+              <TableCell align="right">Tng Price</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -101,15 +101,8 @@ export const CardTable = ({ inputText }) => {
                 <TableCell component="th" scope="row">
                   {row.card_name}
                 </TableCell>
-                <TableCell align="right">{row.card_price}</TableCell>
-                <TableCell align="right">
-                  <div>
-                    <Typography variant="caption">
-                      {new Date(row.created_at).toLocaleDateString()}{" "}
-                      {new Date(row.created_at).toLocaleTimeString()}
-                    </Typography>
-                  </div>
-                </TableCell>
+                <TableCell align="right">{row.card_edition}</TableCell>
+                <TableCell align="right">{row.card_price_tng}</TableCell>
               </TableRow>
             ))}
           </TableBody>

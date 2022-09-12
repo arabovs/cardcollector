@@ -1,7 +1,9 @@
 import React from "react";
 import { gql, useSubscription } from "@apollo/client";
 import { CardTable } from "../components/CardTable";
-import { TextField, Typography } from "@mui/material";
+import { TopTenFoil } from "../components/TopTenFoil";
+import { TopTenTng } from "../components/TopTenTng";
+import { Box, Grid, TextField, Typography } from "@mui/material";
 
 import {
   ApolloClient,
@@ -16,6 +18,7 @@ import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 import isNode from "is-node";
 import ws from "ws";
+import { TopAll } from "../components/TopAll";
 
 const wsLink = new WebSocketLink({
   uri: "wss://lotrtcgwebscrapper.herokuapp.com/v1/graphql",
@@ -66,6 +69,11 @@ const IndexPage = () => {
         }}
       />
       <CardTable inputText={inputText} />
+      <Box sx={{ flexGrow: 1 }}>
+        <TopTenTng inputText={inputText} />
+        <TopTenFoil inputText={inputText} />
+        <TopAll />
+      </Box>
     </div>
   );
 };
