@@ -1,5 +1,4 @@
 import React from "react";
-import { gql, useSubscription } from "@apollo/client";
 import {
   ApolloClient,
   InMemoryCache,
