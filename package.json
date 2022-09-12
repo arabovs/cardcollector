@@ -9,5 +9,8 @@
   "workspaces": [
     "apps/fe",
     "apps/be"
-  ]
+  ],
+  "resolutions": {
+    "ws": "7.4.6"
+  }
 }
