@@ -54,13 +54,15 @@ editions_dict = {
   "18": "Rise-of-Saruman", 
   "19": "Treachery-and-Deceit",
   "0": "lotr-promotional",
+  "lotr-promotional": "lotr-promotional",
   "": "empty"
 }
 
 client = Client(transport=transport, fetch_schema_from_transport=True)
 
 def cleanCardName( card_name ):
-  return str(card_name).replace(",","").replace(" ","-").replace("•","")
+   
+  return str(card_name).replace(",","").replace(" ","-").replace("•","").replace("(", "").replace(")", "")
 
 def cleanPrice( card_price ):
   return str(card_price).replace("<span class=\"item-price\">$","").replace("<span class=\"sub-price\">","").replace("</span></span>","")  
@@ -73,11 +75,13 @@ def promoEdition(edition):
 
   return   
 
-def runGQL(card_name, card_edition, card_price, source):
-    query = gql("""mutation MyMutation($card_name: String!, $card_edition: String!, $card_price: float8!, $source: String!) {
+def runGQL(card_name, card_edition, card_price, card_price_foil, card_price_tng, source):
+    query = gql("""mutation MyMutation($card_name: String!, $card_edition: String!, $card_price: float8!, $card_price_foil: float8!, $card_price_tng: float8!, $source: String!) {
       insert_lotr_all_cards_pricing(objects: {card_name: $card_name,
                                       card_edition: $card_edition,
                                       card_price: $card_price,
+                                      card_price_foil: $card_price_foil, 
+                                      card_price_tng: $card_price_tng,
                                       source: $source 
                                       }) {
         affected_rows
@@ -88,6 +92,8 @@ def runGQL(card_name, card_edition, card_price, source):
         "card_name": card_name,
         "card_edition": card_edition,
         "card_price": card_price,
+        "card_price_foil": card_price_foil,
+        "card_price_tng": card_price_tng,
         "source": source
     }
     result = client.execute(query, variable_values=params)
@@ -108,7 +114,7 @@ for cards in cards_table:
         card_id_regex = re.compile(r"\D+")
         card_id_regex_letter = re.search(card_id_regex, card_id).group(0)
         if card_id_regex_letter == "P" or card_id_regex_letter == "W" or card_id_regex_letter == "D" or card_id_regex_letter =="SPD" or card_id_regex_letter =="AFD":
-              card_name_cleaned = card_name_cleaned + "-" + card_id_regex_letter
+              #card_name_cleaned = card_name_cleaned + "-" + card_id_regex_letter
               edition = "lotr-promotional"
             
         else:
@@ -118,21 +124,35 @@ for cards in cards_table:
        
         
         # skipping here as we need to handle promo cards better
-        if edition == '0' or "("  in card_name_cleaned or "Title" in card_name_cleaned:
+        if  "Title" in card_name_cleaned:
           print("Skipping: " + card_name_cleaned)
           continue
         
         URL_PRICE = createNewURL(edition, card_name_cleaned)
-        page_price = requests.get(URL_PRICE)
+        page_price = requests.get(URL_PRICE) 
+        page_price_foil = requests.get(URL_PRICE + "-foil") 
+        page_price_tng = requests.get(URL_PRICE + "-tengwar")
         soup_price = BeautifulSoup(page_price.content, "html.parser")
+        soup_price_foil = BeautifulSoup(page_price_foil.content, "html.parser")
+        soup_price_tng = BeautifulSoup(page_price_tng.content, "html.parser")
         card_price = soup_price.find(class_='item-price')
+        card_price_foil = soup_price_foil.find(class_='item-price')
+        card_price_tng = soup_price_tng.find(class_='item-price')
         card_price_formatted  = cleanPrice(card_price)
+        card_price_formatted_foil  = cleanPrice(card_price_foil)
+        card_price_formatted_tng  = cleanPrice(card_price_tng)
         
-        print("Inserting " + card_name_cleaned + " price: " + card_price_formatted)
+          
+
         
+        
+        print(type(card_price_foil))
         # Insert into postGre
-        if card_price_formatted != "None":
-          runGQL(card_name_cleaned,editions_dict[edition].replace(" ","-"),card_price_formatted, source)
+        
+        
+          
+        print("Card " + card_name_cleaned + " price: " + card_price_formatted + " Foil card " + card_price_formatted_foil + " tengwar card " + card_price_formatted_tng)
+        #runGQL(card_name_cleaned,editions_dict[edition].replace(" ","-"),card_price_formatted, card_price_formatted_foil, card_price_formatted_tng,  source)
 
 
 # PROCESS END
