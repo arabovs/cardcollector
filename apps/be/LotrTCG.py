@@ -135,7 +135,7 @@ for cards in cards_table:
        
           
         print(f"Card " + card_name_cleaned + " price: " + str(card_price) + " Foil card " + str(card_price_foil) + " tengwar card " + str(card_price_tng))
-        runGQL(card_name_cleaned,editions_dict[edition].replace(" ","-"),page_price, page_price_foil, page_price_tng,  source)
+        runGQL(card_name_cleaned,editions_dict[edition].replace(" ","-"),card_price, card_price_foil, card_price_tng,  source)
 
 
 # PROCESS END
