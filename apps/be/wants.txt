@@ -1,5 +1,6 @@
 The Fellowship of the Ring:
 Gimli's Battle Axe (1R14) 1
+The Saga of Elendil (1R114) x1
 Lurtz, Servant of Isengard (1R127)
 Morgul Blade (1R216)
 Morgul Gates (1R217)
@@ -11,9 +12,15 @@ Battle Fury (1C4)
 Delving (1C6)
 Weathertop (1U336)
 Pass of Caradhras (1U348)
+Orc Bowmen (1R264) x4
+Orc Scouting Band (1U270) x3
+Orc War Band (1R272) x3/4
+
 
 
 Mines of Moria:
+Endurance of Dwarves (2U4) x5
+Flaming Brand (2R32) x1/2
 Lurtz's Sword (2R43)
 His Terrible Servants (2R77) 2
 Resistance Becomes Unbearable (2U79)
@@ -21,42 +28,77 @@ Stricken Dumb (2R80)
 Ulaire Attea, The Easterling (2U82)
 Ulaire Enquea, Ringwraith in Twilight (2U83)
 
+
 Realms of the Elf-lords:
-Citadel of Minas Tirith (3R40)
+Citadel of Minas Tirith (3R40) - we have that one x1
 Gates of the Dead City (3R81)
 
 The two Towers:
+My Axe Is Notched (4R52) x1
+Final Count (4R69) x1
+Strength of Arms (4U82) x1
 Boromir, My Brother (4R111)
 Forests of Ithilien (4R121)
 Gondorian Ranger (4C122)
 Ruins of Osgiliath (4R133)
 The One Ring, Answer To All Riddles (4R1)
+Desert Lord (4R219) x1/2
+Simbelmyne (4R289) x1 !!! (T) cheaprer ///normal card too expensive
+Southron Spear (4C255) x2/3
 
-Battle of helo's Deep
+
+Battle of helo's Deep:
+City Wall (5C33) x3
+Berserk Savage (5R46) x2
+Berserk Slayer (5R47) x2
+Devilry of Orthanc (5R49) x1
+Sharku, Warg-captain (5R58) x1
+Sharku's Warg (5R59) x1
+
+
 
 Ents of Fangorn:
-2 Fell Beast (6U83)
+Agility (6C12) x1
+Crack Into Rubble (6U25) x1/2
+Ent Horde (6R28) x1
+Ancient Roads (6R49) x3
+Garrison of Osgiliath (6C52) x1
+Fell Beast (6U83) x2
 Sword of Dol Guldur (6R85)
 Ulaire Toldea, Winged Sentry (6R88)
 
-The Return of the King
+The Return of the King:
+Gondor Bow (7U94) x2
 Gondorian Merchant (7R97)
+Harsh Tongues (7C150) x1
 
-Siege of Gondor
+Siege of Gondor:
+Faramir, Defender of Osgiliath (8C34) x1
+Fourth Level (8C35) x3
+Garrison of Gondor (8R36) x1
+Imrahil, Prince of Dol Amroth (8R37) x1
+Knight of Dol Amroth (8C39) x1
+Knight's Mount (8C40) x4
+Sixth Level (8U44) x2/3
 
-Reflections
-Knife of the Galadhrim (9R+17)
-Elendil, The Tall (9R+32)
-Library of Orthanc (9R+39)
-Ring of Ire (9R+43)
+
+Reflections:
+The One Ring, The Binding Ring (9R+1)
 Durin III, Dwarven Lord (9R+3)
 Gimli, Bearer of Grudges (9R+4)
+Knife of the Galadhrim (9R+17)
+Elendil, The Tall (9R+32)
+Sapling of the White Tree (9R35) x2/3
+Library of Orthanc (9R+39)
+Host of Moria, Legion of the Underdeeps (9R+41) x1
+Ring of Ire (9R+43)
 Ithil Stone (9R+47)
 Sauron, The Lord of the Rings (9R+48)
-Ring of Ire (9R+43) 1
-The One Ring, The Binding Ring (9R+1)
 
-Mount Doom
+
+Mount Doom:
+Fifth Level (10U32) x2
+Seasoned Leader (10R48) x2
 
 
 
