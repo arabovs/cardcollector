@@ -21,16 +21,6 @@ transport = RequestsHTTPTransport(
     retries=3,
 )
 
-# todo: will be used in the promo handling logic
-name_dic = {
-  "-(D)":"",
-  "-(T)":"",
-  "-(AFD)":"",
-  "-(P)":"",
-  "-(W)":"",
-  "-(M)":"",
-}
-
 # used for translating edition code to url path
 editions_dict = {
   "1": "The-Fellowship-of-the-Ring",
