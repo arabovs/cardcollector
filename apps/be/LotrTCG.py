@@ -161,8 +161,8 @@ def openFile(input_filename):
 
 
 #### THIS WHERE ALL MAGIC LIES :D #####
-#openFile("test/input.test")
-scrapeLatestPricing()
+openFile("test/input.test")
+#scrapeLatestPricing()
   
 print("Process End:", now.strftime("%d/%m/%Y %H:%M:%S"))
 
