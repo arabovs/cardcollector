@@ -72,6 +72,7 @@ def createNewURL(edition, card_name_cleaned):
   return URL_PRICING + editions_dict[edition] + "/" + card_name_cleaned
 
 #insert row in db pricing table
+# GQL Mutation
 def gqlInsertCard(card_name, card_edition, card_price, card_price_foil, card_price_tng, source, card_id):
     query = gql("""mutation MyMutation($card_name: String!, $card_edition: String!, $card_price: float8!, $card_price_foil: float8!, $card_price_tng: float8!, $source: String!, $card_id: String!) {
       insert_lotr_all_cards_pricing(objects: {card_name: $card_name,
@@ -97,7 +98,7 @@ def gqlInsertCard(card_name, card_edition, card_price, card_price_foil, card_pri
     }
     result = client.execute(query, variable_values=params)
     
-    #insert row in db pricing table
+# GQL Query
 def gqlFindCardbyName(card_name):
     query = gql("""query MyQuery($card_name: String!) {
       lotr_all_cards_pricing(where: {card_name: {_ilike: $card_name}}) {
