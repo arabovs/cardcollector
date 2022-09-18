@@ -1,29 +1,37 @@
-Fell Beast (6U83) 2
-Ulaire Attea, The Easterling (2U82) 2
-Ulaire Enquea, Ringwraith in Twilight (2U83) 2
-Lurtz, Servant of Isengard (M) (1M3) 2
-In the Ringwraith's Wake (1R214) 3
-All Blades Perish (1U203) 3
-Black Steed (1R208) 2
-The Master's Will (1U215) 1
-Morgul Blade (1R216) 1
-The Pale Blade (1R221) 1
-Return to Its Master (1R224) 2
-The Twilight World (1R228) 2
-
-Ulaire Cantea, Lieutenant of Dol Guldur 2
-Ulaire Otsea, Lieutenant of Morgul (1U235) 1
-The Witch-king, Lord of Angmar (1R237) 2
-Bill Ferny, Swarthy Sneering Fellow (2R75) 1
+Knife of the Galadhrim (9R+17)
+Elendil, The Tall (9R+32)
+Library of Orthanc (9R+39)
+Ring of Ire (9R+43)
+Durin III, Dwarven Lord (9R+3)
+Gimli, Bearer of Grudges (9R+4)
+Boromir, My Brother (4R111)
+Forests of Ithilien (4R121)
+Gondorian Ranger (4C122)
+Ruins of Osgiliath (4R133)
+Gondorian Merchant (7R97)
+Citadel of Minas Tirith (3R40)
+The One Ring, Answer To All Riddles (4R1)
+Lurtz, Servant of Isengard (1R127)
+Lurtz's Sword (2R43)
+2 Fell Beast (6U83)
+Morgul Blade (1R216)
+Morgul Gates (1R217)
+Paths Seldom Trodden (1U222)
+Return to Its Master (1R224)
+Ulaire Cantea, Lieutenant of Dol Guldur (1R230)
+The Witch-king, Lord of Angmar (1R237)
 His Terrible Servants (2R77) 2
-Resistance Becomes Unbearable (2U79) 1
-Stricken Dumb (2R80) 1
+Resistance Becomes Unbearable (2U79)
+Stricken Dumb (2R80)
+Ulaire Attea, The Easterling (2U82)
+Ulaire Enquea, Ringwraith in Twilight (2U83)
+Gates of the Dead City (3R81)
+Sword of Dol Guldur (6R85)
+Ithil Stone (9R+47)
+Sauron, The Lord of the Rings (9R+48)
+Ulaire Toldea, Winged Sentry (6R88)
 
-Gates of the Dead City (3R81) 1
-Ulaire Otsea, Ringwraith in Twilight (3U86) 1
-Sword of Dol Guldur (6R85) 1
-Stronghold of Minas Morgul (7R206) 1
-Black Flail (8R70) 1
+
 
 
 Ring of Ire (9R+43) 1
@@ -32,8 +40,7 @@ Gimli's Battle Axe (1R14) 1
 
 Battle Fury (1C4)
 Delving (1C6)
-Gimli, Son of Gloin (1R13)
-Durin III, Dwarven Lord (9R+3) 1
+
 The One Ring, The Binding Ring (9R+1)
 Weathertop (1U336)
 Pass of Caradhras (1U348)
