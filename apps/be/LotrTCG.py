@@ -158,7 +158,16 @@ def openFile(input_filename):
   for x in f:
      printCardByName(x.replace("\n",""))
 
+
+
+#### THIS WHERE ALL MAGIC LIES :D #####
 #openFile("test/input.test")
 scrapeLatestPricing()
   
 print("Process End:", now.strftime("%d/%m/%Y %H:%M:%S"))
+
+
+
+
+
+#### THIS WHERE ALL MAGIC LIES :D #####
