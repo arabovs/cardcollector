@@ -1,47 +1,88 @@
-Knife of the Galadhrim (9R+17)
-Elendil, The Tall (9R+32)
-Library of Orthanc (9R+39)
-Ring of Ire (9R+43)
-Durin III, Dwarven Lord (9R+3)
-Gimli, Bearer of Grudges (9R+4)
-Boromir, My Brother (4R111)
-Forests of Ithilien (4R121)
-Gondorian Ranger (4C122)
-Ruins of Osgiliath (4R133)
-Gondorian Merchant (7R97)
-Citadel of Minas Tirith (3R40)
-The One Ring, Answer To All Riddles (4R1)
+The Fellowship of the Ring:
+Gimli's Battle Axe (1R14) 1
 Lurtz, Servant of Isengard (1R127)
-Lurtz's Sword (2R43)
-2 Fell Beast (6U83)
 Morgul Blade (1R216)
 Morgul Gates (1R217)
 Paths Seldom Trodden (1U222)
 Return to Its Master (1R224)
 Ulaire Cantea, Lieutenant of Dol Guldur (1R230)
 The Witch-king, Lord of Angmar (1R237)
+Battle Fury (1C4)
+Delving (1C6)
+Weathertop (1U336)
+Pass of Caradhras (1U348)
+
+
+Mines of Moria:
+Lurtz's Sword (2R43)
 His Terrible Servants (2R77) 2
 Resistance Becomes Unbearable (2U79)
 Stricken Dumb (2R80)
 Ulaire Attea, The Easterling (2U82)
 Ulaire Enquea, Ringwraith in Twilight (2U83)
+
+Realms of the Elf-lords:
+Citadel of Minas Tirith (3R40)
 Gates of the Dead City (3R81)
+
+The two Towers:
+Boromir, My Brother (4R111)
+Forests of Ithilien (4R121)
+Gondorian Ranger (4C122)
+Ruins of Osgiliath (4R133)
+The One Ring, Answer To All Riddles (4R1)
+
+Battle of helo's Deep
+
+Ents of Fangorn:
+2 Fell Beast (6U83)
 Sword of Dol Guldur (6R85)
-Ithil Stone (9R+47)
-Sauron, The Lord of the Rings (9R+48)
 Ulaire Toldea, Winged Sentry (6R88)
 
+The Return of the King
+Gondorian Merchant (7R97)
 
+Siege of Gondor
 
-
+Reflections
+Knife of the Galadhrim (9R+17)
+Elendil, The Tall (9R+32)
+Library of Orthanc (9R+39)
+Ring of Ire (9R+43)
+Durin III, Dwarven Lord (9R+3)
+Gimli, Bearer of Grudges (9R+4)
+Ithil Stone (9R+47)
+Sauron, The Lord of the Rings (9R+48)
 Ring of Ire (9R+43) 1
-Gimli's Battle Axe (1R14) 1
-
-
-Battle Fury (1C4)
-Delving (1C6)
-
 The One Ring, The Binding Ring (9R+1)
-Weathertop (1U336)
-Pass of Caradhras (1U348)
-Lurtz's Sword (2R43)
+
+Mount Doom
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
