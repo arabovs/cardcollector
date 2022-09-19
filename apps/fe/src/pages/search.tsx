@@ -1,12 +1,12 @@
 import React from "react";
-import { Grommet } from "../components/Grommet";
+import { GrommetButton } from "../components/GrommetButton";
+import { MUIButton } from "../components/MUIButton";
 
 const SearchPage = () => {
   return (
     <div>
-      <Grommet inputText="Frodo" />
-      <Grommet inputText="Frodo" />
-      <Grommet inputText="Frodo" />
+      <GrommetButton />
+      <MUIButton />
     </div>
   );
 };
