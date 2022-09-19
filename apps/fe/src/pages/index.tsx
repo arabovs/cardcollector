@@ -4,7 +4,7 @@ import { CardTable } from "../components/CardTable";
 import { TopTenFoil } from "../components/TopTenFoil";
 import { TopTenTng } from "../components/TopTenTng";
 import { Box, Grid, TextField, Typography } from "@mui/material";
-
+import { Grommet } from "../components/Grommet";
 import {
   ApolloClient,
   InMemoryCache,
@@ -68,12 +68,7 @@ const IndexPage = () => {
           setInputText(e.target.value.toLowerCase());
         }}
       />
-      <CardTable inputText={inputText} />
-      <Box sx={{ flexGrow: 1 }}>
-        <TopTenTng inputText={inputText} />
-        <TopTenFoil inputText={inputText} />
-        <TopAll />
-      </Box>
+      <Grommet inputText={inputText} />
     </div>
   );
 };
