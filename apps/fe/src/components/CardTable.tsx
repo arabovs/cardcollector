@@ -44,8 +44,10 @@ export const CardTable = ({ inputText }) => {
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="right">Card Name</TableCell>
+              <TableCell align="left">Card Name</TableCell>
               <TableCell align="right">Card Price</TableCell>
+              <TableCell align="right">Foil Price</TableCell>
+              <TableCell align="right">Tang Price</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -57,6 +59,8 @@ export const CardTable = ({ inputText }) => {
                   {row.card_name}
                 </TableCell>
                 <TableCell align="right">{row.card_price}</TableCell>
+                <TableCell align="right">{row.card_price_foil}</TableCell>
+                <TableCell align="right">{row.card_price_tng}</TableCell>
               </TableRow>
             ))}
           </TableBody>
