@@ -12,10 +12,5 @@
   ],
   "resolutions": {
     "ws": "7.4.6"
-  },
-  "dependencies": {
-    "@apollo/client": "^3.6.9",
-    "graphql": "^15.8.0",
-    "isomorphic-fetch": "^3.0.0"
   }
 }
