@@ -69,11 +69,6 @@ const IndexPage = () => {
         }}
       />
       <CardTable inputText={inputText} />
-      <Box sx={{ flexGrow: 1 }}>
-        <TopTenTng inputText={inputText} />
-        <TopTenFoil inputText={inputText} />
-        <TopAll />
-      </Box>
     </div>
   );
 };

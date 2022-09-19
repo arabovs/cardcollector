@@ -44,10 +44,8 @@ export const CardTable = ({ inputText }) => {
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Post</TableCell>
               <TableCell align="right">Card Name</TableCell>
               <TableCell align="right">Card Price</TableCell>
-              <TableCell align="right">Last Update</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -59,14 +57,6 @@ export const CardTable = ({ inputText }) => {
                   {row.card_name}
                 </TableCell>
                 <TableCell align="right">{row.card_price}</TableCell>
-                <TableCell align="right">
-                  <div>
-                    <Typography variant="caption">
-                      {new Date(row.created_at).toLocaleDateString()}{" "}
-                      {new Date(row.created_at).toLocaleTimeString()}
-                    </Typography>
-                  </div>
-                </TableCell>
               </TableRow>
             ))}
           </TableBody>
