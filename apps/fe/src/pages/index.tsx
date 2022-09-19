@@ -51,7 +51,7 @@ export const client = new ApolloClient({
 });
 
 const IndexPage = () => {
-  const [inputText, setInputText] = React.useState(null);
+  const [inputText, setInputText] = React.useState<any | null>(null);
 
   return (
     <div>
