@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from gql.transport.requests import RequestsHTTPTransport
 from datetime import datetime
 import re
-from urllib.request import urlretrieve
+
 
 source = "ccgcastle"
 URL = "https://lotrtcgwiki.com/wiki/grand" 
