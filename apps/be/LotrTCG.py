@@ -6,6 +6,7 @@ from gql.transport.requests import RequestsHTTPTransport
 from datetime import datetime
 import re
 
+
 source = "ccgcastle"
 URL = "https://lotrtcgwiki.com/wiki/grand" 
 URL_PRICING = "https://www.ccgcastle.com/product/lotr-tcg/" 
@@ -48,6 +49,27 @@ editions_dict = {
 }
 
 client = Client(transport=transport, fetch_schema_from_transport=True)
+
+
+#get img
+def getImageFromURL(page_url):
+
+
+  image_url = requests.get(page_url)
+  soup_img = BeautifulSoup(image_url.content, "html.parser")
+  card_img = soup_img.find(id = "product-image")
+
+  try:
+    img = card_img['src']
+    site_url = "https://www.ccgcastle.com"
+    img_url = site_url + img
+  except:
+    img_url = "None"
+  
+  
+  return img_url
+
+  
 
 #get price from url, 0 if no valid url
 def getPriceFromURL(page_url): 
@@ -141,29 +163,32 @@ def scrapeLatestPricing():
             card_price      = getPriceFromURL(URL_PRICE) 
             card_price_foil = getPriceFromURL(URL_PRICE + "-foil") 
             card_price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
+            card_image      = getImageFromURL(URL_PRICE)
+
+            print(card_image)
            
-              
-            print(f"Inserting Card Name: " + card_name_cleaned + " with regular price of: " + str(card_price) + " and foil price: " + str(card_price_foil) + " and tengwar price: " + str(card_price_tng))
-            gqlInsertCard(str(row.find('td', class_= 'col1').string).replace("•",""),editions_dict[edition].replace(" ","-"),card_price, card_price_foil, card_price_tng,  source,str(row.find('td').string))
+            #add card_image to gqlInsertCard
+            #print(f"Inserting Card Name: " + card_name_cleaned + " with regular price of: " + str(card_price) + " and foil price: " + str(card_price_foil) + " and tengwar price: " + str(card_price_tng))
+            #gqlInsertCard(str(row.find('td', class_= 'col1').string).replace("•",""),editions_dict[edition].replace(" ","-"),card_price, card_price_foil, card_price_tng,  source,str(row.find('td').string))
 
 
 
-def printCardByName(card_name):
-    data = gqlFindCardbyName(card_name)
-    for array in data["lotr_all_cards_pricing"]:
-      print(array["card_price"])
+#def printCardByName(card_name):
+    #data = gqlFindCardbyName(card_name)
+    #for array in data["lotr_all_cards_pricing"]:
+      #print(array["card_price"])
     
 
-def openFile(input_filename):
-  f = open(input_filename, "r")
-  for x in f:
-     printCardByName(x.replace("\n",""))
+#def openFile(input_filename):
+  #f = open(input_filename, "r")
+  #for x in f:
+     #printCardByName(x.replace("\n",""))
 
 
 
 #### THIS WHERE ALL MAGIC LIES :D #####
-openFile("test/input.test")
-#scrapeLatestPricing()
+#openFile("test/input.test")
+scrapeLatestPricing()
   
 print("Process End:", now.strftime("%d/%m/%Y %H:%M:%S"))
 
