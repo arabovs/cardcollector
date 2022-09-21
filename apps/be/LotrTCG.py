@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from gql.transport.requests import RequestsHTTPTransport
 from datetime import datetime
 import re
+from urllib.request import urlretrieve
 
 source = "ccgcastle"
 URL = "https://lotrtcgwiki.com/wiki/grand" 
@@ -59,7 +60,9 @@ def getImageFromURL(page_url):
   card_img = soup_img.find(id = "product-image")
 
   try:
-    img_url = card_img['src']
+    img = card_img['src']
+    site_url = "https://www.ccgcastle.com"
+    img_url = site_url + img
   except:
     img_url = "None"
   
@@ -164,7 +167,7 @@ def scrapeLatestPricing():
 
             print(card_image)
            
-              
+            #add card_image to gqlInsertCard
             #print(f"Inserting Card Name: " + card_name_cleaned + " with regular price of: " + str(card_price) + " and foil price: " + str(card_price_foil) + " and tengwar price: " + str(card_price_tng))
             #gqlInsertCard(str(row.find('td', class_= 'col1').string).replace("•",""),editions_dict[edition].replace(" ","-"),card_price, card_price_foil, card_price_tng,  source,str(row.find('td').string))
 
