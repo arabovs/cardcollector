@@ -8,7 +8,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
 } from "@mui/material";
 import { client } from "../client/client";
 
@@ -16,10 +15,7 @@ export const SetTable = ({ inputText }) => {
   const { data, loading, error } = useSubscription(
     gql`
       subscription($where: lotr_all_cards_pricing_bool_exp) {
-        lotr_all_cards_pricing: lotr_all_cards_pricing(
-          where: $where
-          
-        ) {
+        lotr_all_cards_pricing: lotr_all_cards_pricing(where: $where) {
           card_edition
           card_name
           card_price
