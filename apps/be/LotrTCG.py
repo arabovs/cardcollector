@@ -59,12 +59,12 @@ def getImageFromURL(page_url):
   card_img = soup_img.find(id = "product-image")
 
   try:
-    card_imgg = card_img['src']
+    img_url = card_img['src']
   except:
-    card_imgg = "None"
+    img_url = "None"
   
   
-  return card_imgg
+  return img_url
 
   
 
