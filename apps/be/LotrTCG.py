@@ -54,7 +54,6 @@ client = Client(transport=transport, fetch_schema_from_transport=True)
 #get img
 def getImageFromURL(page_url):
 
-
   image_url = requests.get(page_url)
   soup_img = BeautifulSoup(image_url.content, "html.parser")
   card_img = soup_img.find(id = "product-image")
@@ -95,14 +94,15 @@ def createNewURL(edition, card_name_cleaned):
 
 #insert row in db pricing table
 # GQL Mutation
-def gqlInsertCard(card_name, card_edition, card_price, card_price_foil, card_price_tng, source, card_id):
-    query = gql("""mutation MyMutation($card_name: String!, $card_edition: String!, $card_price: float8!, $card_price_foil: float8!, $card_price_tng: float8!, $source: String!, $card_id: String!) {
+def gqlInsertCard(card_name, card_edition, card_price, card_price_foil, card_price_tng, source, card_id, card_img):
+    query = gql("""mutation MyMutation($card_name: String!, $card_edition: String!, $card_price: float8!, $card_price_foil: float8!, $card_price_tng: float8!, $source: String!, $card_id: String!, $card_img: String!) {
       insert_lotr_all_cards_pricing(objects: {card_name: $card_name,
                                       card_edition: $card_edition,
                                       card_price: $card_price,
                                       card_price_foil: $card_price_foil, 
                                       card_price_tng: $card_price_tng,
                                       card_id: $card_id,
+                                      card_img: $card_img,
                                       source: $source 
                                       }) {
         affected_rows
@@ -116,6 +116,7 @@ def gqlInsertCard(card_name, card_edition, card_price, card_price_foil, card_pri
         "card_price_foil": card_price_foil,
         "card_price_tng": card_price_tng,
         "card_id": card_id,
+        "card_img": card_img,
         "source": source
     }
     result = client.execute(query, variable_values=params)
@@ -159,17 +160,14 @@ def scrapeLatestPricing():
               continue
             
             URL_PRICE = createNewURL(edition, card_name_cleaned)
-            
             card_price      = getPriceFromURL(URL_PRICE) 
             card_price_foil = getPriceFromURL(URL_PRICE + "-foil") 
             card_price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
-            card_image      = getImageFromURL(URL_PRICE)
+            card_image      = getImageFromURL(URL_PRICE.replace("'","-"))
 
-            print(card_image)
-           
-            #add card_image to gqlInsertCard
-            #print(f"Inserting Card Name: " + card_name_cleaned + " with regular price of: " + str(card_price) + " and foil price: " + str(card_price_foil) + " and tengwar price: " + str(card_price_tng))
-            #gqlInsertCard(str(row.find('td', class_= 'col1').string).replace("•",""),editions_dict[edition].replace(" ","-"),card_price, card_price_foil, card_price_tng,  source,str(row.find('td').string))
+            
+            print(f"Inserting Card Name: " + card_name_cleaned + " with regular price of: " + str(card_price) + " and foil price: " + str(card_price_foil) + " and tengwar price: " + str(card_price_tng))
+            gqlInsertCard(str(row.find('td', class_= 'col1').string).replace("•",""),editions_dict[edition].replace(" ","-"),card_price, card_price_foil, card_price_tng,  source,str(row.find('td').string), str(card_image))
 
 
 
@@ -191,9 +189,6 @@ def scrapeLatestPricing():
 scrapeLatestPricing()
   
 print("Process End:", now.strftime("%d/%m/%Y %H:%M:%S"))
-
-
-
 
 
 #### THIS WHERE ALL MAGIC LIES :D #####
