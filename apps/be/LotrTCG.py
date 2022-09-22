@@ -163,7 +163,7 @@ def scrapeLatestPricing():
             card_price      = getPriceFromURL(URL_PRICE) 
             card_price_foil = getPriceFromURL(URL_PRICE + "-foil") 
             card_price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
-            card_image      = getImageFromURL(URL_PRICE.replace("'","-"))
+            card_image      = getImageFromURL(URL_PRICE.replace("'","-").replace("!","").replace(".", "-")) #not tested
 
             
             print(f"Inserting Card Name: " + card_name_cleaned + " with regular price of: " + str(card_price) + " and foil price: " + str(card_price_foil) + " and tengwar price: " + str(card_price_tng))
