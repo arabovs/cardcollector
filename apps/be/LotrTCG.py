@@ -164,7 +164,7 @@ def scrapeLatestPricing():
             card_price_foil = getPriceFromURL(URL_PRICE + "-foil") 
             card_price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
             card_image      = getImageFromURL(URL_PRICE.replace("'","-").replace("!","").replace(".", "-")) #not tested
-
+            #replace("(","").replace("T","-tengwar"),replace(")","")  ---repalce for (T) cards
             
             print(f"Inserting Card Name: " + card_name_cleaned + " with regular price of: " + str(card_price) + " and foil price: " + str(card_price_foil) + " and tengwar price: " + str(card_price_tng))
             gqlInsertCard(str(row.find('td', class_= 'col1').string).replace("•",""),editions_dict[edition].replace(" ","-"),card_price, card_price_foil, card_price_tng,  source,str(row.find('td').string), str(card_image))
