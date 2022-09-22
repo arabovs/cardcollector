@@ -63,7 +63,7 @@ export const CardTable = ({ inputText }) => {
                 <TableCell align="right">{row.card_price}</TableCell>
                 <TableCell align="right">{row.card_price_foil}</TableCell>
                 <TableCell align="right">{row.card_price_tng}</TableCell>
-                <TableCell align="right"><img src={row.card_img} width="200" height="250" style={{ alignSelf: 'center' }}/></TableCell>
+                <TableCell align="right"><img src={row.card_img} width="200" height="250"/></TableCell>
               </TableRow>
             ))}
           </TableBody>
