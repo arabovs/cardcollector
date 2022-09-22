@@ -13,11 +13,6 @@ const IndexPage = () => {
     <div>
       {" "}
       <Link to="/search">Go to search</Link>
-      <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
-        <ImageListItem>
-          <img src="https://lotrtcgwiki.com/wiki/_media/cards:lotr00001.jpg" />
-        </ImageListItem>
-      </ImageList>
       <Typography variant="h5" fontWeight={"bold"}>
         All posts:
       </Typography>

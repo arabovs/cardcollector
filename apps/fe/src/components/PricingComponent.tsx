@@ -9,7 +9,7 @@ export const PricingComponent = ({ inputText }) => {
         areas={[
           { name: "main", start: [0, 0], end: [1, 0] },
           { name: "side", start: [2, 0], end: [2, 0] },
-          { name: "foot", start: [0, 1], end: [2, 1] },
+          //{ name: "foot", start: [0, 1], end: [2, 1] },
         ]}
         columns={["small", "flex", "medium"]}
         rows={["medium", "small"]}
