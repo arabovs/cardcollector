@@ -80,8 +80,12 @@ def getPriceFromURL(page_url):
 
 #removes and format's card name
 def cleanCardName( card_name ):
-  return str(card_name).replace(",","").replace(" ","-").replace("•","").replace("(", "").replace(")", "")
+  card = str(card_name).replace(",","").replace(" ","-").replace("•","").replace("(", "").replace(")", "").replace("!", "").replace(".","").replace("'","-")
 
+  if card[-1] == 'T':
+   card = re.sub(r".$", "tengwar", card)
+
+  return card
 #cleans html tag from span
 def cleanPrice( card_price ):
   if card_price is None:
@@ -163,11 +167,13 @@ def scrapeLatestPricing():
             card_price      = getPriceFromURL(URL_PRICE) 
             card_price_foil = getPriceFromURL(URL_PRICE + "-foil") 
             card_price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
-            card_image      = getImageFromURL(URL_PRICE.replace("'","-").replace("!","").replace(".", "-")) #not tested
-            #replace("(","").replace("T","-tengwar"),replace(")","")  ---repalce for (T) cards
+            card_image      = getImageFromURL(URL_PRICE) 
+           
+            print(URL_PRICE)
+            print(card_image)
             
-            print(f"Inserting Card Name: " + card_name_cleaned + " with regular price of: " + str(card_price) + " and foil price: " + str(card_price_foil) + " and tengwar price: " + str(card_price_tng))
-            gqlInsertCard(str(row.find('td', class_= 'col1').string).replace("•",""),editions_dict[edition].replace(" ","-"),card_price, card_price_foil, card_price_tng,  source,str(row.find('td').string), str(card_image))
+            #print(f"Inserting Card Name: " + card_name_cleaned + " with regular price of: " + str(card_price) + " and foil price: " + str(card_price_foil) + " and tengwar price: " + str(card_price_tng))
+            #gqlInsertCard(str(row.find('td', class_= 'col1').string).replace("•",""),editions_dict[edition].replace(" ","-"),card_price, card_price_foil, card_price_tng,  source,str(row.find('td').string), str(card_image))
 
 
 
