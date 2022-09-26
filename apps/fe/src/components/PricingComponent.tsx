@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Grid } from "Grommet";
-import { CardTable } from "./CardTable";
+import { PricingTable } from "./PricingTable";
 
 export const PricingComponent = ({ inputText }) => {
   return (
@@ -16,7 +16,7 @@ export const PricingComponent = ({ inputText }) => {
         gap="small"
       >
         <Box gridArea="main">
-          <CardTable inputText={inputText} />
+          <PricingTable inputText={inputText} />
         </Box>
         <Box gridArea="side" />
         <Box gridArea="foot" background="accent-1" />

@@ -1,3 +1,23 @@
+Forbidden Pool (4R120)
+Forests of Ithilien (4R121)
+Gondorian Ranger (4C122)
+Pathfinder (4C129)
+Ruins of Osgiliath (4R133)
+Anborn, Skilled Huntsman (6C48)
+Ancient Roads (6R49)
+Perilous Ventures (6U54)
+Gondorian Merchant (7R97)
+Armor (1C92)
+Coat of Mail (1C101)
+Eregion's Trails (1C104)
+Great Shield (1C107)
+No Stranger to the Shadows (1U108)
+Pursuit Just Behind (1R111)
+The Saga of Elendil (1R114)
+Flaming Brand (2R32)
+Boromir, My Brother (4R111)
+
+
 The Fellowship of the Ring:
 Battle Fury (1C4)
 Delving (1C6)
