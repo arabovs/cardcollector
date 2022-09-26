@@ -26,6 +26,7 @@ const SearchPage = () => {
               value={value}
               label="edition-selector"
               onChange={handleChange}
+              maxWidth={100}
             >
               <MenuItem value="Promotional">Promotional</MenuItem>
               <MenuItem value="The-Fellowship-of-the-Ring">

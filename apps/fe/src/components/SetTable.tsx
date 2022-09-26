@@ -8,6 +8,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import { client } from "../client/client";
 
@@ -21,6 +22,7 @@ export const SetTable = ({ inputText }) => {
           card_price
           card_price_foil
           card_price_tng
+          card_img
         }
       }
     `,
@@ -41,11 +43,24 @@ export const SetTable = ({ inputText }) => {
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="left">Set</TableCell>
-              <TableCell align="right">Card Name</TableCell>
-              <TableCell align="right">Card Price</TableCell>
-              <TableCell align="right">Foil Price</TableCell>
-              <TableCell align="right">Tang Price</TableCell>
+              <TableCell align="left">
+                <Typography>Set</Typography>
+              </TableCell>
+              <TableCell align="right">
+                <Typography>Card Name</Typography>
+              </TableCell>
+              <TableCell align="right">
+                <Typography>Card Price</Typography>
+              </TableCell>
+              <TableCell align="right">
+                <Typography>Foil Price</Typography>
+              </TableCell>
+              <TableCell align="right">
+                <Typography>Tang Price</Typography>
+              </TableCell>
+              <TableCell align="right">
+                <Typography>Image</Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -54,12 +69,25 @@ export const SetTable = ({ inputText }) => {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {row.card_edition}
+                  <Typography>{row.card_edition}</Typography>
                 </TableCell>
-                <TableCell align="right">{row.card_name}</TableCell>
-                <TableCell align="right">{row.card_price}</TableCell>
-                <TableCell align="right">{row.card_price_foil}</TableCell>
-                <TableCell align="right">{row.card_price_tng}</TableCell>
+                <TableCell align="right">
+                  <Typography>{row.card_name}</Typography>
+                </TableCell>
+                <TableCell align="right">
+                  <Typography>{row.card_price}</Typography>
+                </TableCell>
+                <TableCell align="right">
+                  <Typography>{row.card_price_foil}</Typography>
+                </TableCell>
+                <TableCell align="right">
+                  <Typography>{row.card_price_tng}</Typography>
+                </TableCell>
+                <TableCell align="right">
+                  <TableCell align="right">
+                    <img src={row.card_img} width="200" height="250" />
+                  </TableCell>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

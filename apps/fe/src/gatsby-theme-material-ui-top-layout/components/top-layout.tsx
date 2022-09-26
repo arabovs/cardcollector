@@ -6,12 +6,10 @@ import { Container } from "@mui/material";
 
 function getLibrary(provider) {}
 
-
 export default function TopLayout({ children, theme }) {
   return (
     <ThemeTopLayout theme={theme}>
-      <ApolloProvider client={client}>
-      </ApolloProvider>
+      <ApolloProvider client={client}></ApolloProvider>
     </ThemeTopLayout>
   );
 }
