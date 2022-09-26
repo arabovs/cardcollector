@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { client } from "../client/client";
 
-export const CardTable = ({ inputText }) => {
+export const PricingTable = ({ inputText }) => {
   const { data, loading, error } = useSubscription(
     gql`
       subscription($where: lotr_all_cards_pricing_bool_exp) {
@@ -63,7 +63,9 @@ export const CardTable = ({ inputText }) => {
                 <TableCell align="right">{row.card_price}</TableCell>
                 <TableCell align="right">{row.card_price_foil}</TableCell>
                 <TableCell align="right">{row.card_price_tng}</TableCell>
-                <TableCell align="right"><img src={row.card_img} width="200" height="250"/></TableCell>
+                <TableCell align="right">
+                  <img src={row.card_img} width="200" height="250" />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
