@@ -52,7 +52,7 @@ client = Client(transport=transport, fetch_schema_from_transport=True)
 
 
 #get img
-def getImageFromURL(page_url):
+def getImageFromURL(page_url, card_id):
 
   image_url = requests.get(page_url)
   soup_img = BeautifulSoup(image_url.content, "html.parser")
@@ -63,7 +63,12 @@ def getImageFromURL(page_url):
     site_url = "https://www.ccgcastle.com"
     img_url = site_url + img
   except:
-    img_url = "None"
+    if page_url[-1] == 'P':
+      page_url = re.sub(r".$", card_id, page_url)
+      img_url = getImageFromURL(page_url, card_id)
+      
+    else:
+      img_url = "None"
   
   
   return img_url
@@ -167,7 +172,7 @@ def scrapeLatestPricing():
             card_price      = getPriceFromURL(URL_PRICE) 
             card_price_foil = getPriceFromURL(URL_PRICE + "-foil") 
             card_price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
-            card_image      = getImageFromURL(URL_PRICE) 
+            card_image      = getImageFromURL(URL_PRICE, card_id) 
            
             print(URL_PRICE)
             print(card_image)
