@@ -5,14 +5,8 @@ from gql import Client, gql
 
 class GQL:
 
-
-    
     def __init__(self):
         print("Starting DB")
-
-    
-
-    
 
     def gqlInsertCard(self, card_name, card_edition, card_price, card_price_foil, card_price_tng, source, card_id, card_img):
         HASURA_URL = "https://lotrtcgwebscrapper.herokuapp.com/v1/graphql"
