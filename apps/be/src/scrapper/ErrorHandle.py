@@ -5,11 +5,13 @@ class ErrorHandle():
         def check_URL(page_url):
 
 
-                # if page_url(last element) == "-tengward" replace with "-t" !!!!!  
+                # if page_url(last element) == "-tengwar" replace with "-t" !!!!!  
+                # ako smenim "-tengwar" s "-t" kartite v na4aloto koito sa "-tengwar" 6te sprat da rabotqt
                 # Cave-Troll-of-Moria-Scourge-of-the-Black-Pit missint "-t" in URL
 
+
     
-                card_back_img = "https://www.ccgcastle.com/product/lotr-tcg/lotr-complete-sets/mines-of-moria-complete-set" #for missing cards
+                card_back_img = "https://www.ccgcastle.com/product/lotr-tcg/lotr-complete-sets/mines-of-moria-complete-set" #img for missing cards
 
                 if(page_url == "https://www.ccgcastle.com/product/lotr-tcg/lotr-promotional/Neekerbreekers--Bog-D"): # handle signel card cus of name
                     page_url = page_url.replace("--","-")
