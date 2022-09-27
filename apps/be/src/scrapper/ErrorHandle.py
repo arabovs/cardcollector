@@ -4,8 +4,9 @@ class ErrorHandle():
 
         def check_URL(page_url):
 
-                
-                # if page_url(last element) == "-tengward" replace with "-t" !!!!!
+
+                # if page_url(last element) == "-tengward" replace with "-t" !!!!!  
+                # Cave-Troll-of-Moria-Scourge-of-the-Black-Pit missint "-t" in URL
 
     
                 card_back_img = "https://www.ccgcastle.com/product/lotr-tcg/lotr-complete-sets/mines-of-moria-complete-set" #for missing cards
