@@ -5,9 +5,7 @@ class ErrorHandle():
         def check_URL(page_url):
 
 
-                # if page_url(last element) == "-tengwar" replace with "-t" !!!!!  
-                # ako smenim "-tengwar" s "-t" kartite v na4aloto koito sa "-tengwar" 6te sprat da rabotqt
-                # Cave-Troll-of-Moria-Scourge-of-the-Black-Pit missint "-t" in URL
+
 
 
     
@@ -19,8 +17,6 @@ class ErrorHandle():
                     page_url = card_back_img # handle isildur's bane
                 if(page_url == "https://www.ccgcastle.com/product/lotr-tcg/The-Fellowship-of-the-Ring/Cave-Troll-of-Moria-Scourge-of-the-Black-Pit-tengwar"):   
                     page_url = page_url.replace("-tengwar","")  # handel Troll. Error in the site URL (tengwar exist but no link created by site creator)
-                if(page_url == "https://www.ccgcastle.com/product/lotr-tcg/The-Fellowship-of-the-Ring/Ulaire-Enquea-Lieutenant-of-Morgul-tengwar"):   
-                    page_url = page_url.replace("-tengwar","-t")
                 if(page_url == "https://www.ccgcastle.com/product/lotr-tcg/The-Fellowship-of-the-Ring/Ulaire-Otsea-Lieutenant-of-Morgul"):   
                     page_url = card_back_img # non-exicting card
                 if(page_url == "https://www.ccgcastle.com/product/lotr-tcg/The-Fellowship-of-the-Ring/Bilbo-Retired-Adventurer"):   
@@ -43,12 +39,9 @@ class ErrorHandle():
                     page_url = card_back_img # non-exicting card
                 if(page_url == "https://www.ccgcastle.com/product/lotr-tcg/Realms-of-the-Elf-lords/Tower-of-Barad-dur"):   
                     page_url = card_back_img # non-exicting card
-                if(page_url == "https://www.ccgcastle.com/product/lotr-tcg/The-Two-Towers/Hides-tengwar"):   
-                    page_url = page_url.replace("-tengwar","-t")
                 if(page_url == "https://www.ccgcastle.com/product/lotr-tcg/The-Two-Towers/Gimli-Unbidden-Guest"):   
                     page_url = "https://www.ccgcastle.com/product/lotr-tcg/The-Two-Towers/Gimli-Unbidden-Guest-foil"
-                if(page_url == "https://www.ccgcastle.com/product/lotr-tcg/The-Two-Towers/Legolas-Dauntless-Hunter-tengwar"):   
-                    page_url = page_url.replace("-tengwar","-t")
+               
 
 
                 return page_url

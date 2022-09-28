@@ -56,6 +56,10 @@ def getImageFromURL(page_url, card_id):
       new_page_url = re.sub(r".$", card_id, page_url)
       img_url = getImageFromURL(new_page_url, card_id)
 
+    if page_url[-8:] == "-tengwar":
+      new_page_url = page_url.replace("-tengwar","-t")
+      img_url = getImageFromURL(new_page_url, card_id)
+
     
     
   return img_url
