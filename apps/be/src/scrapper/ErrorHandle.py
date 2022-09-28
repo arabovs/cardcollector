@@ -37,6 +37,9 @@ class ErrorHandle():
                 if(page_url == """https://www.ccgcastle.com/product/lotr-tcg/Mines-of-Moria/Speak-"Friend"-and-Enter"""): #remove "" from the URL  
                     page_url = "https://www.ccgcastle.com/product/lotr-tcg/Mines-of-Moria/Speak-Friend-and-Enter"
 
+
+                   
+                ##delete and test from the start
                 if(page_url == "https://www.ccgcastle.com/product/lotr-tcg/The-Fellowship-of-the-Ring/The-One-Ring-Isildur-s-Bane-tengwar"):   
                     page_url = card_back_img # non-exicting card
                 if(page_url == "https://www.ccgcastle.com/product/lotr-tcg/The-Fellowship-of-the-Ring/Ulaire-Otsea-Lieutenant-of-Morgul"):   
@@ -74,6 +77,7 @@ class ErrorHandle():
 
                 
                 #image only on FOIL
+                #delete and test from the start
                 if(page_url == "https://www.ccgcastle.com/product/lotr-tcg/The-Two-Towers/Ranks-Without-Number"):   
                     page_url = page_url + "-foil"
                 if(page_url == "https://www.ccgcastle.com/product/lotr-tcg/The-Two-Towers/Gimli-Unbidden-Guest"):   
