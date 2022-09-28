@@ -60,6 +60,14 @@ def getImageFromURL(page_url, card_id):
       new_page_url = page_url.replace("-tengwar","-t")
       img_url = getImageFromURL(new_page_url, card_id)
 
+    else:
+      if page_url[-5:] != "-foil":
+        new_page_url = page_url + "-foil"
+        img_url = getImageFromURL(new_page_url, card_id)
+      else:
+        new_page_url = "https://www.ccgcastle.com/product/lotr-tcg/lotr-complete-sets/mines-of-moria-complete-set"
+        img_url = getImageFromURL(new_page_url, card_id)
+    
     
     
   return img_url
@@ -102,7 +110,7 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if increment > 874 and increment < 5000:
+            if increment > 1775 and increment < 5000:
               card_id = str(row.find('td').string)
               card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string)       
               card_id_regex_number = re.compile(r"^([^a-zA-Z]*)") #Monk code kepp
