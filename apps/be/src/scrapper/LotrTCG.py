@@ -89,7 +89,7 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if increment > 2 and increment < 140:
+            if increment > 2 and increment < 200:
               
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
@@ -101,8 +101,37 @@ def scrapeLatestPricing():
               card_culture = str(row.find('td', class_= 'col3').find('a').string)
               
               # Detailed Card Info from 
-              card_details = requests.get("https://lotrtcgwiki.com/wiki/" + cardURLgenerator(card_edition,card_number))
+              CARD_URL = "https://lotrtcgwiki.com/wiki/lotr" + cardURLgenerator(card_edition,card_number)
+              print(CARD_URL)
+              card_details = requests.get(CARD_URL)
               soup_card_details = BeautifulSoup(card_details.content, "html.parser")
+              x = 0
+              dict = {}
+              key = 0
+              value = 0
+              for card_detail_row in soup_card_details.find_all('tr'):
+
+                try:
+                  key = card_detail_row.find('td', class_='col0').a.string
+                  value = card_detail_row.find('td', class_='col1').a.string
+                  dict[key] = value
+                except:
+                  try:
+                    key = str(card_detail_row.find('td', class_='col0').a.string)
+                  except:
+                    print("")
+                  value = str(card_detail_row.find('td', class_='col1')).replace("<td class=\"col1\"> ","").replace("</td>","")
+                  dict[key] = value
+                
+
+              print(dict)
+                
+                  
+ 
+                #print(type(card_detail_row.find('td', class_='col1')))
+                
+              
+              soup_card_details.find(class_='item-price')
               
               # skipping here as we need to handle promo cards better
               if  "Title" in card_name_cleaned:
@@ -112,13 +141,12 @@ def scrapeLatestPricing():
               card_price      = getPriceFromURL(URL_PRICE) 
               card_price_foil = getPriceFromURL(URL_PRICE + "-foil") 
               card_price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
-              print(card_id)
               card_image      = getImageFromURL(URL_PRICE, card_id) 
 
               print(URL_PRICE)
               print(card_image)
-              gql_connector.gqlInsertCard(str(row.find('td', class_= 'col1').string).replace("•",""),editions_dict[edition].replace(" ","-"),card_price, card_price_foil, card_price_tng,  source,str(row.find('td').string), str(card_image))
-              print(f"Inserting Card " + str(increment) + " Name: " + card_name_cleaned + " with regular price of: " + str(card_price) + " and foil price: " + str(card_price_foil) + " and tengwar price: " + str(card_price_tng))
+              #gql_connector.gqlInsertCard(str(row.find('td', class_= 'col1').string).replace("•",""),editions_dict[edition].replace(" ","-"),card_price, card_price_foil, card_price_tng,  source,str(row.find('td').string), str(card_image))
+              #print(f"Inserting Card " + str(increment) + " Name: " + card_name_cleaned + " with regular price of: " + str(card_price) + " and foil price: " + str(card_price_foil) + " and tengwar price: " + str(card_price_tng))
 
             increment += 1
 
