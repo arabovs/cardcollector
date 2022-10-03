@@ -1,3 +1,4 @@
+from operator import concat
 from requests import request
 import requests
 from bs4 import BeautifulSoup
@@ -22,7 +23,7 @@ editions_dict = etc().editions_dict
 
 
 def getImageFromURL(page_url, card_id):
-
+  return ""
   image_url = requests.get(page_url)
   soup_img = BeautifulSoup(image_url.content, "html.parser")
   card_img = soup_img.find(id = "product-image")
@@ -46,6 +47,7 @@ def getPriceFromURL(page_url):
   soup_price = BeautifulSoup(page_price_url.content, "html.parser")
   card_price = soup_price.find(class_='item-price')
   card_price_formatted = cleanPrice(card_price)
+  
   return card_price_formatted
 
 #removes and format's card name
@@ -66,6 +68,17 @@ def cleanPrice( card_price ):
 def createNewURL(edition, card_name_cleaned):
   return URL_PRICING + editions_dict[edition] + "/" + card_name_cleaned
 
+#used to obtain other info for card
+def cardURLgenerator(card_edition, card_number):
+  print(len(card_edition))
+  if len(card_edition) == 1:
+    card_edition = concat("0",card_edition)
+  if len(card_number) == 1:
+    card_number = concat("00",card_number)
+  if len(card_number) == 2:
+    card_number = concat("0",card_number)
+  return concat(card_edition,card_number)
+  
 # PROCESS START
 
 print("Process Start:", now.strftime("%d/%m/%Y %H:%M:%S"))
@@ -76,18 +89,26 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if increment > 1 and increment < 140:
+            if increment > 2 and increment < 140:
+              
+              # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
-              card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string)       
-              card_id_regex_number = re.compile(r"^([^a-zA-Z]*)") #Monk code kepp
-              edition = re.search(card_id_regex_number, card_id).group(0)
-
+              card_id_regex_number = re.compile(r"^([^a-zA-Z]*)\w+(\d+)") #Monk code kepp
+              card_edition = re.search(card_id_regex_number, card_id).group(1)
+              card_number = re.search(card_id_regex_number, card_id).group(2)
+              card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string)     
+              card_type = str(row.find('td', class_= 'col2').find('a').string)
+              card_culture = str(row.find('td', class_= 'col3').find('a').string)
+              
+              # Detailed Card Info from 
+              card_details = requests.get("https://lotrtcgwiki.com/wiki/" + cardURLgenerator(card_edition,card_number))
+              soup_card_details = BeautifulSoup(card_details.content, "html.parser")
+              
               # skipping here as we need to handle promo cards better
               if  "Title" in card_name_cleaned:
                 print("Skipping: " + card_name_cleaned)
                 continue
-              
-              URL_PRICE = createNewURL(edition, card_name_cleaned)
+              URL_PRICE = createNewURL(card_edition, card_name_cleaned)
               card_price      = getPriceFromURL(URL_PRICE) 
               card_price_foil = getPriceFromURL(URL_PRICE + "-foil") 
               card_price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
