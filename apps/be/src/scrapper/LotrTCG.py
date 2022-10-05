@@ -8,11 +8,11 @@ from GQL import GQL
 from etc import etc
 import re
 
+global_card_number = ""
 source = "ccgcastle"
 URL = "https://lotrtcgwiki.com/wiki/grand" 
 URL_PRICING = "https://www.ccgcastle.com/product/lotr-tcg/" 
 list_char = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','y','x','z']
-
 page = requests.get(URL)
 soup = BeautifulSoup(page.content, "html.parser")
 now = now = datetime.now()
@@ -71,13 +71,18 @@ def createNewURL(edition, card_name_cleaned):
 
 #used to obtain other info for card
 def cardURLgenerator(card_edition, card_number):
+  global global_card_number
   if len(card_edition) == 1:
     card_edition = concat("0",card_edition)
   if len(card_number) == 1:
     card_number = concat("00",card_number)
+    global_card_number = card_number
   if len(card_number) == 2:
     card_number = concat("0",card_number)
+    global_card_number = card_number
   return concat(card_edition,card_number)
+
+
 
 def splitEditionID(id):
     card_edition = 0
@@ -143,14 +148,16 @@ def scrapeLatestPricing():
               # DND card_type = str(row.find('td', class_= 'col2').find('a').string)
               # DND card_culture = str(row.find('td', class_= 'col3').find('a').string)
               
+              
               # Detailed Card Info from 
               card_image = "https://lotrtcgwiki.com/wiki/_media/cards:lotr" + splitEditionID(card_id) + ".jpg"
               card_dict = fetchCardDetailsDict("https://lotrtcgwiki.com/wiki/lotr" + splitEditionID(card_id))
+              print("CARD NUMBER IS: " + global_card_number)
               card_dict["card_image"] = card_image
               card_dict["card_name"] = card_name
               card_dict["card_id"] = card_id
               card_dict["card_edition"] = card_edition
-              card_dict["card_number"] = card_number
+              card_dict["card_number"] = global_card_number
               # DND card_dict["card_type"] = card_type.lower()
               # DND card_dict["card_culture"] = card_culture.lower()
               
@@ -165,7 +172,7 @@ def scrapeLatestPricing():
               card_price_foil = getPriceFromURL(URL_PRICE + "-foil") 
               card_price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
               # DEPRECATED USE - SORRY MITAK :D
-              # card_image      = getImageFromURL(URL_PRICE, card_id) 
+              #card_image      = getImageFromURL(URL_PRICE, card_id) 
               
               card_dict["card_price"] = card_price
               card_dict["card_price_foil"] = card_price_foil
@@ -174,7 +181,7 @@ def scrapeLatestPricing():
               #gql_connector.gqlInsertCard(str(row.find('td', class_= 'col1').string).replace("•",""),editions_dict[edition].replace(" ","-"),card_price, card_price_foil, card_price_tng,  source,str(row.find('td').string), str(card_image))
               #print(f"Inserting Card " + str(increment) + " Name: " + card_name_cleaned + " with regular price of: " + str(card_price) + " and foil price: " + str(card_price_foil) + " and tengwar price: " + str(card_price_tng))
               #gqlInsertCard(self, card_name, card_edition, card_price, card_price_foil, card_price_tng, source, card_id, card_img,card_kind,card_culture,card_twilight,card_type,card_number):
-              gql_connector.gqlInsertCard( card_dict.get("card_name",""), card_dict.get("card_edition",""), 0, 0, 0, source, card_dict.get("card_id",""), "",card_dict.get("kind",""),card_dict.get("culture",""),card_dict.get("twilight",0),card_dict.get("card_type",""),card_dict.get("card_number","")) 
+              #gql_connector.gqlInsertCard( card_dict.get("card_name",""), card_dict.get("card_edition",""), 0, 0, 0, source, card_dict.get("card_id",""), "",card_dict.get("kind",""),card_dict.get("culture",""),card_dict.get("twilight",0),card_dict.get("card_type",""),card_dict.get("card_number","")) 
             increment += 1
 
 scrapeLatestPricing()
