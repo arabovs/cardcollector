@@ -101,7 +101,13 @@ def fetchCardDetailsDict(card_url):
      key = str(card_detail_row.find('td', class_='col0').a.string).lower().replace(" ","_")
      value = card_detail_row.find('td', class_='col1').a.string
      if (str(key) == 'game_text'):
-      print("GAME TEXT: " + str(card_detail_row.find('td', class_='col1').a.string))
+      card_game_text = str(card_detail_row.find('td', class_='col1'))
+      #card_game_text_regex = re.compile(r"<(?:\"[^\"]*\"['\"]*|'[^']*'['\"]*|[^'\">])+>").groups() #Monk code keep
+      #print(re.search(card_game_text_regex, card_game_text))
+      card_game_text_formatted = ""
+      for e in re.findall(r'>(.*?)<', card_game_text):
+        card_game_text_formatted += e
+      print(card_game_text_formatted)
      dict[key] = str(value).lower().replace("<em>","").replace("�","").replace("</em>","")
    except:
      try:
@@ -124,7 +130,7 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if increment > 201 and increment < 220:
+            if increment > 201 and increment < 300:
               
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
@@ -132,7 +138,6 @@ def scrapeLatestPricing():
               card_id_regex_number = re.compile(r"^([^a-zA-Z]*)\w+(\d+)") #Monk code keep
               card_edition = re.search(card_id_regex_number, card_id).group(1)
               card_number = re.search(card_id_regex_number, card_id).group(2)
-              print(card_number)
               card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string)     
               # DND card_type = str(row.find('td', class_= 'col2').find('a').string)
               # DND card_culture = str(row.find('td', class_= 'col3').find('a').string)
@@ -146,7 +151,6 @@ def scrapeLatestPricing():
               # DND card_dict["card_type"] = card_type.lower()
               # DND card_dict["card_culture"] = card_culture.lower()
               
-              print(str(increment) + " " + str(card_dict))
               #print(type(card_detail_row.find('td', class_='col1')))
               #soup_card_details.find(class_='item-price')
               # skipping here as we need to handle promo cards better
