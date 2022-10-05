@@ -1,5 +1,6 @@
 from operator import concat
 from requests import request
+import json
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
@@ -102,20 +103,20 @@ def fetchCardDetailsDict(card_url):
      value = card_detail_row.find('td', class_='col1').a.string
      if (str(key) == 'game_text'):
       card_game_text = str(card_detail_row.find('td', class_='col1'))
-      #card_game_text_regex = re.compile(r"<(?:\"[^\"]*\"['\"]*|'[^']*'['\"]*|[^'\">])+>").groups() #Monk code keep
-      #print(re.search(card_game_text_regex, card_game_text))
       card_game_text_formatted = ""
       for e in re.findall(r'>(.*?)<', card_game_text):
         card_game_text_formatted += e
-      print(card_game_text_formatted)
-     dict[key] = str(value).lower().replace("<em>","").replace("�","").replace("</em>","")
+      dict[key] = card_game_text_formatted
+     if (str(key) != 'game_text'):
+      dict[key] = str(value).lower().replace("<em>","").replace("�","").replace("</em>","")
    except:
      try:
        key = str(card_detail_row.find('td', class_='col0').a.string)
      except:
        print("")
      value = str(card_detail_row.find('td', class_='col1')).replace("<td class=\"col1\"> ","").replace("</td>","")
-     dict[str(key).lower().replace(" ","_")] = str(value).lower().replace("<em>","").replace("�","").replace("</em>","")
+     if (str(key) != 'game_text'):
+        dict[str(key).lower().replace(" ","_")] = re.sub(r"[^a-zA-Z0-9.:;!?,\s+]","",str(value).replace("<em>","").replace("�","").replace("</em>",""))
      
   return dict
 # PROCESS START
@@ -130,7 +131,7 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if increment > 201 and increment < 300:
+            if increment > 201 and increment < 250:
               
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
@@ -143,7 +144,9 @@ def scrapeLatestPricing():
               # DND card_culture = str(row.find('td', class_= 'col3').find('a').string)
               
               # Detailed Card Info from 
+              card_image = "https://lotrtcgwiki.com/wiki/_media/cards:lotr" + splitEditionID(card_id) + ".jpg"
               card_dict = fetchCardDetailsDict("https://lotrtcgwiki.com/wiki/lotr" + splitEditionID(card_id))
+              card_dict["card_image"] = card_image
               card_dict["card_name"] = card_name
               card_dict["card_id"] = card_id
               card_dict["card_edition"] = card_edition
@@ -151,6 +154,7 @@ def scrapeLatestPricing():
               # DND card_dict["card_type"] = card_type.lower()
               # DND card_dict["card_culture"] = card_culture.lower()
               
+              print(json.dumps(str(card_dict),sort_keys=True, indent=4))
               #print(type(card_detail_row.find('td', class_='col1')))
               #soup_card_details.find(class_='item-price')
               # skipping here as we need to handle promo cards better
