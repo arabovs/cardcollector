@@ -91,6 +91,7 @@ def splitEditionID(id):
         position+=1
     return cardURLgenerator(card_edition, card_number)
 
+# we create a dictionary of all the <td> in the card details page dynamically 
 def fetchCardDetailsDict(card_url):
   card_details = requests.get(card_url)
   soup_card_details = BeautifulSoup(card_details.content, "html.parser")
@@ -117,7 +118,6 @@ def fetchCardDetailsDict(card_url):
      value = str(card_detail_row.find('td', class_='col1')).replace("<td class=\"col1\"> ","").replace("</td>","")
      if (str(key) != 'game_text'):
         dict[str(key).lower().replace(" ","_")] = re.sub(r"[^a-zA-Z0-9.:;!?,\s+]","",str(value).replace("<em>","").replace("�","").replace("</em>",""))
-     
   return dict
 # PROCESS START
 
@@ -131,7 +131,7 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if increment > 201 and increment < 250:
+            if increment > 215 and increment < 217:
               
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
@@ -154,9 +154,8 @@ def scrapeLatestPricing():
               # DND card_dict["card_type"] = card_type.lower()
               # DND card_dict["card_culture"] = card_culture.lower()
               
-              print(json.dumps(str(card_dict),sort_keys=True, indent=4))
+
               #print(type(card_detail_row.find('td', class_='col1')))
-              #soup_card_details.find(class_='item-price')
               # skipping here as we need to handle promo cards better
               if  "Title" in card_name_cleaned:
                 print("Skipping: " + card_name_cleaned)
@@ -165,8 +164,13 @@ def scrapeLatestPricing():
               card_price      = getPriceFromURL(URL_PRICE) 
               card_price_foil = getPriceFromURL(URL_PRICE + "-foil") 
               card_price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
-              card_image      = getImageFromURL(URL_PRICE, card_id) 
-
+              # DEPRECATED USE - SORRY MITAK :D
+              # card_image      = getImageFromURL(URL_PRICE, card_id) 
+              
+              card_dict["card_price"] = card_price
+              card_dict["card_price_foil"] = card_price_foil
+              card_dict["card_price_tng"] = card_price_tng
+              print(json.dumps(str(card_dict),sort_keys=True, indent=4))
               #gql_connector.gqlInsertCard(str(row.find('td', class_= 'col1').string).replace("•",""),editions_dict[edition].replace(" ","-"),card_price, card_price_foil, card_price_tng,  source,str(row.find('td').string), str(card_image))
               #print(f"Inserting Card " + str(increment) + " Name: " + card_name_cleaned + " with regular price of: " + str(card_price) + " and foil price: " + str(card_price_foil) + " and tengwar price: " + str(card_price_tng))
               #gqlInsertCard(self, card_name, card_edition, card_price, card_price_foil, card_price_tng, source, card_id, card_img,card_kind,card_culture,card_twilight,card_type,card_number):
