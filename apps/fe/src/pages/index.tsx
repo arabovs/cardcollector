@@ -8,7 +8,14 @@ const IndexPage = () => {
 
   return (
     <div>
-      {" "}
+      <ins
+        className="adsbygoogle"
+        style={{ display: "block" }}
+        data-ad-client="ca-pub-4553864806120513"
+        data-ad-slot="7021113116"
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      ></ins>{" "}
       <Link to="/search">Go to search</Link>
       <Typography variant="h5" fontWeight={"bold"}>
         All posts:
