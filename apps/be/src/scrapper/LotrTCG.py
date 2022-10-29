@@ -71,15 +71,16 @@ def createNewURL(edition, card_name_cleaned):
 
 #used to obtain other info for card
 def cardURLgenerator(card_edition, card_number):
-  global global_card_number
+  print("card edition", card_edition)
+  print("card number", card_number)
   if len(card_edition) == 1:
     card_edition = concat("0",card_edition)
   if len(card_number) == 1:
     card_number = concat("00",card_number)
-    global_card_number = card_number
+    print("card number", card_number)
   if len(card_number) == 2:
     card_number = concat("0",card_number)
-    global_card_number = card_number
+    print("card number", card_number)
   return concat(card_edition,card_number)
 
 
@@ -90,11 +91,14 @@ def splitEditionID(id):
     position = 0
     for c in list(id):
         if c.lower() in list_char:
+            print(c)
             position+=1
             card_edition = id[0:position-1]
+            print(card_edition)
             card_number = id[position:len(id)]
+            print("THIS IS THE CARD NUMBER",card_number)
         position+=1
-    return cardURLgenerator(card_edition, card_number)
+    return cardURLgenerator(str(card_edition), str(card_number))
 
 # we create a dictionary of all the <td> in the card details page dynamically 
 def fetchCardDetailsDict(card_url):
@@ -105,7 +109,6 @@ def fetchCardDetailsDict(card_url):
 # THIS NEEDS FIXING
    try:
      ## try with BS.tag.strip()
-     print("KEY " ,str(card_detail_row.find('td', class_='col0').string))
      key = str(card_detail_row.find('td', class_='col0').a.string).lower().replace(" ","_")
      value = card_detail_row.find('td', class_='col1').a.string
      if (str(key) == 'game_text' or str(key) == "notes"):
@@ -137,10 +140,11 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if increment > 215 and increment < 217:
+            if increment > 250 and increment < 4000:
               
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
+              print(card_id)
               card_name = str(row.find('td', class_= 'col1').string).replace("•","")
               card_id_regex_number = re.compile(r"^([^a-zA-Z]*)\w+(\d+)") #Monk code keep
               card_edition = re.search(card_id_regex_number, card_id).group(1)
@@ -148,10 +152,9 @@ def scrapeLatestPricing():
               card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string)     
               # DND card_type = str(row.find('td', class_= 'col2').find('a').string)
               # DND card_culture = str(row.find('td', class_= 'col3').find('a').string)
-              
-              
               # Detailed Card Info from 
-              card_image = "https://lotrtcgwiki.com/wiki/_media/cards:lotr" + splitEditionID(card_id) + ".jpg"
+              print("LOL",splitEditionID(str(card_number)))
+              card_image = "https://lotrtcgwiki.com/wiki/_media/cards:lotr" + splitEditionID(str(card_id)) + ".jpg"
               card_dict = fetchCardDetailsDict("https://lotrtcgwiki.com/wiki/lotr" + splitEditionID(card_id))
               print("CARD NUMBER IS: " + global_card_number)
               card_dict["card_image"] = card_image
@@ -161,8 +164,6 @@ def scrapeLatestPricing():
               card_dict["card_number"] = global_card_number
               # DND card_dict["card_type"] = card_type.lower()
               # DND card_dict["card_culture"] = card_culture.lower()
-              
-
               #print(type(card_detail_row.find('td', class_='col1')))
               # skipping here as we need to handle promo cards better
               if  "Title" in card_name_cleaned:
@@ -173,7 +174,7 @@ def scrapeLatestPricing():
               card_price_foil = getPriceFromURL(URL_PRICE + "-foil") 
               card_price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
               # DEPRECATED USE - SORRY MITAK :D
-              #card_image      = getImageFromURL(URL_PRICE, card_id) 
+              card_image      = getImageFromURL(URL_PRICE, card_id) 
               
               card_dict["card_price"] = card_price
               card_dict["card_price_foil"] = card_price_foil
@@ -182,7 +183,7 @@ def scrapeLatestPricing():
               #gql_connector.gqlInsertCard(str(row.find('td', class_= 'col1').string).replace("•",""),editions_dict[edition].replace(" ","-"),card_price, card_price_foil, card_price_tng,  source,str(row.find('td').string), str(card_image))
               #print(f"Inserting Card " + str(increment) + " Name: " + card_name_cleaned + " with regular price of: " + str(card_price) + " and foil price: " + str(card_price_foil) + " and tengwar price: " + str(card_price_tng))
               #gqlInsertCard(self, card_name, card_edition, card_price, card_price_foil, card_price_tng, source, card_id, card_img,card_kind,card_culture,card_twilight,card_type,card_number):
-              #gql_connector.gqlInsertCard( card_dict.get("card_name",""), card_dict.get("card_edition",""), 0, 0, 0, source, card_dict.get("card_id",""), "",card_dict.get("kind",""),card_dict.get("culture",""),card_dict.get("twilight",0),card_dict.get("card_type",""),card_dict.get("card_number","")) 
+              gql_connector.gqlInsertCard( card_dict.get("card_name",""), card_dict.get("card_edition",""), 0, 0, 0, source, card_dict.get("card_id",""), card_dict.get("card_image",""),card_dict.get("kind",""),card_dict.get("culture",""),card_dict.get("twilight",0),card_dict.get("card_type",""),card_dict.get("card_number","")) 
             increment += 1
 
 scrapeLatestPricing()
