@@ -105,9 +105,10 @@ def fetchCardDetailsDict(card_url):
 # THIS NEEDS FIXING
    try:
      ## try with BS.tag.strip()
+     print("KEY " ,str(card_detail_row.find('td', class_='col0').string))
      key = str(card_detail_row.find('td', class_='col0').a.string).lower().replace(" ","_")
      value = card_detail_row.find('td', class_='col1').a.string
-     if (str(key) == 'game_text'):
+     if (str(key) == 'game_text' or str(key) == "notes"):
       card_game_text = str(card_detail_row.find('td', class_='col1'))
       card_game_text_formatted = ""
       for e in re.findall(r'>(.*?)<', card_game_text):
