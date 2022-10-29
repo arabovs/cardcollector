@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Grid } from "Grommet";
+import { Box, Grid } from "@mui/material";
 import { SetTable } from "./SetTable";
 
 export const SetComponent = ({ inputText }) => {
@@ -9,7 +9,6 @@ export const SetComponent = ({ inputText }) => {
         areas={[
           { name: "main", start: [0, 0], end: [1, 0] },
           { name: "side", start: [2, 0], end: [2, 0] },
-          
         ]}
         columns={["small", "flex", "medium"]}
         rows={["medium", "small"]}

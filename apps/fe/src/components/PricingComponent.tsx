@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Grid } from "Grommet";
+import { Box, Grid } from "@mui/material";
 import { PricingTable } from "./PricingTable";
 
 export const PricingComponent = ({ inputText }) => {
