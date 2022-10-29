@@ -20,6 +20,7 @@ export const PricingTable = ({ inputText }) => {
           where: $where
           limit: 5
         ) {
+          id
           card_name
           card_price
           card_price_foil
@@ -29,7 +30,6 @@ export const PricingTable = ({ inputText }) => {
       }
     `,
     {
-      client,
       variables: {
         ...(inputText
           ? { where: { card_name: { _ilike: `%${inputText}%` } } }
@@ -56,6 +56,7 @@ export const PricingTable = ({ inputText }) => {
             {data.lotr_all_cards_pricing.map((row) => (
               <TableRow
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                key={row.id}
               >
                 <TableCell component="th" scope="row">
                   {row.card_name}
@@ -63,9 +64,6 @@ export const PricingTable = ({ inputText }) => {
                 <TableCell align="right">{row.card_price}</TableCell>
                 <TableCell align="right">{row.card_price_foil}</TableCell>
                 <TableCell align="right">{row.card_price_tng}</TableCell>
-                <TableCell align="right">
-                  <img src={row.card_img} width="200" height="250" />
-                </TableCell>
                 <TableCell align="right">
                   <img src={row.card_img} width="200" height="250" />
                 </TableCell>
