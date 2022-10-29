@@ -39,7 +39,7 @@ const IndexPage = () => {
       }
     }
   `);
-  const { data, error } = useSubscription(
+  const { data, error, ...rest } = useSubscription(
     gql`
       subscription ($where: lotr_all_cards_pricing_bool_exp) {
         lotr_all_cards_pricing: lotr_all_cards_pricing(where: $where) {
@@ -54,12 +54,22 @@ const IndexPage = () => {
     `,
     {
       variables: {
-        ...(searchField
-          ? { where: { card_name: { _ilike: `%${searchField}%` } } }
-          : {}),
+        where: {
+          card_name: { _ilike: `%${searchField}%` },
+          ...(typeFiterItems.length > 0
+            ? {
+                _or: [
+                  ...typeFiterItems.map((filter) => ({
+                    card_type: { _eq: filter },
+                  })),
+                ],
+              }
+            : {}),
+        },
       },
     }
   );
+  console.log(rest);
   if (error) return <div>{error.message}</div>;
   return (
     <Box sx={{ p: 1 }}>
@@ -80,7 +90,7 @@ const IndexPage = () => {
       </Box>
       <Grid container spacing={1}>
         {isFilterOpen && (
-          <Grid item sm={3}>
+          <Grid item sm={2}>
             <Card>
               <CardContent>
                 <List>
@@ -100,7 +110,7 @@ const IndexPage = () => {
                             secondaryAction={
                               <Checkbox
                                 edge="end"
-                                onChange={(value: number) => {
+                                onChange={() => {
                                   const currentIndex = typeFiterItems.indexOf(
                                     type.card_type
                                   );
@@ -135,14 +145,25 @@ const IndexPage = () => {
           </Grid>
         )}
 
-        <Grid container spacing={1} item sm={isFilterOpen ? 9 : 12}>
+        <Grid container spacing={1} item sm={isFilterOpen ? 10 : 12}>
+          <Grid item sm={12}>
+            {data?.lotr_all_cards_pricing && (
+              <Typography variant="subtitle2">
+                {data?.lotr_all_cards_pricing.length} items
+              </Typography>
+            )}
+          </Grid>
           <Grid item sm={12} container spacing={1}>
             {typeFiterItems.map((typeFilter) => (
               <Grid item>
                 <Chip
                   label={`Type: ${typeFilter}`}
-                  onClick={() => console.log("click")}
-                  onDelete={() => console.log("delete")}
+                  onDelete={() => {
+                    console.log("delete");
+                    setTypeFilterItems(
+                      typeFiterItems.filter((i) => i !== typeFilter)
+                    );
+                  }}
                 />
               </Grid>
             ))}
