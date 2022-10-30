@@ -59,7 +59,8 @@ def cardURLgenerator(card_edition, card_number):
     card_number = concat("0",card_number)
   return concat(card_edition,card_number)
 
-def splitEditionID(id):
+def splitEditionID(id,option):
+  if option == 1:
     card_edition = 0
     card_number = 0
     position = 0
@@ -70,6 +71,11 @@ def splitEditionID(id):
             card_number = id[position:len(id)]
         position+=1
     return cardURLgenerator(card_edition, card_number)
+  if option == 2:
+    card_number = id[-1:]
+    return "00SPD" + card_number
+  return
+    
 
 def fetchCardDetailsDict(card_url):
   card_details = requests.get(card_url)
@@ -88,10 +94,12 @@ def fetchCardDetailsDict(card_url):
         card_game_text_formatted += e
       dict[key] = card_game_text_formatted
      if (str(key) != 'game_text'):
+      
       dict[key] = str(value).lower().replace("<em>","").replace("�","").replace("</em>","")
    except:
      try:
        key = str(card_detail_row.find('td', class_='col0').a.string)
+       
      except:
        print("")
      value = str(card_detail_row.find('td', class_='col1')).replace("<td class=\"col1\"> ","").replace("</td>","")
@@ -111,11 +119,11 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if increment > 170:
+            if increment > 0:
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
               card_name = str(row.find('td', class_= 'col1').string).replace("•","")
-              card_id_regex_number = re.compile(r"^([^a-zA-Z]*)\w+(\d+)") #Monk code keep]
+              card_id_regex_number = re.compile(r"^([^a-zA-Z]*)\w+(\d+)") 
               
               if card_id[-1].isnumeric():
                 card_edition = re.search(card_id_regex_number, card_id).group(1)
@@ -125,9 +133,16 @@ def scrapeLatestPricing():
                 # DND card_type = str(row.find('td', class_= 'col2').find('a').string)
                 # DND card_culture = str(row.find('td', class_= 'col3').find('a').string)
                 
-                # Detailed Card Info from 
-                card_image = "https://lotrtcgwiki.com/wiki/_media/cards:lotr" + splitEditionID(card_id) + ".jpg"
-                card_dict = fetchCardDetailsDict("https://lotrtcgwiki.com/wiki/lotr" + splitEditionID(card_id))
+                # Detailed Card Info from - we need to handle SPD and rest better  
+                if "(AI)" in card_name_cleaned:
+                  print("Skipping")
+                  continue              
+                if card_name_cleaned[-3:] not in ("SPD"):
+                  card_image = "https://lotrtcgwiki.com/wiki/_media/cards:lotr" + splitEditionID(card_id,1) + ".jpg"
+                  card_dict = fetchCardDetailsDict("https://lotrtcgwiki.com/wiki/lotr" + splitEditionID(card_id,1))
+                else:
+                  card_image = "https://lotrtcgwiki.com/wiki/_media/cards:lotr" + splitEditionID(card_id,2) + ".jpg"
+                  card_dict = fetchCardDetailsDict("https://lotrtcgwiki.com/wiki/lotr" + splitEditionID(card_id,2))
                 card_dict["card_image"] = card_image
                 card_dict["card_name"] = card_name
                 card_dict["card_id"] = card_id
@@ -147,6 +162,7 @@ def scrapeLatestPricing():
                 card_price      = getPriceFromURL(URL_PRICE) 
                 card_price_foil = getPriceFromURL(URL_PRICE + "-foil") 
                 card_price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
+                print(json.dumps(str(card_dict),sort_keys=True, indent=4))
                 if len(card_dict.get("rarity")) > 1:
                   card_dict["rarity"] = "P"
                 for key, value in card_dict.items():
@@ -162,7 +178,7 @@ def scrapeLatestPricing():
                   card_dict["kind"] = "The One Ring"
                 
                 
-                print(json.dumps(str(card_dict),sort_keys=True, indent=4))
+                
                 gql_connector.gqlInsertCard(card_dict.get("card_name",""),
                                         card_dict.get("card_edition",""),
                                         card_price,
@@ -184,8 +200,9 @@ def scrapeLatestPricing():
                                         card_dict.get("rarity",""),
                                         card_dict.get("signet",""))
               else:
-                # need to find a way to handle this better
+                  # need to find a way to handle this better
                 continue
+            print("Card number: ", increment)
             increment += 1
 
 scrapeLatestPricing()
