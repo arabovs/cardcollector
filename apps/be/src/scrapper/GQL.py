@@ -10,23 +10,23 @@ class GQL:
 
     def gqlInsertCard(self,
                       card_name,
-                      card_edition,
+                      set,
                       card_price,
-                      card_price_foil,
-                      card_price_tng,
+                      price_foil,
+                      price_tng,
                       source, card_id,
-                      card_img,card_kind,
-                      card_culture,
-                      card_twilight,
-                      card_type,
+                      card_img,kind,
+                      culture,
+                      twilight,
+                      type,
                       card_number,
                       lore,
-                      card_text,
+                      text,
                       strength,
                       vitality,
                       resistance,
                       rarity,
-                      card_signet
+                      signet
                       ):
         HASURA_URL = "https://lotrtcgwebscrapper.herokuapp.com/v1/graphql"
 
@@ -37,70 +37,70 @@ class GQL:
         )
         client = Client(transport=transport, fetch_schema_from_transport=True)
         query = gql("""mutation MyMutation($card_name: String!,
-                                           $card_edition: String!,
+                                           $set: String!,
                                            $card_price: float8!,
-                                           $card_price_foil: float8!, 
-                                           $card_price_tng: float8!,
+                                           $price_foil: float8!, 
+                                           $price_tng: float8!,
                                            $source: String!,
                                            $card_id: String!,
                                            $card_img: String!,
-                                           $card_kind: String!,
-                                           $card_culture: String!,
-                                           $card_twilight: String!,
+                                           $kind: String!,
+                                           $culture: String!,
+                                           $twilight: String!,
                                            $card_number: String!,
-                                           $card_type: String!,
+                                           $type: String!,
                                            $lore: String!,
-                                           $card_text: String!,
+                                           $text: String!,
                                            $strength: String!,
                                            $vitality: String!,
                                            $resistance: String!,
                                            $rarity: String!,
-                                           $card_signet: String!) {
+                                           $signet: String!) {
           insert_lotr_all_cards_pricing(objects: {card_name: $card_name,
-                                          card_edition: $card_edition,
+                                          set: $set,
                                           card_price: $card_price,
-                                          card_price_foil: $card_price_foil, 
-                                          card_price_tng: $card_price_tng,
+                                          price_foil: $price_foil, 
+                                          price_tng: $price_tng,
                                           card_id: $card_id,
                                           card_img: $card_img,
-                                          card_kind: $card_kind,
-                                          card_culture: $card_culture,
-                                          card_twilight: $card_twilight,
-                                          card_type: $card_type,
+                                          kind: $kind,
+                                          culture: $culture,
+                                          twilight: $twilight,
+                                          type: $type,
                                           card_number: $card_number,
                                           source: $source,
-                                          card_lore: $lore,
-                                          card_text: $card_text,
+                                          lore: $lore,
+                                          text: $text,
                                           strength: $strength,
                                           vitality: $vitality,
                                           resistance: $resistance,
                                           rarity: $rarity,
-                                          card_signet: $card_signet
+                                          signet: $signet
                                           }) {
             affected_rows
           }
         }""")
         params = {
             "card_name": card_name,
-            "card_edition": card_edition,
+            "set": set,
             "card_price": card_price,
-            "card_price_foil": card_price_foil,
-            "card_price_tng": card_price_tng,
+            "price_foil": price_foil,
+            "price_tng": price_tng,
             "card_id": card_id,
             "card_img": card_img,
-            "card_kind": card_kind,
-            "card_culture": card_culture,
-            "card_twilight": card_twilight,
-            "card_type": card_type,
+            "kind": kind,
+            "culture": culture,
+            "twilight": twilight,
+            "type": type,
             "card_number": card_number,
             "source": source,
             "lore": lore,
-            "card_text": card_text,
+            "text": text,
             "strength": strength,
             "vitality": vitality,
             "resistance": resistance,
             "rarity": rarity,
-            "card_signet": card_signet,
+            "signet": signet,
             
         }
         result = client.execute(query, variable_values=params)
@@ -113,8 +113,8 @@ class GQL:
                 id
                 card_name
                 card_price
-                card_price_foil
-                card_price_tng
+                price_foil
+                price_tng
           }
         }""")
         params = {

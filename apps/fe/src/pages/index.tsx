@@ -27,7 +27,7 @@ import React, { useState } from "react";
 import { Close, ExpandLess, ExpandMore, FilterList } from "@mui/icons-material";
 
 const filter_icons = {
-  card_culture: {
+  culture: {
     Dwarven: "https://lotrtcgwiki.com/wiki/_media/dwarven.gif",
     Gandalf: "https://lotrtcgwiki.com/wiki/_media/gandalf.gif",
     Elven: "https://lotrtcgwiki.com/wiki/_media/elven.gif",
@@ -45,7 +45,7 @@ const filter_icons = {
 };
 
 const filter_type_label = {
-  card_edition: {
+  set: {
     "0": "Promotional",
     "1": "The Fellowship of the Ring",
     "2": "Mines of Moria",
@@ -133,12 +133,12 @@ const CardFilter = ({
 };
 
 const labels = {
-  card_type: "Type",
-  card_kind: "Kind",
-  card_culture: "Culture",
-  card_edition: "Edition",
+  type: "Type",
+  kind: "Kind",
+  culture: "Culture",
+  set: "Edition",
   rarity: "Rarity",
-  card_signet: "Signet",
+  signet: "Signet",
 };
 
 const IndexPage = () => {
@@ -153,26 +153,26 @@ const IndexPage = () => {
   };
   const filterTypesQuery = useQuery(gql`
     query FilterTypes {
-      card_type: lotr_all_cards_pricing(distinct_on: card_type) {
-        card_type
+      type: lotr_all_cards_pricing(distinct_on: type) {
+        type
       }
-      card_kind: lotr_all_cards_pricing(distinct_on: card_kind) {
-        card_kind
+      kind: lotr_all_cards_pricing(distinct_on: kind) {
+        kind
       }
-      card_culture: lotr_all_cards_pricing(distinct_on: card_culture) {
-        card_culture
+      culture: lotr_all_cards_pricing(distinct_on: culture) {
+        culture
       }
-      card_edition: lotr_all_cards_pricing(distinct_on: card_edition) {
-        card_edition
+      set: lotr_all_cards_pricing(distinct_on: set) {
+        set
       }
       rarity: lotr_all_cards_pricing(distinct_on: rarity) {
         rarity
       }
-      card_signet: lotr_all_cards_pricing(
-        distinct_on: card_signet
-        where: { card_signet: { _neq: "" } }
+      signet: lotr_all_cards_pricing(
+        distinct_on: signet
+        where: { signet: { _neq: "" } }
       ) {
-        card_signet
+        signet
       }
     }
   `);
@@ -218,7 +218,7 @@ const IndexPage = () => {
   }));
   const { data, error, loading } = useSubscription(
     gql`
-      subscription (
+      subscription(
         $where: lotr_all_cards_pricing_bool_exp
         $order_by: [lotr_all_cards_pricing_order_by!]
         $limit: Int
@@ -233,8 +233,8 @@ const IndexPage = () => {
           id
           card_name
           card_price
-          card_price_foil
-          card_price_tng
+          price_foil
+          price_tng
           card_img
         }
       }

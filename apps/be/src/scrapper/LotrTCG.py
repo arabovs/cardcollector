@@ -53,27 +53,27 @@ def createNewURL(edition, card_name_cleaned):
   return URL_PRICING + editions_dict[edition] + "/" + card_name_cleaned
 
 #used to obtain other info for card
-def cardURLgenerator(card_edition, card_number):
-  if len(card_edition) == 1:
-    card_edition = concat("0",card_edition)
+def cardURLgenerator(set, card_number):
+  if len(set) == 1:
+    set = concat("0",set)
   if len(card_number) == 1:
     card_number = concat("00",card_number)
   if len(card_number) == 2:
     card_number = concat("0",card_number)
-  return concat(card_edition,card_number)
+  return concat(set,card_number)
 
 def splitEditionID(id,option):
   if option == 1:
-    card_edition = 0
+    set = 0
     card_number = 0
     position = 0
     for c in list(id):
         if c.lower() in list_char:
             position+=1
-            card_edition = id[0:position-1]
+            set = id[0:position-1]
             card_number = id[position:len(id)]
         position+=1
-    return cardURLgenerator(card_edition, card_number)
+    return cardURLgenerator(set, card_number)
   if option == 2:
     card_number = id[-1:]
     return "00SPD" + card_number
@@ -122,19 +122,17 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if increment > 0:
+            if increment > 240:
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
               card_name = str(row.find('td', class_= 'col1').string).replace("•","")
               card_id_regex_number = re.compile(r"^([^a-zA-Z]*)\w+(\d+)") 
               
               if card_id[-1].isnumeric():
-                card_edition = re.search(card_id_regex_number, card_id).group(1)
+                set = re.search(card_id_regex_number, card_id).group(1)
                 card_number = re.search(card_id_regex_number, card_id).group(2)
               
                 card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string)     
-                # DND card_type = str(row.find('td', class_= 'col2').find('a').string)
-                # DND card_culture = str(row.find('td', class_= 'col3').find('a').string)
                 
                 # Detailed Card Info from - we need to handle SPD and rest better  
                 if "(AI)" in card_name_cleaned:
@@ -149,23 +147,17 @@ def scrapeLatestPricing():
                 card_dict["card_image"] = card_image
                 card_dict["card_name"] = card_name
                 card_dict["card_id"] = card_id
-                card_dict["card_edition"] = card_edition
+                card_dict["set"] = set
                 card_dict["card_number"] = card_number
-                # DND card_dict["card_type"] = card_type.lower()
-                # DND card_dict["card_culture"] = card_culture.lower()
-                
-                
-                #print(type(card_detail_row.find('td', class_='col1')))
-                #soup_card_details.find(class_='item-price')
+      
                 # skipping here as we need to handle promo cards better
                 if  "Title" in card_name_cleaned:
                   print("Skipping: " + card_name_cleaned)
                   continue
-                URL_PRICE = createNewURL(card_edition, card_name_cleaned)
+                URL_PRICE = createNewURL(set, card_name_cleaned)
                 card_price      =0# getPriceFromURL(URL_PRICE) 
-                card_price_foil =0# getPriceFromURL(URL_PRICE + "-foil") 
-                card_price_tng  =0# getPriceFromURL(URL_PRICE + "-tengwar")
-                print(json.dumps(str(card_dict),sort_keys=True, indent=4))
+                price_foil =0# getPriceFromURL(URL_PRICE + "-foil") 
+                price_tng  =0# getPriceFromURL(URL_PRICE + "-tengwar")
                 if len(card_dict.get("rarity")) > 1:
                   card_dict["rarity"] = "P"
                 for key, value in card_dict.items():
@@ -179,34 +171,38 @@ def scrapeLatestPricing():
                 if card_dict["card_type"] == "The One Ring":
                   card_dict["culture"] = "The One Ring"
                   card_dict["kind"] = "The One Ring"
-                
-                
 
+                
+                # create file
                 filename = card_dict.get("card_image","").replace("https://lotrtcgwiki.com/wiki/_media/","")
-                print(filename)
                 img_data = requests.get(card_dict.get("card_image","")).content
-                with open("C:\\Users\\arabo\\Coding\\lotr-tcg-scrapper\\apps\\fe\\resources\\img\\"+ filename.replace(":","-"), 'wb') as handler:
-                    handler.write(img_data)
-                #gql_connector.gqlInsertCard(card_dict.get("card_name",""),
-                #                        card_dict.get("card_edition",""),
-                #                        card_price,
-                #                        card_price_foil,
-                #                        card_price_tng,
-                #                        source, 
-                #                        card_dict.get("card_id",""),
-                #                        card_dict.get("card_image",""),
-                #                        card_dict.get("kind",""),
-                #                        card_dict.get("culture",""),
-                #                        card_dict.get("twilight",""),
-                #                        card_dict.get("card_type",""),
-                #                        card_dict.get("card_number",""),
-                #                        card_dict.get("lore",""),
-                #                        card_dict.get("game_text",""),
-                #                        card_dict.get("strength",""),
-                #                        card_dict.get("vitality",""),
-                #                        card_dict.get("resistance",""),
-                #                        card_dict.get("rarity",""),
-                #                        card_dict.get("signet",""))
+                #with open("C:\\Users\\arabo\\Coding\\lotr-tcg-scrapper\\apps\\fe\\resources\\img\\"+ filename.replace(":","-"), 'wb') as handler:
+                    #handler.write(img_data)
+                    
+                # log
+                print(json.dumps(str(card_dict),sort_keys=True, indent=4))
+    
+                # insert to hasura
+                gql_connector.gqlInsertCard(card_dict.get("card_name",""),
+                                        card_dict.get("set",""),
+                                        card_price,
+                                        price_foil,
+                                        price_tng,
+                                        source, 
+                                        card_dict.get("card_id",""),
+                                        card_dict.get("card_image",""),
+                                        card_dict.get("kind",""),
+                                        card_dict.get("culture",""),
+                                        card_dict.get("twilight",""),
+                                        card_dict.get("card_type",""),
+                                        card_dict.get("card_number",""),
+                                        card_dict.get("lore",""),
+                                        card_dict.get("game_text",""),
+                                        card_dict.get("strength",""),
+                                        card_dict.get("vitality",""),
+                                        card_dict.get("resistance",""),
+                                        card_dict.get("rarity",""),
+                                        card_dict.get("signet",""))
               else:
                   # need to find a way to handle this better
                 continue
