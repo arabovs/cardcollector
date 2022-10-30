@@ -28,7 +28,6 @@ const CardFilter = ({
   filterName,
   selectedFilters,
   setSelectedFilters,
-  field,
 }) => {
   const [isFilterTypeOpen, setFilterTypeOpen] = useState(false);
   return (
@@ -46,22 +45,23 @@ const CardFilter = ({
                 <Checkbox
                   edge="end"
                   onChange={() => {
-                    const currentIndex = selectedFilters.indexOf(type[field]);
-                    const newChecked = [...selectedFilters];
-
-                    if (currentIndex === -1) {
-                      newChecked.push(type[field]);
-                    } else {
-                      newChecked.splice(currentIndex, 1);
+                    const includes = selectedFilters
+                      .map((filter) => filter.value)
+                      .includes(type.value);
+                    if (includes) {
+                      return setSelectedFilters(
+                        selectedFilters.filter((i) => i.value !== type.value)
+                      );
                     }
-
-                    setSelectedFilters(newChecked);
+                    setSelectedFilters([...selectedFilters, type]);
                   }}
-                  checked={selectedFilters.indexOf(type[field]) !== -1}
+                  checked={selectedFilters
+                    .map((filter) => filter.value)
+                    .includes(type.value)}
                 />
               }
             >
-              <ListItemText primary={type[field]} />
+              <ListItemText primary={type.value} />
             </ListItem>
           ))}
         </List>
@@ -70,50 +70,50 @@ const CardFilter = ({
   );
 };
 
+const labels = {
+  card_type: "Type",
+  card_kind: "Kind",
+  card_culture: "Culture",
+  card_edition: "Edition",
+  rarity: "Rarity",
+};
+
 const IndexPage = () => {
   const [searchField, setSearchField] = useState("");
   const [isFilterOpen, setFilterOpen] = useState(true);
-  const [typeFiterItems, setTypeFilterItems] = useState([]);
-  const [kindFilterItems, setKindFilterItems] = useState([]);
-  const [cultureFiterItems, setCultureFilterItems] = useState([]);
-  const [editionFiterItems, setEditionFilterItems] = useState([]);
-  const [rarityFilteritems, setRarityFilterItems] = useState([]);
+  const [selectedFilters, setSelectedFilters] = useState([]);
   const [orderBy, setOrderBy] = useState(null);
-  const cardTypeQuery = useQuery(gql`
-    query CardTypes {
-      lotr_all_cards_pricing(distinct_on: card_type) {
+  const filterTypesQuery = useQuery(gql`
+    query FilterTypes {
+      card_type: lotr_all_cards_pricing(distinct_on: card_type) {
         card_type
       }
-    }
-  `);
-  const cardKindQuery = useQuery(gql`
-    query CardTypes {
-      lotr_all_cards_pricing(distinct_on: card_kind) {
+      card_kind: lotr_all_cards_pricing(distinct_on: card_kind) {
         card_kind
       }
-    }
-  `);
-  const cardCultureQuery = useQuery(gql`
-    query CardTypes {
-      lotr_all_cards_pricing(distinct_on: card_culture) {
+      card_culture: lotr_all_cards_pricing(distinct_on: card_culture) {
         card_culture
       }
-    }
-  `);
-  const cardEditionQuery = useQuery(gql`
-    query CardTypes {
-      lotr_all_cards_pricing(distinct_on: card_edition) {
+      card_edition: lotr_all_cards_pricing(distinct_on: card_edition) {
         card_edition
       }
-    }
-  `);
-  const cardRarityQuery = useQuery(gql`
-    query CardTypes {
-      lotr_all_cards_pricing(distinct_on: rarity) {
+      rarity: lotr_all_cards_pricing(distinct_on: rarity) {
         rarity
       }
     }
   `);
+  const filterTypes = (
+    (filterTypesQuery.data && Object.entries(filterTypesQuery.data)) ||
+    []
+  ).map(([key, value]) => ({
+    key,
+    label: labels[key],
+    values: value.map((item) => ({
+      key,
+      value: item[key],
+      label: labels[key],
+    })),
+  }));
   const { data, error } = useSubscription(
     gql`
       subscription (
@@ -138,21 +138,14 @@ const IndexPage = () => {
         where: {
           card_name: { _ilike: `%${searchField}%` },
           _or: {
-            ...(typeFiterItems.length > 0
-              ? { card_type: { _in: typeFiterItems } }
-              : {}),
-            ...(kindFilterItems.length > 0
-              ? { card_kind: { _in: kindFilterItems } }
-              : {}),
-            ...(cultureFiterItems.length > 0
-              ? { card_culture: { _in: cultureFiterItems } }
-              : {}),
-            ...(editionFiterItems.length > 0
-              ? { card_edition: { _in: editionFiterItems } }
-              : {}),
-            ...(rarityFilteritems.length > 0
-              ? { rarity: { _in: rarityFilteritems } }
-              : {}),
+            ...selectedFilters.reduce((acc, filter) => {
+              return {
+                ...acc,
+                [filter.key]: {
+                  _in: [...(acc[filter.key]?._in || []), filter.value],
+                },
+              };
+            }, {}),
           },
         },
         order_by: { card_price: orderBy },
@@ -205,41 +198,14 @@ const IndexPage = () => {
             <Card>
               <CardContent>
                 <List>
-                  <CardFilter
-                    filterName="Type"
-                    filters={cardTypeQuery.data?.lotr_all_cards_pricing}
-                    selectedFilters={typeFiterItems}
-                    setSelectedFilters={setTypeFilterItems}
-                    field="card_type"
-                  />
-                  <CardFilter
-                    filterName="Kind"
-                    filters={cardKindQuery.data?.lotr_all_cards_pricing}
-                    selectedFilters={kindFilterItems}
-                    setSelectedFilters={setKindFilterItems}
-                    field="card_kind"
-                  />
-                  <CardFilter
-                    filterName="Culture"
-                    filters={cardCultureQuery.data?.lotr_all_cards_pricing}
-                    selectedFilters={cultureFiterItems}
-                    setSelectedFilters={setCultureFilterItems}
-                    field="card_culture"
-                  />
-                  <CardFilter
-                    filterName="Edition"
-                    filters={cardEditionQuery.data?.lotr_all_cards_pricing}
-                    selectedFilters={editionFiterItems}
-                    setSelectedFilters={setEditionFilterItems}
-                    field="card_edition"
-                  />
-                  <CardFilter
-                    filterName="Rarity"
-                    filters={cardRarityQuery.data?.lotr_all_cards_pricing}
-                    selectedFilters={rarityFilteritems}
-                    setSelectedFilters={setRarityFilterItems}
-                    field="rarity"
-                  />
+                  {filterTypes.map((filterType) => (
+                    <CardFilter
+                      filterName={filterType.label}
+                      filters={filterType.values}
+                      selectedFilters={selectedFilters}
+                      setSelectedFilters={setSelectedFilters}
+                    />
+                  ))}
                 </List>
               </CardContent>
             </Card>
@@ -254,80 +220,27 @@ const IndexPage = () => {
             )}
           </Grid>
           <Grid item sm={12} container spacing={1}>
-            {typeFiterItems.map((typeFilter) => (
+            {selectedFilters.map((typeFilter) => (
               <Grid item>
                 <Chip
-                  label={`Type: ${typeFilter}`}
+                  label={`${typeFilter.label}: ${typeFilter.value}`}
                   onDelete={() => {
-                    setTypeFilterItems(
-                      typeFiterItems.filter((i) => i !== typeFilter)
+                    setSelectedFilters(
+                      selectedFilters.filter(
+                        (i) => i.value !== typeFilter.value
+                      )
                     );
                   }}
                 />
               </Grid>
             ))}
-            {kindFilterItems.map((kindFilter) => (
-              <Grid item>
-                <Chip
-                  label={`Kind: ${kindFilter}`}
-                  onDelete={() => {
-                    setKindFilterItems(
-                      kindFilterItems.filter((i) => i !== kindFilter)
-                    );
-                  }}
-                />
-              </Grid>
-            ))}
-            {cultureFiterItems.map((cultureFilter) => (
-              <Grid item>
-                <Chip
-                  label={`Culture: ${cultureFilter}`}
-                  onDelete={() => {
-                    setCultureFilterItems(
-                      cultureFiterItems.filter((i) => i !== cultureFilter)
-                    );
-                  }}
-                />
-              </Grid>
-            ))}
-            {editionFiterItems.map((editionFilter) => (
-              <Grid item>
-                <Chip
-                  label={`Edition: ${editionFilter}`}
-                  onDelete={() => {
-                    setEditionFilterItems(
-                      editionFiterItems.filter((i) => i !== editionFilter)
-                    );
-                  }}
-                />
-              </Grid>
-            ))}
-            {rarityFilteritems.map((rarityFilter) => (
-              <Grid item>
-                <Chip
-                  label={`Rarity: ${rarityFilter}`}
-                  onDelete={() => {
-                    setRarityFilterItems(
-                      rarityFilteritems.filter((i) => i !== rarityFilter)
-                    );
-                  }}
-                />
-              </Grid>
-            ))}
-            {(typeFiterItems.length > 0 ||
-              kindFilterItems.length > 0 ||
-              cultureFiterItems.length > 0 ||
-              editionFiterItems.length > 0 ||
-              rarityFilteritems.length > 0) && (
+            {selectedFilters.length > 0 && (
               <Grid item>
                 <Button
                   size="small"
                   color="inherit"
                   onClick={() => {
-                    setTypeFilterItems([]);
-                    setKindFilterItems([]);
-                    setCultureFilterItems([]);
-                    setEditionFilterItems([]);
+                    setSelectedFilters([]);
                   }}
                 >
                   Clear all
