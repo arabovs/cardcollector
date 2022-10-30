@@ -25,7 +25,21 @@ import React, { useState } from "react";
 import { Close, ExpandLess, ExpandMore, FilterList } from "@mui/icons-material";
 
 const filter_icons = {
-  card_culture: { Dwarven: "https://lotrtcgwiki.com/wiki/_media/dwarven.gif" },
+  card_culture: {
+    Dwarven: "https://lotrtcgwiki.com/wiki/_media/dwarven.gif",
+    Gandalf: "https://lotrtcgwiki.com/wiki/_media/gandalf.gif",
+    Elven: "https://lotrtcgwiki.com/wiki/_media/elven.gif",
+    Gollum: "https://lotrtcgwiki.com/wiki/_media/gollum.gif",
+    Gondor: "https://lotrtcgwiki.com/wiki/_media/gondor.gif",
+    Rohan: "https://lotrtcgwiki.com/wiki/_media/rohan.gif",
+    Shire: "https://lotrtcgwiki.com/wiki/_media/shire.gif",
+    Dunland: "https://lotrtcgwiki.com/wiki/_media/dunland.gif",
+    Isengard: "https://lotrtcgwiki.com/wiki/_media/isengard.gif",
+    Moria: "https://lotrtcgwiki.com/wiki/_media/moria.gif",
+    Raider: "https://lotrtcgwiki.com/wiki/_media/raider.gif",
+    Sauron: "https://lotrtcgwiki.com/wiki/_media/sauron.gif",
+    Wraith: "https://lotrtcgwiki.com/wiki/_media/wraith.gif",
+  },
 };
 
 const CardFilter = ({
@@ -126,7 +140,7 @@ const IndexPage = () => {
   }));
   const { data, error } = useSubscription(
     gql`
-      subscription (
+      subscription(
         $where: lotr_all_cards_pricing_bool_exp
         $order_by: [lotr_all_cards_pricing_order_by!]
       ) {
