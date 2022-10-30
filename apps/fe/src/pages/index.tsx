@@ -87,11 +87,6 @@ const labels = {
 const IndexPage = () => {
   const [searchField, setSearchField] = useState("");
   const [isFilterOpen, setFilterOpen] = useState(true);
-  const [typeFiterItems, setTypeFilterItems] = useState([]);
-  const [kindFilterItems, setKindFilterItems] = useState([]);
-  const [cultureFiterItems, setCultureFilterItems] = useState([]);
-  const [editionFiterItems, setEditionFilterItems] = useState([]);
-  const [rarityFilteritems, setRarityFilterItems] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [orderBy, setOrderBy] = useState(null);
   const filterTypesQuery = useQuery(gql`
