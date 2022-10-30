@@ -21,13 +21,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import {
-  Close,
-  ExpandLess,
-  ExpandMore,
-  FilterList,
-  TypeSpecimen,
-} from "@mui/icons-material";
+import { Close, ExpandLess, ExpandMore, FilterList } from "@mui/icons-material";
 
 const CardFilter = ({
   filters = [],
