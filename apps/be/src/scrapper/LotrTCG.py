@@ -118,7 +118,6 @@ def scrapeLatestPricing():
               card_id_regex_number = re.compile(r"^([^a-zA-Z]*)\w+(\d+)") #Monk code keep]
               
               if card_id[-1].isnumeric():
-                print(card_id)
                 card_edition = re.search(card_id_regex_number, card_id).group(1)
                 card_number = re.search(card_id_regex_number, card_id).group(2)
               
@@ -137,7 +136,7 @@ def scrapeLatestPricing():
                 # DND card_dict["card_type"] = card_type.lower()
                 # DND card_dict["card_culture"] = card_culture.lower()
                 
-                print(json.dumps(str(card_dict),sort_keys=True, indent=4))
+                
                 #print(type(card_detail_row.find('td', class_='col1')))
                 #soup_card_details.find(class_='item-price')
                 # skipping here as we need to handle promo cards better
@@ -153,6 +152,17 @@ def scrapeLatestPricing():
                 for key, value in card_dict.items():
                   if(key in ["culture","kind","set","card_type","lore"]): 
                     card_dict[key] = value.title()
+                
+                if card_dict["card_type"] == "Site":
+                  card_dict["culture"] = "Site"
+                  card_dict["kind"]    = "Site"
+                  
+                if card_dict["card_type"] == "The One Ring":
+                  card_dict["culture"] = "The One Ring"
+                  card_dict["kind"] = "The One Ring"
+                
+                
+                print(json.dumps(str(card_dict),sort_keys=True, indent=4))
                 gql_connector.gqlInsertCard(card_dict.get("card_name",""),
                                         card_dict.get("card_edition",""),
                                         card_price,
