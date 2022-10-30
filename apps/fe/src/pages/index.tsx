@@ -13,29 +13,92 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
   TextField,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import {
-  ExpandLess,
-  ExpandMore,
-  FilterList,
-  Inbox,
-  StarBorder,
-} from "@mui/icons-material";
+import { ExpandLess, ExpandMore, FilterList } from "@mui/icons-material";
+
+const CardFilter = ({
+  filters = [],
+  filterName,
+  selectedFilters,
+  setSelectedFilters,
+  field,
+}) => {
+  const [isFilterTypeOpen, setFilterTypeOpen] = useState(false);
+  return (
+    <>
+      <ListItemButton onClick={() => setFilterTypeOpen((p) => !p)}>
+        <ListItemText primary={filterName} />
+        {isFilterTypeOpen ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+      <Collapse in={isFilterTypeOpen} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          {filters.map((type) => (
+            <ListItem
+              sx={{ pl: 4 }}
+              secondaryAction={
+                <Checkbox
+                  edge="end"
+                  onChange={() => {
+                    const currentIndex = selectedFilters.indexOf(type[field]);
+                    const newChecked = [...selectedFilters];
+
+                    if (currentIndex === -1) {
+                      newChecked.push(type[field]);
+                    } else {
+                      newChecked.splice(currentIndex, 1);
+                    }
+
+                    setSelectedFilters(newChecked);
+                  }}
+                  checked={selectedFilters.indexOf(type[field]) !== -1}
+                />
+              }
+            >
+              <ListItemText primary={type[field]} />
+            </ListItem>
+          ))}
+        </List>
+      </Collapse>
+    </>
+  );
+};
 
 const IndexPage = () => {
   const [searchField, setSearchField] = useState("");
   const [isFilterOpen, setFilterOpen] = useState(true);
-  const [isFilterTypeOpen, setFilterTypeOpen] = useState(false);
   const [typeFiterItems, setTypeFilterItems] = useState([]);
+  const [kindFilterItems, setKindFilterItems] = useState([]);
+  const [cultureFiterItems, setCultureFilterItems] = useState([]);
+  const [editionFiterItems, setEditionFilterItems] = useState([]);
   const cardTypeQuery = useQuery(gql`
     query CardTypes {
       lotr_all_cards_pricing(distinct_on: card_type) {
         card_type
+      }
+    }
+  `);
+  const cardKindQuery = useQuery(gql`
+    query CardTypes {
+      lotr_all_cards_pricing(distinct_on: card_kind) {
+        card_kind
+      }
+    }
+  `);
+  const cardCultureQuery = useQuery(gql`
+    query CardTypes {
+      lotr_all_cards_pricing(distinct_on: card_culture) {
+        card_culture
+      }
+    }
+  `);
+  const cardEditionQuery = useQuery(gql`
+    query CardTypes {
+      lotr_all_cards_pricing(distinct_on: card_edition) {
+        card_edition
       }
     }
   `);
@@ -61,6 +124,33 @@ const IndexPage = () => {
                 _or: [
                   ...typeFiterItems.map((filter) => ({
                     card_type: { _eq: filter },
+                  })),
+                ],
+              }
+            : {}),
+          ...(kindFilterItems.length > 0
+            ? {
+                _and: [
+                  ...kindFilterItems.map((filter) => ({
+                    card_kind: { _eq: filter },
+                  })),
+                ],
+              }
+            : {}),
+          ...(cultureFiterItems.length > 0
+            ? {
+                _and: [
+                  ...cultureFiterItems.map((filter) => ({
+                    card_culture: { _eq: filter },
+                  })),
+                ],
+              }
+            : {}),
+          ...(editionFiterItems.length > 0
+            ? {
+                _and: [
+                  ...editionFiterItems.map((filter) => ({
+                    card_edition: { _eq: filter },
                   })),
                 ],
               }
@@ -93,51 +183,34 @@ const IndexPage = () => {
             <Card>
               <CardContent>
                 <List>
-                  <ListItemButton onClick={() => setFilterTypeOpen((p) => !p)}>
-                    <ListItemIcon>
-                      <Inbox />
-                    </ListItemIcon>
-                    <ListItemText primary="Type" />
-                    {isFilterTypeOpen ? <ExpandLess /> : <ExpandMore />}
-                  </ListItemButton>
-                  <Collapse in={isFilterTypeOpen} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                      {cardTypeQuery.data?.lotr_all_cards_pricing.map(
-                        (type) => (
-                          <ListItem
-                            sx={{ pl: 4 }}
-                            secondaryAction={
-                              <Checkbox
-                                edge="end"
-                                onChange={() => {
-                                  const currentIndex = typeFiterItems.indexOf(
-                                    type.card_type
-                                  );
-                                  const newChecked = [...typeFiterItems];
-
-                                  if (currentIndex === -1) {
-                                    newChecked.push(type.card_type);
-                                  } else {
-                                    newChecked.splice(currentIndex, 1);
-                                  }
-
-                                  setTypeFilterItems(newChecked);
-                                }}
-                                checked={
-                                  typeFiterItems.indexOf(type.card_type) !== -1
-                                }
-                              />
-                            }
-                          >
-                            <ListItemIcon>
-                              <StarBorder />
-                            </ListItemIcon>
-                            <ListItemText primary={type.card_type} />
-                          </ListItem>
-                        )
-                      )}
-                    </List>
-                  </Collapse>
+                  <CardFilter
+                    filterName="Type"
+                    filters={cardTypeQuery.data?.lotr_all_cards_pricing}
+                    selectedFilters={typeFiterItems}
+                    setSelectedFilters={setTypeFilterItems}
+                    field="card_type"
+                  />
+                  <CardFilter
+                    filterName="Kind"
+                    filters={cardKindQuery.data?.lotr_all_cards_pricing}
+                    selectedFilters={kindFilterItems}
+                    setSelectedFilters={setKindFilterItems}
+                    field="card_kind"
+                  />
+                  <CardFilter
+                    filterName="Culture"
+                    filters={cardCultureQuery.data?.lotr_all_cards_pricing}
+                    selectedFilters={cultureFiterItems}
+                    setSelectedFilters={setCultureFilterItems}
+                    field="card_culture"
+                  />
+                  <CardFilter
+                    filterName="Edition"
+                    filters={cardEditionQuery.data?.lotr_all_cards_pricing}
+                    selectedFilters={editionFiterItems}
+                    setSelectedFilters={setEditionFilterItems}
+                    field="card_edition"
+                  />
                 </List>
               </CardContent>
             </Card>
@@ -152,13 +225,17 @@ const IndexPage = () => {
               </Typography>
             )}
           </Grid>
-          <Grid item sm={12} container spacing={1}>
-            {typeFiterItems.map((typeFilter) => (
+          {/* <Grid item sm={12} container spacing={1}>
+            {[
+              ...typeFiterItems,
+              ...kindFilterItems,
+              ...cultureFiterItems,
+              ...editionFiterItems,
+            ].map((typeFilter) => (
               <Grid item>
                 <Chip
-                  label={`Type: ${typeFilter}`}
+                  label={`${typeFilter}`}
                   onDelete={() => {
-                    console.log("delete");
                     setTypeFilterItems(
                       typeFiterItems.filter((i) => i !== typeFilter)
                     );
@@ -177,7 +254,7 @@ const IndexPage = () => {
                 </Button>
               </Grid>
             )}
-          </Grid>
+          </Grid> */}
           {data?.lotr_all_cards_pricing.map((item) => (
             <Grid item sm={2}>
               <Card>
