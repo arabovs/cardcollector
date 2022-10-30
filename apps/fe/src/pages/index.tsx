@@ -8,10 +8,9 @@ import {
   Checkbox,
   Chip,
   Collapse,
-  FormControl,
   Grid,
   IconButton,
-  InputLabel,
+  InputAdornment,
   List,
   ListItem,
   ListItemButton,
@@ -22,7 +21,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { ExpandLess, ExpandMore, FilterList } from "@mui/icons-material";
+import { Close, ExpandLess, ExpandMore, FilterList } from "@mui/icons-material";
 
 const CardFilter = ({
   filters = [],
@@ -79,6 +78,7 @@ const IndexPage = () => {
   const [cultureFiterItems, setCultureFilterItems] = useState([]);
   const [editionFiterItems, setEditionFilterItems] = useState([]);
   const [rarityFilteritems, setRarityFilterItems] = useState([]);
+  const [orderBy, setOrderBy] = useState(null);
   const cardTypeQuery = useQuery(gql`
     query CardTypes {
       lotr_all_cards_pricing(distinct_on: card_type) {
@@ -116,8 +116,14 @@ const IndexPage = () => {
   `);
   const { data, error } = useSubscription(
     gql`
-      subscription($where: lotr_all_cards_pricing_bool_exp) {
-        lotr_all_cards_pricing: lotr_all_cards_pricing(where: $where) {
+      subscription (
+        $where: lotr_all_cards_pricing_bool_exp
+        $order_by: [lotr_all_cards_pricing_order_by!]
+      ) {
+        lotr_all_cards_pricing: lotr_all_cards_pricing(
+          where: $where
+          order_by: $order_by
+        ) {
           id
           card_name
           card_price
@@ -149,6 +155,7 @@ const IndexPage = () => {
               : {}),
           },
         },
+        order_by: { card_price: orderBy },
       },
     }
   );
@@ -172,9 +179,23 @@ const IndexPage = () => {
           />
         </Grid>
         <Grid item sm={2}>
-          <Select fullWidth size="small">
-            <MenuItem value={10}>Price low to high</MenuItem>
-            <MenuItem value={20}>Price high to low</MenuItem>
+          <Select
+            fullWidth
+            size="small"
+            value={orderBy}
+            onChange={(e) => setOrderBy(e.target.value)}
+            endAdornment={
+              orderBy && (
+                <InputAdornment position="end" sx={{ mr: 3 }}>
+                  <IconButton size="small" onClick={() => setOrderBy(null)}>
+                    <Close fontSize={"small"} />
+                  </IconButton>
+                </InputAdornment>
+              )
+            }
+          >
+            <MenuItem value={"asc"}>Price low to high</MenuItem>
+            <MenuItem value={"desc"}>Price high to low</MenuItem>
           </Select>
         </Grid>
       </Grid>
