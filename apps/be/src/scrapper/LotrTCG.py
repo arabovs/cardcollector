@@ -111,7 +111,7 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if increment > 180:
+            if increment > 1:
               
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
@@ -145,8 +145,26 @@ def scrapeLatestPricing():
               card_price      = getPriceFromURL(URL_PRICE) 
               card_price_foil = getPriceFromURL(URL_PRICE + "-foil") 
               card_price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
-
-              gql_connector.gqlInsertCard( card_dict.get("card_name",""), card_dict.get("card_edition",""), card_price, card_price_foil, card_price_tng, source, card_dict.get("card_id",""), card_dict.get("card_image",""),card_dict.get("kind",""),card_dict.get("culture",""),card_dict.get("twilight",0),card_dict.get("card_type",""),card_dict.get("card_number",""),card_dict.get("lore",""),card_dict.get("game_text","")) 
+              
+              gql_connector.gqlInsertCard(card_dict.get("card_name",""),
+                                          card_dict.get("card_edition",""),
+                                          card_price,
+                                          card_price_foil,
+                                          card_price_tng,
+                                          source, 
+                                          card_dict.get("card_id",""),
+                                          card_dict.get("card_image",""),
+                                          card_dict.get("kind",""),
+                                          card_dict.get("culture",""),
+                                          card_dict.get("twilight",""),
+                                          card_dict.get("card_type",""),
+                                          card_dict.get("card_number",""),
+                                          card_dict.get("lore",""),
+                                          card_dict.get("game_text",""),
+                                          card_dict.get("strength",""),
+                                          card_dict.get("vitality",""),
+                                          card_dict.get("resistance",""),
+                                          card_dict.get("rarity",""))
             increment += 1
 
 scrapeLatestPricing()
