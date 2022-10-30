@@ -8,12 +8,16 @@ import {
   Checkbox,
   Chip,
   Collapse,
+  FormControl,
   Grid,
   IconButton,
+  InputLabel,
   List,
   ListItem,
   ListItemButton,
   ListItemText,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -119,110 +123,50 @@ const IndexPage = () => {
       variables: {
         where: {
           card_name: { _ilike: `%${searchField}%` },
-          ...(typeFiterItems.length > 0
-            ? {
-                _and: [
-                  ...typeFiterItems.map((filter) => ({
-                    card_type: { _in: filter },
-                  })),
-                ],
-              }
-            : {}),
-          ...(kindFilterItems.length > 0
-            ? {
-                _and: [
-                  ...kindFilterItems.map((filter) => ({
-                    card_kind: { _in: filter },
-                  })),
-                ],
-              }
-            : {}),
-          ...(cultureFiterItems.length > 0
-            ? {
-                _and: [
-                  ...cultureFiterItems.map((filter) => ({
-                    card_culture: { _in: filter },
-                  })),
-                ],
-              }
-            : {}),
-          ...(editionFiterItems.length > 0
-            ? {
-                _and: [
-                  ...editionFiterItems.map((filter) => ({
-                    card_edition: { _in: filter },
-                  })),
-                ],
-              }
-            : {}),
+          _or: {
+            ...(typeFiterItems.length > 0
+              ? { card_type: { _in: typeFiterItems } }
+              : {}),
+            ...(kindFilterItems.length > 0
+              ? { card_kind: { _in: kindFilterItems } }
+              : {}),
+            ...(cultureFiterItems.length > 0
+              ? { card_culture: { _in: cultureFiterItems } }
+              : {}),
+            ...(editionFiterItems.length > 0
+              ? { card_edition: { _in: editionFiterItems } }
+              : {}),
+          },
         },
       },
     }
   );
-  console.log({
-    variables: {
-      where: {
-        card_name: { _ilike: `%${searchField}%` },
-        ...(typeFiterItems.length > 0
-          ? {
-              // _and: [
-              //   ...typeFiterItems.map((filter) => ({
-              //     card_type: { _in: filter },
-              //   })),
-              // ],
-              ...typeFiterItems.map((filter, index) => ({
-                [index > 0 ? `_and` : `_or`]: { card_type: { _eq: filter } },
-              })),
-            }
-          : {}),
-        ...(kindFilterItems.length > 0
-          ? {
-              _and: [
-                ...kindFilterItems.map((filter) => ({
-                  card_kind: { _in: filter },
-                })),
-              ],
-            }
-          : {}),
-        ...(cultureFiterItems.length > 0
-          ? {
-              _and: [
-                ...cultureFiterItems.map((filter) => ({
-                  card_culture: { _in: filter },
-                })),
-              ],
-            }
-          : {}),
-        ...(editionFiterItems.length > 0
-          ? {
-              _and: [
-                ...editionFiterItems.map((filter) => ({
-                  card_edition: { _in: filter },
-                })),
-              ],
-            }
-          : {}),
-      },
-    },
-  });
   if (error) return <div>{error.message}</div>;
   return (
     <Box sx={{ p: 1 }}>
-      <Box display="flex" sx={{ mb: 1, mt: 1 }}>
-        <IconButton sx={{ mr: 1 }} onClick={() => setFilterOpen((p) => !p)}>
-          <FilterList />
-        </IconButton>
-        <TextField
-          type="text"
-          size="small"
-          name="search_field"
-          fullWidth
-          placeholder="Search by name"
-          value={searchField}
-          onChange={(e) => setSearchField(e.target.value)}
-          autoComplete={"off"}
-        />
-      </Box>
+      <Grid container spacing={1}>
+        <Grid item sm={10} sx={{ display: "flex", alignItems: "center" }}>
+          <IconButton sx={{ mr: 1 }} onClick={() => setFilterOpen((p) => !p)}>
+            <FilterList />
+          </IconButton>
+          <TextField
+            type="text"
+            size="small"
+            name="search_field"
+            fullWidth
+            placeholder="Search by name"
+            value={searchField}
+            onChange={(e) => setSearchField(e.target.value)}
+            autoComplete={"off"}
+          />
+        </Grid>
+        <Grid item sm={2}>
+          <Select fullWidth size="small">
+            <MenuItem value={10}>Price low to high</MenuItem>
+            <MenuItem value={20}>Price high to low</MenuItem>
+          </Select>
+        </Grid>
+      </Grid>
       <Grid container spacing={1}>
         {isFilterOpen && (
           <Grid item sm={2} xs={12}>
@@ -262,7 +206,6 @@ const IndexPage = () => {
             </Card>
           </Grid>
         )}
-
         <Grid container spacing={1} item sm={isFilterOpen ? 10 : 12}>
           <Grid item sm={12}>
             {data?.lotr_all_cards_pricing && (
@@ -271,16 +214,11 @@ const IndexPage = () => {
               </Typography>
             )}
           </Grid>
-          {/* <Grid item sm={12} container spacing={1}>
-            {[
-              ...typeFiterItems,
-              ...kindFilterItems,
-              ...cultureFiterItems,
-              ...editionFiterItems,
-            ].map((typeFilter) => (
+          <Grid item sm={12} container spacing={1}>
+            {typeFiterItems.map((typeFilter) => (
               <Grid item>
                 <Chip
-                  label={`${typeFilter}`}
+                  label={`Type: ${typeFilter}`}
                   onDelete={() => {
                     setTypeFilterItems(
                       typeFiterItems.filter((i) => i !== typeFilter)
@@ -289,18 +227,62 @@ const IndexPage = () => {
                 />
               </Grid>
             ))}
-            {typeFiterItems.length > 0 && (
+            {kindFilterItems.map((kindFilter) => (
+              <Grid item>
+                <Chip
+                  label={`Kind: ${kindFilter}`}
+                  onDelete={() => {
+                    setKindFilterItems(
+                      kindFilterItems.filter((i) => i !== kindFilter)
+                    );
+                  }}
+                />
+              </Grid>
+            ))}
+            {cultureFiterItems.map((cultureFilter) => (
+              <Grid item>
+                <Chip
+                  label={`Culture: ${cultureFilter}`}
+                  onDelete={() => {
+                    setCultureFilterItems(
+                      cultureFiterItems.filter((i) => i !== cultureFilter)
+                    );
+                  }}
+                />
+              </Grid>
+            ))}
+            {editionFiterItems.map((editionFilter) => (
+              <Grid item>
+                <Chip
+                  label={`Edition: ${editionFilter}`}
+                  onDelete={() => {
+                    setEditionFilterItems(
+                      editionFiterItems.filter((i) => i !== editionFilter)
+                    );
+                  }}
+                />
+              </Grid>
+            ))}
+            {(typeFiterItems.length > 0 ||
+              kindFilterItems.length > 0 ||
+              cultureFiterItems.length > 0 ||
+              editionFiterItems.length > 0) && (
               <Grid item>
                 <Button
                   size="small"
                   color="inherit"
-                  onClick={() => setTypeFilterItems([])}
+                  onClick={() => {
+                    setTypeFilterItems([]);
+                    setKindFilterItems([]);
+                    setCultureFilterItems([]);
+                    setEditionFilterItems([]);
+                  }}
                 >
                   Clear all
                 </Button>
               </Grid>
             )}
-          </Grid> */}
+          </Grid>
           {data?.lotr_all_cards_pricing.map((item) => (
             <Grid item sm={2}>
               <Card>
