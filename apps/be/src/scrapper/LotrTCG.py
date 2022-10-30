@@ -111,7 +111,7 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if increment > 1
+            if increment > 1:
               
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
