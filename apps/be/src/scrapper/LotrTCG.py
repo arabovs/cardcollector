@@ -111,7 +111,7 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if increment > 1:
+            if increment > 170:
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
               card_name = str(row.find('td', class_= 'col1').string).replace("•","")
@@ -150,7 +150,9 @@ def scrapeLatestPricing():
                 card_price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
                 if len(card_dict.get("rarity")) > 1:
                   card_dict["rarity"] = "P"
-                print(card_dict["rarity"])
+                for key, value in card_dict.items():
+                  if(key in ["culture","kind","set","card_type","lore"]): 
+                    card_dict[key] = value.title()
                 gql_connector.gqlInsertCard(card_dict.get("card_name",""),
                                         card_dict.get("card_edition",""),
                                         card_price,
@@ -167,7 +169,7 @@ def scrapeLatestPricing():
                                         card_dict.get("lore",""),
                                         card_dict.get("game_text",""),
                                         card_dict.get("strength",""),
-                                       card_dict.get("vitality",""),
+                                        card_dict.get("vitality",""),
                                         card_dict.get("resistance",""),
                                         card_dict.get("rarity",""))
               else:
