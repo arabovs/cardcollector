@@ -145,7 +145,7 @@ const IndexPage = () => {
               ? { card_edition: { _in: editionFiterItems } }
               : {}),
             ...(rarityFilteritems.length > 0
-              ? { card_edition: { _in: rarityFilteritems } }
+              ? { rarity: { _in: rarityFilteritems } }
               : {}),
           },
         },
@@ -281,10 +281,23 @@ const IndexPage = () => {
                 />
               </Grid>
             ))}
+            {rarityFilteritems.map((rarityFilter) => (
+              <Grid item>
+                <Chip
+                  label={`Rarity: ${rarityFilter}`}
+                  onDelete={() => {
+                    setRarityFilterItems(
+                      rarityFilteritems.filter((i) => i !== rarityFilter)
+                    );
+                  }}
+                />
+              </Grid>
+            ))}
             {(typeFiterItems.length > 0 ||
               kindFilterItems.length > 0 ||
               cultureFiterItems.length > 0 ||
-              editionFiterItems.length > 0) && (
+              editionFiterItems.length > 0 ||
+              rarityFilteritems.length > 0) && (
               <Grid item>
                 <Button
                   size="small"
