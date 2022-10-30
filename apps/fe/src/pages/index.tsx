@@ -78,6 +78,7 @@ const IndexPage = () => {
   const [kindFilterItems, setKindFilterItems] = useState([]);
   const [cultureFiterItems, setCultureFilterItems] = useState([]);
   const [editionFiterItems, setEditionFilterItems] = useState([]);
+  const [rarityFilteritems, setRarityFilterItems] = useState([]);
   const cardTypeQuery = useQuery(gql`
     query CardTypes {
       lotr_all_cards_pricing(distinct_on: card_type) {
@@ -106,9 +107,16 @@ const IndexPage = () => {
       }
     }
   `);
+  const cardRarityQuery = useQuery(gql`
+    query CardTypes {
+      lotr_all_cards_pricing(distinct_on: rarity) {
+        rarity
+      }
+    }
+  `);
   const { data, error } = useSubscription(
     gql`
-      subscription ($where: lotr_all_cards_pricing_bool_exp) {
+      subscription($where: lotr_all_cards_pricing_bool_exp) {
         lotr_all_cards_pricing: lotr_all_cards_pricing(where: $where) {
           id
           card_name
@@ -135,6 +143,9 @@ const IndexPage = () => {
               : {}),
             ...(editionFiterItems.length > 0
               ? { card_edition: { _in: editionFiterItems } }
+              : {}),
+            ...(rarityFilteritems.length > 0
+              ? { card_edition: { _in: rarityFilteritems } }
               : {}),
           },
         },
@@ -200,6 +211,13 @@ const IndexPage = () => {
                     selectedFilters={editionFiterItems}
                     setSelectedFilters={setEditionFilterItems}
                     field="card_edition"
+                  />
+                  <CardFilter
+                    filterName="Rarity"
+                    filters={cardRarityQuery.data?.lotr_all_cards_pricing}
+                    selectedFilters={rarityFilteritems}
+                    setSelectedFilters={setRarityFilterItems}
+                    field="rarity"
                   />
                 </List>
               </CardContent>

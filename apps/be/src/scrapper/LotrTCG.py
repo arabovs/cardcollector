@@ -145,7 +145,9 @@ def scrapeLatestPricing():
               card_price      = getPriceFromURL(URL_PRICE) 
               card_price_foil = getPriceFromURL(URL_PRICE + "-foil") 
               card_price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
-              
+              if len(card_dict.get("rarity")) > 1:
+                card_dict["rarity"] = "P"
+              print(card_dict["rarity"])
               gql_connector.gqlInsertCard(card_dict.get("card_name",""),
                                           card_dict.get("card_edition",""),
                                           card_price,
