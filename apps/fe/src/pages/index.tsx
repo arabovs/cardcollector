@@ -121,9 +121,9 @@ const IndexPage = () => {
           card_name: { _ilike: `%${searchField}%` },
           ...(typeFiterItems.length > 0
             ? {
-                _or: [
+                _and: [
                   ...typeFiterItems.map((filter) => ({
-                    card_type: { _eq: filter },
+                    card_type: { _in: filter },
                   })),
                 ],
               }
@@ -132,7 +132,7 @@ const IndexPage = () => {
             ? {
                 _and: [
                   ...kindFilterItems.map((filter) => ({
-                    card_kind: { _eq: filter },
+                    card_kind: { _in: filter },
                   })),
                 ],
               }
@@ -141,7 +141,7 @@ const IndexPage = () => {
             ? {
                 _and: [
                   ...cultureFiterItems.map((filter) => ({
-                    card_culture: { _eq: filter },
+                    card_culture: { _in: filter },
                   })),
                 ],
               }
@@ -150,7 +150,7 @@ const IndexPage = () => {
             ? {
                 _and: [
                   ...editionFiterItems.map((filter) => ({
-                    card_edition: { _eq: filter },
+                    card_edition: { _in: filter },
                   })),
                 ],
               }
@@ -159,6 +159,52 @@ const IndexPage = () => {
       },
     }
   );
+  console.log({
+    variables: {
+      where: {
+        card_name: { _ilike: `%${searchField}%` },
+        ...(typeFiterItems.length > 0
+          ? {
+              // _and: [
+              //   ...typeFiterItems.map((filter) => ({
+              //     card_type: { _in: filter },
+              //   })),
+              // ],
+              ...typeFiterItems.map((filter, index) => ({
+                [index > 0 ? `_and` : `_or`]: { card_type: { _eq: filter } },
+              })),
+            }
+          : {}),
+        ...(kindFilterItems.length > 0
+          ? {
+              _and: [
+                ...kindFilterItems.map((filter) => ({
+                  card_kind: { _in: filter },
+                })),
+              ],
+            }
+          : {}),
+        ...(cultureFiterItems.length > 0
+          ? {
+              _and: [
+                ...cultureFiterItems.map((filter) => ({
+                  card_culture: { _in: filter },
+                })),
+              ],
+            }
+          : {}),
+        ...(editionFiterItems.length > 0
+          ? {
+              _and: [
+                ...editionFiterItems.map((filter) => ({
+                  card_edition: { _in: filter },
+                })),
+              ],
+            }
+          : {}),
+      },
+    },
+  });
   if (error) return <div>{error.message}</div>;
   return (
     <Box sx={{ p: 1 }}>
