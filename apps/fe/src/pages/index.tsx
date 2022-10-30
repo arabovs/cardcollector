@@ -42,6 +42,30 @@ const filter_icons = {
   },
 };
 
+const filter_type_label = {
+  card_edition: {
+    "0": "Promotional",
+    "1": "The Fellowship of the Ring",
+    "2": "Mines of Moria",
+    "3": "Realms of the Elf-lords",
+    "4": "The Two Towers",
+    "5": "Battle of Helm's Deep",
+    "6": "Ents of Fangorn",
+    "7": "The Return of the King",
+    "8": "Siege of Gondor",
+    "9": "Reflections",
+    "10": "Mount Doom",
+    "11": "Shadows",
+    "12": "Black Rider",
+    "13": "Bloodlines",
+    "14": "Expanded Middle-earth",
+    "15": "Hunters",
+    "16": "The Wraith Collection",
+    "17": "Rise of Saruman",
+    "18": "Treachery & Deceit",
+  },
+};
+
 const CardFilter = ({
   filters = [],
   filterName,
@@ -85,7 +109,13 @@ const CardFilter = ({
                   <img src={filter_icons[type.key][type.value]} />
                 </ListItemIcon>
               )}
-              <ListItemText primary={type.value} />
+              <ListItemText
+                primary={
+                  (filter_type_label[type.key] &&
+                    filter_type_label[type.key][type.value]) ||
+                  type.value
+                }
+              />
             </ListItem>
           ))}
         </List>
@@ -100,6 +130,7 @@ const labels = {
   card_culture: "Culture",
   card_edition: "Edition",
   rarity: "Rarity",
+  card_signet: "Signet",
 };
 
 const IndexPage = () => {
@@ -123,6 +154,12 @@ const IndexPage = () => {
       }
       rarity: lotr_all_cards_pricing(distinct_on: rarity) {
         rarity
+      }
+      card_signet: lotr_all_cards_pricing(
+        distinct_on: card_signet
+        where: { card_signet: { _neq: "" } }
+      ) {
+        card_signet
       }
     }
   `);

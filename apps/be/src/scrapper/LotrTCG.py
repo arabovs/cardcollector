@@ -181,7 +181,8 @@ def scrapeLatestPricing():
                                         card_dict.get("strength",""),
                                         card_dict.get("vitality",""),
                                         card_dict.get("resistance",""),
-                                        card_dict.get("rarity",""))
+                                        card_dict.get("rarity",""),
+                                        card_dict.get("signet",""))
               else:
                 # need to find a way to handle this better
                 continue

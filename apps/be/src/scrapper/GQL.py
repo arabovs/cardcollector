@@ -25,7 +25,8 @@ class GQL:
                       strength,
                       vitality,
                       resistance,
-                      rarity
+                      rarity,
+                      card_signet
                       ):
         HASURA_URL = "https://lotrtcgwebscrapper.herokuapp.com/v1/graphql"
 
@@ -53,7 +54,8 @@ class GQL:
                                            $strength: String!,
                                            $vitality: String!,
                                            $resistance: String!,
-                                           $rarity: String!) {
+                                           $rarity: String!,
+                                           $card_signet: String!) {
           insert_lotr_all_cards_pricing(objects: {card_name: $card_name,
                                           card_edition: $card_edition,
                                           card_price: $card_price,
@@ -72,7 +74,8 @@ class GQL:
                                           strength: $strength,
                                           vitality: $vitality,
                                           resistance: $resistance,
-                                          rarity: $rarity
+                                          rarity: $rarity,
+                                          card_signet: $card_signet
                                           }) {
             affected_rows
           }
@@ -97,6 +100,7 @@ class GQL:
             "vitality": vitality,
             "resistance": resistance,
             "rarity": rarity,
+            "card_signet": card_signet,
             
         }
         result = client.execute(query, variable_values=params)
