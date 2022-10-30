@@ -175,15 +175,34 @@ const IndexPage = () => {
       }
     }
   `);
-  const paginationCountQuery = useQuery(gql`
-    query PaginationCount {
-      lotr_all_cards_pricing_aggregate {
-        aggregate {
-          count
+  const queryFilters = selectedFilters.reduce((acc, filter) => {
+    return {
+      ...acc,
+      [filter.key]: {
+        _in: [...(acc[filter.key]?._in || []), filter.value],
+      },
+    };
+  }, {});
+  const paginationCountQuery = useQuery(
+    gql`
+      query PaginationCount($where: lotr_all_cards_pricing_bool_exp = {}) {
+        lotr_all_cards_pricing_aggregate(where: $where) {
+          aggregate {
+            count
+          }
         }
       }
+    `,
+    {
+      variables: {
+        where: {
+          _or: {
+            ...queryFilters,
+          },
+        },
+      },
     }
-  `);
+  );
   const filterTypes = (
     (filterTypesQuery.data && Object.entries(filterTypesQuery.data)) ||
     []
@@ -224,14 +243,7 @@ const IndexPage = () => {
         where: {
           card_name: { _ilike: `%${searchField}%` },
           _or: {
-            ...selectedFilters.reduce((acc, filter) => {
-              return {
-                ...acc,
-                [filter.key]: {
-                  _in: [...(acc[filter.key]?._in || []), filter.value],
-                },
-              };
-            }, {}),
+            ...queryFilters,
           },
         },
         order_by: { card_price: orderBy },
