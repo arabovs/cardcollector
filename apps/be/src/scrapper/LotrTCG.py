@@ -112,61 +112,67 @@ def scrapeLatestPricing():
         rows = cards.find_all('tr')
         for row in rows:
             if increment > 1:
-              
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
               card_name = str(row.find('td', class_= 'col1').string).replace("•","")
-              card_id_regex_number = re.compile(r"^([^a-zA-Z]*)\w+(\d+)") #Monk code keep
-              card_edition = re.search(card_id_regex_number, card_id).group(1)
-              card_number = re.search(card_id_regex_number, card_id).group(2)
-              card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string)     
-              # DND card_type = str(row.find('td', class_= 'col2').find('a').string)
-              # DND card_culture = str(row.find('td', class_= 'col3').find('a').string)
+              card_id_regex_number = re.compile(r"^([^a-zA-Z]*)\w+(\d+)") #Monk code keep]
               
-              # Detailed Card Info from 
-              card_image = "https://lotrtcgwiki.com/wiki/_media/cards:lotr" + splitEditionID(card_id) + ".jpg"
-              card_dict = fetchCardDetailsDict("https://lotrtcgwiki.com/wiki/lotr" + splitEditionID(card_id))
-              card_dict["card_image"] = card_image
-              card_dict["card_name"] = card_name
-              card_dict["card_id"] = card_id
-              card_dict["card_edition"] = card_edition
-              card_dict["card_number"] = card_number
-              # DND card_dict["card_type"] = card_type.lower()
-              # DND card_dict["card_culture"] = card_culture.lower()
+              if card_id[-1].isnumeric():
+                print(card_id)
+                card_edition = re.search(card_id_regex_number, card_id).group(1)
+                card_number = re.search(card_id_regex_number, card_id).group(2)
               
-              print(json.dumps(str(card_dict),sort_keys=True, indent=4))
-              #print(type(card_detail_row.find('td', class_='col1')))
-              #soup_card_details.find(class_='item-price')
-              # skipping here as we need to handle promo cards better
-              if  "Title" in card_name_cleaned:
-                print("Skipping: " + card_name_cleaned)
+                card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string)     
+                # DND card_type = str(row.find('td', class_= 'col2').find('a').string)
+                # DND card_culture = str(row.find('td', class_= 'col3').find('a').string)
+                
+                # Detailed Card Info from 
+                card_image = "https://lotrtcgwiki.com/wiki/_media/cards:lotr" + splitEditionID(card_id) + ".jpg"
+                card_dict = fetchCardDetailsDict("https://lotrtcgwiki.com/wiki/lotr" + splitEditionID(card_id))
+                card_dict["card_image"] = card_image
+                card_dict["card_name"] = card_name
+                card_dict["card_id"] = card_id
+                card_dict["card_edition"] = card_edition
+                card_dict["card_number"] = card_number
+                # DND card_dict["card_type"] = card_type.lower()
+                # DND card_dict["card_culture"] = card_culture.lower()
+                
+                print(json.dumps(str(card_dict),sort_keys=True, indent=4))
+                #print(type(card_detail_row.find('td', class_='col1')))
+                #soup_card_details.find(class_='item-price')
+                # skipping here as we need to handle promo cards better
+                if  "Title" in card_name_cleaned:
+                  print("Skipping: " + card_name_cleaned)
+                  continue
+                URL_PRICE = createNewURL(card_edition, card_name_cleaned)
+                card_price      = getPriceFromURL(URL_PRICE) 
+                card_price_foil = getPriceFromURL(URL_PRICE + "-foil") 
+                card_price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
+                if len(card_dict.get("rarity")) > 1:
+                  card_dict["rarity"] = "P"
+                print(card_dict["rarity"])
+                gql_connector.gqlInsertCard(card_dict.get("card_name",""),
+                                        card_dict.get("card_edition",""),
+                                        card_price,
+                                        card_price_foil,
+                                        card_price_tng,
+                                        source, 
+                                        card_dict.get("card_id",""),
+                                        card_dict.get("card_image",""),
+                                        card_dict.get("kind",""),
+                                        card_dict.get("culture",""),
+                                        card_dict.get("twilight",""),
+                                        card_dict.get("card_type",""),
+                                        card_dict.get("card_number",""),
+                                        card_dict.get("lore",""),
+                                        card_dict.get("game_text",""),
+                                        card_dict.get("strength",""),
+                                       card_dict.get("vitality",""),
+                                        card_dict.get("resistance",""),
+                                        card_dict.get("rarity",""))
+              else:
+                # need to find a way to handle this better
                 continue
-              URL_PRICE = createNewURL(card_edition, card_name_cleaned)
-              card_price      = getPriceFromURL(URL_PRICE) 
-              card_price_foil = getPriceFromURL(URL_PRICE + "-foil") 
-              card_price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
-              if len(card_dict.get("rarity")) > 1:
-                card_dict["rarity"] = "P"
-              print(card_dict["rarity"])
-              gql_connector.gqlInsertCard(card_dict.get("card_name",""),
-                                          card_dict.get("card_edition",""),
-                                          card_price,
-                                          card_price_foil,
-                                          card_price_tng,
-                                          source, 
-                                          card_dict.get("card_id",""),
-                                          card_dict.get("card_image",""),
-                                          card_dict.get("kind",""),
-                                          card_dict.get("culture",""),
-                                          card_dict.get("twilight",""),
-                                          card_dict.get("card_type",""),
-                                          card_dict.get("card_number",""),
-                                          card_dict.get("lore",""),
-                                          card_dict.get("game_text",""),
-                                          card_dict.get("strength",""),
-                                          card_dict.get("vitality",""),
-                                          card_dict.get("resistance",""),
-                                          card_dict.get("rarity",""))
             increment += 1
 
 scrapeLatestPricing()
