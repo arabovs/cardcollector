@@ -14,6 +14,7 @@ import {
   List,
   ListItem,
   ListItemButton,
+  ListItemIcon,
   ListItemText,
   MenuItem,
   Select,
@@ -22,6 +23,10 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { Close, ExpandLess, ExpandMore, FilterList } from "@mui/icons-material";
+
+const filter_icons = {
+  card_culture: { Dwarven: "https://lotrtcgwiki.com/wiki/_media/dwarven.gif" },
+};
 
 const CardFilter = ({
   filters = [],
@@ -61,6 +66,11 @@ const CardFilter = ({
                 />
               }
             >
+              {filter_icons[type.key] && (
+                <ListItemIcon>
+                  <img src={filter_icons[type.key][type.value]} />
+                </ListItemIcon>
+              )}
               <ListItemText primary={type.value} />
             </ListItem>
           ))}
