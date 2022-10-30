@@ -110,9 +110,6 @@ def fetchCardDetailsDict(card_url):
         dict[str(key).lower().replace(" ","_")] = re.sub(r"[^a-zA-Z0-9.:;!?,\s+]","",str(value).replace("<em>","").replace("�","").replace("</em>",""))
      
   return dict
-# PROCESS START
-
-
 
 print("Process Start:", now.strftime("%d/%m/%Y %H:%M:%S"))
 
@@ -155,9 +152,9 @@ def scrapeLatestPricing():
                   print("Skipping: " + card_name_cleaned)
                   continue
                 URL_PRICE = createNewURL(set, card_name_cleaned)
-                card_price      =0# getPriceFromURL(URL_PRICE) 
-                price_foil =0# getPriceFromURL(URL_PRICE + "-foil") 
-                price_tng  =0# getPriceFromURL(URL_PRICE + "-tengwar")
+                card_price = getPriceFromURL(URL_PRICE) 
+                price_foil = getPriceFromURL(URL_PRICE + "-foil") 
+                price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
                 if len(card_dict.get("rarity")) > 1:
                   card_dict["rarity"] = "P"
                 for key, value in card_dict.items():
@@ -176,8 +173,8 @@ def scrapeLatestPricing():
                 # create file
                 filename = card_dict.get("card_image","").replace("https://lotrtcgwiki.com/wiki/_media/","")
                 img_data = requests.get(card_dict.get("card_image","")).content
-                #with open("C:\\Users\\arabo\\Coding\\lotr-tcg-scrapper\\apps\\fe\\resources\\img\\"+ filename.replace(":","-"), 'wb') as handler:
-                    #handler.write(img_data)
+                with open("C:\\Users\\arabo\\Coding\\lotr-tcg-scrapper\\apps\\fe\\resources\\img\\"+ filename.replace(":","-"), 'wb') as handler:
+                    handler.write(img_data)
                     
                 # log
                 print(json.dumps(str(card_dict),sort_keys=True, indent=4))
