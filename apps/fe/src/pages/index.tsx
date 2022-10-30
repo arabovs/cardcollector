@@ -17,6 +17,7 @@ import {
   ListItemIcon,
   ListItemText,
   MenuItem,
+  Pagination,
   Select,
   TextField,
   Typography,
@@ -144,6 +145,11 @@ const IndexPage = () => {
   const [isFilterOpen, setFilterOpen] = useState(true);
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [orderBy, setOrderBy] = useState(null);
+  const [limitItems, setLimitItems] = useState(50);
+  const [page, setPage] = React.useState(1);
+  const handlePageChange = (event, value: number) => {
+    setPage(value);
+  };
   const filterTypesQuery = useQuery(gql`
     query FilterTypes {
       card_type: lotr_all_cards_pricing(distinct_on: card_type) {
@@ -169,6 +175,15 @@ const IndexPage = () => {
       }
     }
   `);
+  const paginationCountQuery = useQuery(gql`
+    query PaginationCount {
+      lotr_all_cards_pricing_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+  `);
   const filterTypes = (
     (filterTypesQuery.data && Object.entries(filterTypesQuery.data)) ||
     []
@@ -183,13 +198,17 @@ const IndexPage = () => {
   }));
   const { data, error } = useSubscription(
     gql`
-      subscription(
+      subscription (
         $where: lotr_all_cards_pricing_bool_exp
         $order_by: [lotr_all_cards_pricing_order_by!]
+        $limit: Int
+        $offset: Int
       ) {
         lotr_all_cards_pricing: lotr_all_cards_pricing(
           where: $where
           order_by: $order_by
+          limit: $limit
+          offset: $offset
         ) {
           id
           card_name
@@ -216,6 +235,8 @@ const IndexPage = () => {
           },
         },
         order_by: { card_price: orderBy },
+        limit: limitItems,
+        offset: limitItems * page - limitItems,
       },
     }
   );
@@ -278,13 +299,31 @@ const IndexPage = () => {
             </Card>
           </Grid>
         )}
-        <Grid container spacing={1} item sm={isFilterOpen ? 10 : 12}>
-          <Grid item sm={12}>
+        <Grid
+          container
+          spacing={1}
+          item
+          sm={isFilterOpen ? 10 : 12}
+          sx={{ mt: 1 }}
+        >
+          <Grid item sm={10}>
             {data?.lotr_all_cards_pricing && (
               <Typography variant="subtitle2">
                 {data?.lotr_all_cards_pricing.length} items
               </Typography>
             )}
+          </Grid>
+          <Grid item sm={2}>
+            <Select
+              fullWidth
+              size="small"
+              value={limitItems}
+              onChange={(e) => setLimitItems(e.target.value)}
+            >
+              <MenuItem value={10}>10</MenuItem>
+              <MenuItem value={20}>20</MenuItem>
+              <MenuItem value={50}>50</MenuItem>
+            </Select>
           </Grid>
           <Grid item sm={12} container spacing={1}>
             {selectedFilters.map((typeFilter) => (
@@ -339,6 +378,18 @@ const IndexPage = () => {
               </Card>
             </Grid>
           ))}
+          <Grid item sm={12} sx={{ display: "flex", justifyContent: "center" }}>
+            {paginationCountQuery?.data && (
+              <Pagination
+                count={Math.round(
+                  paginationCountQuery.data?.lotr_all_cards_pricing_aggregate
+                    .aggregate.count / limitItems
+                )}
+                page={page}
+                onChange={handlePageChange}
+              />
+            )}
+          </Grid>
         </Grid>
       </Grid>
     </Box>
