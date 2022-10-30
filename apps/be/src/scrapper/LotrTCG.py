@@ -1,4 +1,5 @@
 from operator import concat
+from urllib import response
 from requests import request
 import json
 import requests
@@ -6,7 +7,9 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from GQL import GQL
 from etc import etc
+import subprocess
 import re
+from os.path  import basename
 
 source = "ccgcastle"
 URL = "https://lotrtcgwiki.com/wiki/grand" 
@@ -159,9 +162,9 @@ def scrapeLatestPricing():
                   print("Skipping: " + card_name_cleaned)
                   continue
                 URL_PRICE = createNewURL(card_edition, card_name_cleaned)
-                card_price      = getPriceFromURL(URL_PRICE) 
-                card_price_foil = getPriceFromURL(URL_PRICE + "-foil") 
-                card_price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
+                card_price      =0# getPriceFromURL(URL_PRICE) 
+                card_price_foil =0# getPriceFromURL(URL_PRICE + "-foil") 
+                card_price_tng  =0# getPriceFromURL(URL_PRICE + "-tengwar")
                 print(json.dumps(str(card_dict),sort_keys=True, indent=4))
                 if len(card_dict.get("rarity")) > 1:
                   card_dict["rarity"] = "P"
@@ -178,27 +181,32 @@ def scrapeLatestPricing():
                   card_dict["kind"] = "The One Ring"
                 
                 
-                
-                gql_connector.gqlInsertCard(card_dict.get("card_name",""),
-                                        card_dict.get("card_edition",""),
-                                        card_price,
-                                        card_price_foil,
-                                        card_price_tng,
-                                        source, 
-                                        card_dict.get("card_id",""),
-                                        card_dict.get("card_image",""),
-                                        card_dict.get("kind",""),
-                                        card_dict.get("culture",""),
-                                        card_dict.get("twilight",""),
-                                        card_dict.get("card_type",""),
-                                        card_dict.get("card_number",""),
-                                        card_dict.get("lore",""),
-                                        card_dict.get("game_text",""),
-                                        card_dict.get("strength",""),
-                                        card_dict.get("vitality",""),
-                                        card_dict.get("resistance",""),
-                                        card_dict.get("rarity",""),
-                                        card_dict.get("signet",""))
+
+                filename = card_dict.get("card_image","").replace("https://lotrtcgwiki.com/wiki/_media/","")
+                print(filename)
+                img_data = requests.get(card_dict.get("card_image","")).content
+                with open("C:\\Users\\arabo\\Coding\\lotr-tcg-scrapper\\apps\\fe\\resources\\img\\"+ filename.replace(":","-"), 'wb') as handler:
+                    handler.write(img_data)
+                #gql_connector.gqlInsertCard(card_dict.get("card_name",""),
+                #                        card_dict.get("card_edition",""),
+                #                        card_price,
+                #                        card_price_foil,
+                #                        card_price_tng,
+                #                        source, 
+                #                        card_dict.get("card_id",""),
+                #                        card_dict.get("card_image",""),
+                #                        card_dict.get("kind",""),
+                #                        card_dict.get("culture",""),
+                #                        card_dict.get("twilight",""),
+                #                        card_dict.get("card_type",""),
+                #                        card_dict.get("card_number",""),
+                #                        card_dict.get("lore",""),
+                #                        card_dict.get("game_text",""),
+                #                        card_dict.get("strength",""),
+                #                        card_dict.get("vitality",""),
+                #                        card_dict.get("resistance",""),
+                #                        card_dict.get("rarity",""),
+                #                        card_dict.get("signet",""))
               else:
                   # need to find a way to handle this better
                 continue
