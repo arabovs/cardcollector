@@ -319,9 +319,13 @@ const IndexPage = () => {
           sx={{ mt: 1 }}
         >
           <Grid item sm={10}>
-            {data?.lotr_all_cards_pricing && (
+            {paginationCountQuery.data?.lotr_all_cards_pricing_aggregate && (
               <Typography variant="subtitle2">
-                {data?.lotr_all_cards_pricing.length} items
+                {
+                  paginationCountQuery.data?.lotr_all_cards_pricing_aggregate
+                    .aggregate.count
+                }{" "}
+                items
               </Typography>
             )}
           </Grid>
