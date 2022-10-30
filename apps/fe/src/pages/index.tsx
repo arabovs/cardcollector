@@ -19,6 +19,7 @@ import {
   MenuItem,
   Pagination,
   Select,
+  Skeleton,
   TextField,
   Typography,
 } from "@mui/material";
@@ -215,7 +216,7 @@ const IndexPage = () => {
       label: labels[key],
     })),
   }));
-  const { data, error } = useSubscription(
+  const { data, error, loading } = useSubscription(
     gql`
       subscription (
         $where: lotr_all_cards_pricing_bool_exp
@@ -370,6 +371,22 @@ const IndexPage = () => {
               </Grid>
             )}
           </Grid>
+          {loading &&
+            Array.from({ length: limitItems }).map((i) => (
+              <Grid item sm={2}>
+                <Card>
+                  <Skeleton variant="rounded" width={210} height={240} />
+                  <CardContent>
+                    <Typography gutterBottom variant="subtitle2" noWrap>
+                      <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
+                    </Typography>
+                    <Typography gutterBottom variant="subtitle2" noWrap>
+                      <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
           {data?.lotr_all_cards_pricing.map((item) => (
             <Grid item sm={2}>
               <Card>
