@@ -3385,14 +3385,14 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-db@1:
-  version "1.0.30001426"
-  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30001426.tgz#382557e8aa797827996c5a26fd7c3c41b7f64cc6"
-  integrity sha512-TavCzxeIqAKxepRJlyhbDm1YPWMzmI9+yf+brSz9uHLk0G35dowpI/1oxaSDOvBuuJRPg2KYeqlSJDxfXKp9kw==
+  version "1.0.30001427"
+  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30001427.tgz#d301818d9625de92d76f22736e9a95a12957bfc4"
+  integrity sha512-Hr1cmO8iybWlb8yQI3bNIUxDawAIgr2dQqxkjxVsonAwUgcn0QmwceJ8nK8PIJVh89oTuJPmJlke8xc+r6ECvQ==
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001400, caniuse-lite@^1.0.30001426:
-  version "1.0.30001426"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001426.tgz#58da20446ccd0cb1dfebd11d2350c907ee7c2eaa"
-  integrity sha512-n7cosrHLl8AWt0wwZw/PJZgUg3lV0gk9LMI7ikGJwhyhgsd2Nb65vKvmSexCqq/J7rbH3mFG6yZZiPR5dLPW5A==
+  version "1.0.30001427"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001427.tgz#d3a749f74be7ae0671fbec3a4eea18576e8ad646"
+  integrity sha512-lfXQ73oB9c8DP5Suxaszm+Ta2sr/4tf8+381GkIm1MLj/YdLf+rEDyDSRCzeltuyTVGm+/s18gdZ0q+Wmp8VsQ==
 
 capital-case@^1.0.4:
   version "1.0.4"
@@ -7187,9 +7187,9 @@ mem@^8.1.1:
     mimic-fn "^3.1.0"
 
 memfs@^3.1.2, memfs@^3.2.2:
-  version "3.4.8"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-3.4.8.tgz#4204fbd4cb72e2bbcf5941d784c6b6ce2be3dd52"
-  integrity sha512-E8QAFfd4csESWOqKIpN+khILPFSAZwPR9S+DO/5UtJNcuanF1jLZz0oWUAPF7xd2c1r6dGjGx+jH1st+MFWufA==
+  version "3.4.9"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-3.4.9.tgz#403bb953776d72fef4e39e1197a25ffa156d143a"
+  integrity sha512-3rm8kbrzpUGRyPKSGuk387NZOwQ90O4rI9tsWQkzNW7BLSnKGp23RsEsKK8N8QVCrtJoAMqy3spxHC4os4G6PQ==
   dependencies:
     fs-monkey "^1.0.3"
 
@@ -10261,9 +10261,9 @@ webpack-sources@^3.2.3:
   integrity sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==
 
 webpack-stats-plugin@^1.0.3:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/webpack-stats-plugin/-/webpack-stats-plugin-1.1.0.tgz#32c62ba306ffb8c7fcc5d3580b09311fa8ff897a"
-  integrity sha512-D0meHk1WYryUbuCnWJuomJFAYvqs0rxv/JFu1XJT1YYpczdgnP1/vz+u/5Z31jrTxT6dJSxCg+TuKTgjhoZS6g==
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/webpack-stats-plugin/-/webpack-stats-plugin-1.1.1.tgz#11aabf6ad536fd2843eb2e11a58d3485dc111b3e"
+  integrity sha512-aWwE/YuO2W7VCOyWwyDJ7BRSYRYjeXat+X31YiasMM3FS6/4X9W4Mb9Q0g+jIdVgArr1Mb08sHBJKMT5M9+gVA==
 
 webpack-virtual-modules@^0.3.2:
   version "0.3.2"

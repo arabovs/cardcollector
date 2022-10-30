@@ -39,7 +39,7 @@ const IndexPage = () => {
       }
     }
   `);
-  const { data, error, ...rest } = useSubscription(
+  const { data, error } = useSubscription(
     gql`
       subscription ($where: lotr_all_cards_pricing_bool_exp) {
         lotr_all_cards_pricing: lotr_all_cards_pricing(where: $where) {
@@ -69,7 +69,6 @@ const IndexPage = () => {
       },
     }
   );
-  console.log(rest);
   if (error) return <div>{error.message}</div>;
   return (
     <Box sx={{ p: 1 }}>
@@ -90,7 +89,7 @@ const IndexPage = () => {
       </Box>
       <Grid container spacing={1}>
         {isFilterOpen && (
-          <Grid item sm={2}>
+          <Grid item sm={2} xs={12}>
             <Card>
               <CardContent>
                 <List>
@@ -182,7 +181,7 @@ const IndexPage = () => {
           {data?.lotr_all_cards_pricing.map((item) => (
             <Grid item sm={2}>
               <Card>
-                <CardMedia component="img" height="300" image={item.card_img} />
+                <CardMedia component="img" image={item.card_img} />
                 <CardContent>
                   <Typography gutterBottom variant="subtitle2" noWrap>
                     {item.card_name}
