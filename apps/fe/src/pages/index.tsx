@@ -64,6 +64,12 @@ const filter_type_label = {
     "17": "Rise of Saruman",
     "18": "Treachery & Deceit",
   },
+  rarity: {
+    C: "Common",
+    U: "Uncommon",
+    R: "Rare",
+    P: "Promo",
+  },
 };
 
 const CardFilter = ({
