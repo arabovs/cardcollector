@@ -397,7 +397,7 @@ const IndexPage = () => {
           <Grid item sm={12} sx={{ display: "flex", justifyContent: "center" }}>
             {paginationCountQuery?.data && (
               <Pagination
-                count={Math.round(
+                count={Math.ceil(
                   paginationCountQuery.data?.lotr_all_cards_pricing_aggregate
                     .aggregate.count / limitItems
                 )}
