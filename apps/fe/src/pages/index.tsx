@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Card,
+  CardActionArea,
   CardContent,
   CardMedia,
   Checkbox,
@@ -25,6 +26,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { Close, ExpandLess, ExpandMore, FilterList } from "@mui/icons-material";
+import { Link } from "gatsby";
 
 const filter_icons = {
   culture: {
@@ -44,7 +46,7 @@ const filter_icons = {
   },
 };
 
-const filter_type_label = {
+export const filter_type_label = {
   set: {
     "0": "Promotional",
     "1": "The Fellowship of the Ring",
@@ -197,6 +199,7 @@ const IndexPage = () => {
     {
       variables: {
         where: {
+          card_name: { _ilike: `%${searchField}%` },
           _or: {
             ...queryFilters,
           },
@@ -218,7 +221,7 @@ const IndexPage = () => {
   }));
   const { data, error, loading } = useSubscription(
     gql`
-      subscription(
+      subscription (
         $where: lotr_all_cards_pricing_bool_exp
         $order_by: [lotr_all_cards_pricing_order_by!]
         $limit: Int
@@ -255,7 +258,7 @@ const IndexPage = () => {
   );
   if (error) return <div>{error.message}</div>;
   return (
-    <Box sx={{ p: 1 }}>
+    <Box sx={{ mt: 2, mb: 2, pl: 1, pr: 1 }}>
       <Grid container spacing={1}>
         <Grid item sm={10} sx={{ display: "flex", alignItems: "center" }}>
           <IconButton sx={{ mr: 1 }} onClick={() => setFilterOpen((p) => !p)}>
@@ -293,10 +296,10 @@ const IndexPage = () => {
           </Select>
         </Grid>
       </Grid>
-      <Grid container spacing={1}>
+      <Grid container spacing={1} sx={{ mt: 1 }}>
         {isFilterOpen && (
           <Grid item sm={2} xs={12}>
-            <Card>
+            <Card variant="outlined">
               <CardContent>
                 <List>
                   {filterTypes.map((filterType) => (
@@ -312,13 +315,7 @@ const IndexPage = () => {
             </Card>
           </Grid>
         )}
-        <Grid
-          container
-          spacing={1}
-          item
-          sm={isFilterOpen ? 10 : 12}
-          sx={{ mt: 1 }}
-        >
+        <Grid container spacing={1} item sm={isFilterOpen ? 10 : 12}>
           <Grid item sm={10}>
             {paginationCountQuery.data?.lotr_all_cards_pricing_aggregate && (
               <Typography variant="subtitle2">
@@ -374,7 +371,7 @@ const IndexPage = () => {
           {loading &&
             Array.from({ length: limitItems }).map((i) => (
               <Grid item sm={2}>
-                <Card>
+                <Card variant="outlined">
                   <Skeleton variant="rounded" width={210} height={240} />
                   <CardContent>
                     <Typography gutterBottom variant="subtitle2" noWrap>
@@ -389,25 +386,27 @@ const IndexPage = () => {
             ))}
           {data?.lotr_all_cards_pricing.map((item) => (
             <Grid item sm={2}>
-              <Card>
-                <CardMedia component="img" image={item.card_img} />
-                <CardContent>
-                  <Typography gutterBottom variant="subtitle2" noWrap>
-                    {item.card_name}
-                  </Typography>
-                  <Box display="flex" alignItems={"center"}>
-                    <Typography variant="body2" color="text.secondary">
-                      {new Intl.NumberFormat("en-US", {
-                        style: "currency",
-                        currency: "USD",
-                      }).format(item.card_price)}
+              <Card variant="outlined">
+                <CardActionArea component={Link} to={`/card/${item.id}`}>
+                  <CardMedia component="img" image={item.card_img} />
+                  <CardContent>
+                    <Typography gutterBottom variant="subtitle2" noWrap>
+                      {item.card_name}
                     </Typography>
-                    <Box flex={1} />
-                    <Button variant="contained" size="small">
-                      buy now
-                    </Button>
-                  </Box>
-                </CardContent>
+                    <Box display="flex" alignItems={"center"}>
+                      <Typography variant="body2" color="text.secondary">
+                        {new Intl.NumberFormat("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        }).format(item.card_price)}
+                      </Typography>
+                      <Box flex={1} />
+                      <Button variant="contained" size="small">
+                        buy now
+                      </Button>
+                    </Box>
+                  </CardContent>
+                </CardActionArea>
               </Card>
             </Grid>
           ))}
