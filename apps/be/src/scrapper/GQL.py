@@ -27,9 +27,9 @@ class GQL:
                       resistance,
                       rarity,
                       signet,
-                      site_num,
+                      site,
                       subtype,
-                      home_site,
+                      home,
                       ):
         HASURA_URL = "https://lotrtcgwebscrapper.herokuapp.com/v1/graphql"
 
@@ -59,9 +59,9 @@ class GQL:
                                            $resistance: String!,
                                            $rarity: String!,
                                            $signet: String!,
-                                           $site_num: String!,
+                                           $site: String!,
                                            $subtype: String!,
-                                           $home_site: String!) {
+                                           $home: String!) {
           insert_lotr_all_cards_pricing(objects: {card_name: $card_name,
                                           set: $set,
                                           card_price: $card_price,
@@ -82,9 +82,9 @@ class GQL:
                                           resistance: $resistance,
                                           rarity: $rarity,
                                           signet: $signet,
-                                          site_num: $site_num,
+                                          site: $site,
                                           subtype: $subtype,
-                                          home_site: $home_site,
+                                          home: $home,
                                           }) {
             affected_rows
           }
@@ -110,9 +110,9 @@ class GQL:
             "resistance": resistance,
             "rarity": rarity,
             "signet": signet,
-            "site_num": site_num,
+            "site": site,
             "subtype": subtype,
-            "home_site": home_site,
+            "home": home,
             
         }
         result = client.execute(query, variable_values=params)

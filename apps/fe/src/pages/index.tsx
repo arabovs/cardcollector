@@ -221,7 +221,7 @@ const IndexPage = () => {
   }));
   const { data, error, loading } = useSubscription(
     gql`
-      subscription (
+      subscription(
         $where: lotr_all_cards_pricing_bool_exp
         $order_by: [lotr_all_cards_pricing_order_by!]
         $limit: Int

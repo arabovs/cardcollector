@@ -56,6 +56,9 @@ const CardPage = (props) => {
           strength
           vitality
           resistance
+          subtype
+          site
+          home
         }
       }
     `,
@@ -367,6 +370,81 @@ const CardPage = (props) => {
                             </Typography>
                             <Typography textAlign={"center"}>
                               {data?.lotr_all_cards_pricing_by_pk.resistance}
+                            </Typography>
+                          </Card>
+                        </Grid>
+                      )}
+                      {data?.lotr_all_cards_pricing_by_pk.subtype && (
+                        <Grid item sm={4}>
+                          <Card
+                            sx={{
+                              p: 1,
+                              backgroundColor: alpha(purple[500], 0.1),
+                              borderColor: purple[500],
+                            }}
+                            variant="outlined"
+                          >
+                            <Typography
+                              textAlign={"center"}
+                              component="div"
+                              variant="caption"
+                              gutterBottom
+                              color={purple[500]}
+                            >
+                              Subtype
+                            </Typography>
+                            <Typography textAlign={"center"}>
+                              {data?.lotr_all_cards_pricing_by_pk.subtype}
+                            </Typography>
+                          </Card>
+                        </Grid>
+                      )}
+                      {data?.lotr_all_cards_pricing_by_pk.home && (
+                        <Grid item sm={4}>
+                          <Card
+                            sx={{
+                              p: 1,
+                              backgroundColor: alpha(purple[500], 0.1),
+                              borderColor: purple[500],
+                            }}
+                            variant="outlined"
+                          >
+                            <Typography
+                              textAlign={"center"}
+                              component="div"
+                              variant="caption"
+                              gutterBottom
+                              color={purple[500]}
+                            >
+                              Home Site
+                            </Typography>
+                            <Typography textAlign={"center"}>
+                              {data?.lotr_all_cards_pricing_by_pk.home}
+                            </Typography>
+                          </Card>
+                        </Grid>
+                      )}
+                      {data?.lotr_all_cards_pricing_by_pk.site && (
+                        <Grid item sm={4}>
+                          <Card
+                            sx={{
+                              p: 1,
+                              backgroundColor: alpha(purple[500], 0.1),
+                              borderColor: purple[500],
+                            }}
+                            variant="outlined"
+                          >
+                            <Typography
+                              textAlign={"center"}
+                              component="div"
+                              variant="caption"
+                              gutterBottom
+                              color={purple[500]}
+                            >
+                              Site
+                            </Typography>
+                            <Typography textAlign={"center"}>
+                              {data?.lotr_all_cards_pricing_by_pk.site}
                             </Typography>
                           </Card>
                         </Grid>
