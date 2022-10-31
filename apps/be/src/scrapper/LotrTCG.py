@@ -119,7 +119,7 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if increment > 240:
+            if increment > 170: # skip promo set
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
               card_name = str(row.find('td', class_= 'col1').string).replace("•","")
@@ -173,7 +173,7 @@ def scrapeLatestPricing():
                 # create file
                 filename = card_dict.get("card_image","").replace("https://lotrtcgwiki.com/wiki/_media/","")
                 img_data = requests.get(card_dict.get("card_image","")).content
-                with open("C:\\Users\\arabo\\Coding\\lotr-tcg-scrapper\\apps\\fe\\resources\\img\\"+ filename.replace(":","-"), 'wb') as handler:
+                with open("C:\\Users\\arabo\\Coding\\lotr-tcg-scrapper\\apps\\fe\\src\\res\\images\\"+ filename.replace(":","-"), 'wb') as handler:
                     handler.write(img_data)
                     
                 # log
