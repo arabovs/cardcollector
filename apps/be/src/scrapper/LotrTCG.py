@@ -90,23 +90,52 @@ def fetchCardDetailsDict(card_url):
      ## try with BS.tag.strip()
      key = str(card_detail_row.find('td', class_='col0').a.string).lower().replace(" ","_")
      value = card_detail_row.find('td', class_='col1').a.string
+     if (str(key) == "card_type"):
+       card_type = str(card_detail_row.find('td', class_='col1'))
+       card_type_combined = ""
+       for e in re.findall(r'>(.*?)<', card_type):
+         card_type_combined = card_type_combined + e
+        
+       card_type_combined = re.sub('[^0-9a-zA-Z \'!.?,]+', '', card_type_combined)
+       if len(card_type_combined.replace("  ",",").split(",")) == 3:
+        dict[key] = card_type_combined.replace("  ",",").split(",")[0]
+        dict["home_site"] = card_type_combined.replace("  ",",").split(",")[1] 
+        dict["subtype"] = card_type_combined.replace("  ",",").split(",")[2] 
+       if len(card_type_combined.replace("  ",",").split(",")) == 2:
+        dict[key] = card_type_combined.replace("  ",",").split(",")[0]
+        dict["subtype"] = card_type_combined.replace("  ",",").split(",")[1] 
+       if len(card_type_combined.replace("  ",",").split(",")) == 1:
+        dict[key] = card_type_combined.replace("  ",",").split(",")[0]
+       
+     if (str(key) == 'lore'):
+       card_lore = str(card_detail_row.find('td', class_='col1'))
+       card_lore_combined = ""
+       for e in re.findall(r'>(.*?)<', card_lore):
+         card_lore_combined =  card_lore_combined + e
+       card_lore_combined = re.sub('[^0-9a-zA-Z \'!.?,]+', '', card_lore_combined)
+       dict[key] = card_lore_combined
+       
      if (str(key) == 'game_text'):
       card_game_text = str(card_detail_row.find('td', class_='col1'))
       card_game_text_formatted = ""
       for e in re.findall(r'>(.*?)<', card_game_text):
         card_game_text_formatted += e
-      dict[key] = card_game_text_formatted
-     if (str(key) != 'game_text'):
+      dict[key] = card_game_text_formatted.replace("�","")
       
+     if (str(key) not in ['game_text','lore',"card_type"]):
       dict[key] = str(value).lower().replace("<em>","").replace("�","").replace("</em>","")
+      
    except:
+     if(str(key) == "card_type"):
+      print("Haha")
+      
      try:
        key = str(card_detail_row.find('td', class_='col0').a.string)
-       
      except:
        print("")
      value = str(card_detail_row.find('td', class_='col1')).replace("<td class=\"col1\"> ","").replace("</td>","")
-     if (str(key) != 'game_text'):
+     
+     if (str(key) not in  ['game_text','lore','card_type']):
         dict[str(key).lower().replace(" ","_")] = re.sub(r"[^a-zA-Z0-9.:;!?,\s+]","",str(value).replace("<em>","").replace("�","").replace("</em>",""))
      
   return dict
@@ -119,7 +148,7 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if increment > 170: # skip promo set
+            if increment > 182:
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
               card_name = str(row.find('td', class_= 'col1').string).replace("•","")
@@ -130,7 +159,7 @@ def scrapeLatestPricing():
                 card_number = re.search(card_id_regex_number, card_id).group(2)
               
                 card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string)     
-                
+            
                 # Detailed Card Info from - we need to handle SPD and rest better  
                 if "(AI)" in card_name_cleaned:
                   print("Skipping")
@@ -158,7 +187,7 @@ def scrapeLatestPricing():
                 if len(card_dict.get("rarity")) > 1:
                   card_dict["rarity"] = "P"
                 for key, value in card_dict.items():
-                  if(key in ["culture","kind","set","card_type","lore"]): 
+                  if(key in ["culture","kind","set","card_type","lore","signet"]): 
                     card_dict[key] = value.title()
                 
                 if card_dict["card_type"] == "Site":
@@ -171,10 +200,10 @@ def scrapeLatestPricing():
 
                 
                 # create file
-                filename = card_dict.get("card_image","").replace("https://lotrtcgwiki.com/wiki/_media/","")
-                img_data = requests.get(card_dict.get("card_image","")).content
-                with open("C:\\Users\\arabo\\Coding\\lotr-tcg-scrapper\\apps\\fe\\src\\res\\images\\"+ filename.replace(":","-"), 'wb') as handler:
-                    handler.write(img_data)
+                #filename = card_dict.get("card_image","").replace("https://lotrtcgwiki.com/wiki/_media/","")
+                #img_data = requests.get(card_dict.get("card_image","")).content
+                #with open("C:\\Users\\arabo\\Coding\\lotr-tcg-scrapper\\apps\\fe\\src\\res\\images\\"+ filename.replace(":","-"), 'wb') as handler:
+                #    handler.write(img_data)
                     
                 # log
                 print(json.dumps(str(card_dict),sort_keys=True, indent=4))
@@ -199,11 +228,14 @@ def scrapeLatestPricing():
                                         card_dict.get("vitality",""),
                                         card_dict.get("resistance",""),
                                         card_dict.get("rarity",""),
-                                        card_dict.get("signet",""))
+                                        card_dict.get("signet",""),
+                                        card_dict.get("site",""),
+                                        card_dict.get("subtype",""),
+                                         card_dict.get("home_site",""))
               else:
                   # need to find a way to handle this better
                 continue
-            print("Card number: ", increment)
+            #print("Card number: ", increment)
             increment += 1
 
 scrapeLatestPricing()
