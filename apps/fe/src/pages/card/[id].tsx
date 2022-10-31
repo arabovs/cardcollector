@@ -26,7 +26,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { brown, purple, red } from "@mui/material/colors";
+import { blue, brown, grey, purple, red } from "@mui/material/colors";
 import { alpha, Box } from "@mui/system";
 import React, { useState } from "react";
 import { filter_type_label } from "..";
@@ -34,6 +34,7 @@ import { filter_type_label } from "..";
 const CardPage = (props) => {
   const { id } = props.params;
   const [isPropertiesOpen, setPropertiesOpen] = useState(true);
+  const [isDetailsOpen, setDetailsOpen] = useState(true);
   const [isStatsOpen, setStatsOpen] = useState(true);
   const { data, loading, error } = useQuery(
     gql`
@@ -96,6 +97,7 @@ const CardPage = (props) => {
                   </Typography>
                 </CardContent>
                 <Divider />
+
                 <CardHeader
                   title="Properties"
                   avatar={<Label />}
@@ -125,10 +127,10 @@ const CardPage = (props) => {
                             gutterBottom
                             color="primary"
                           >
-                            Тype
+                            Culture
                           </Typography>
                           <Typography textAlign={"center"}>
-                            {data?.lotr_all_cards_pricing_by_pk.type}
+                            {data?.lotr_all_cards_pricing_by_pk.culture}
                           </Typography>
                         </Card>
                       </Grid>
@@ -171,67 +173,38 @@ const CardPage = (props) => {
                             gutterBottom
                             color="primary"
                           >
-                            Culture
+                            Тype
                           </Typography>
                           <Typography textAlign={"center"}>
-                            {data?.lotr_all_cards_pricing_by_pk.culture}
+                            {data?.lotr_all_cards_pricing_by_pk.type}
                           </Typography>
                         </Card>
                       </Grid>
-                      <Grid item sm={4}>
-                        <Card
-                          sx={{
-                            p: 1,
-                            backgroundColor: "rgba(25,118,210,0.1)",
-                            borderColor: "primary.main",
-                          }}
-                          variant="outlined"
-                        >
-                          <Typography
-                            textAlign={"center"}
-                            component="div"
-                            variant="caption"
-                            gutterBottom
-                            color="primary"
+                      {data?.lotr_all_cards_pricing_by_pk.subtype && (
+                        <Grid item sm={4}>
+                          <Card
+                            sx={{
+                              p: 1,
+                              backgroundColor: alpha(blue[500], 0.1),
+                              borderColor: blue[500],
+                            }}
+                            variant="outlined"
                           >
-                            Set
-                          </Typography>
-                          <Typography textAlign={"center"} noWrap>
-                            {
-                              filter_type_label["set"][
-                                data?.lotr_all_cards_pricing_by_pk.set
-                              ]
-                            }
-                          </Typography>
-                        </Card>
-                      </Grid>
-                      <Grid item sm={4}>
-                        <Card
-                          sx={{
-                            p: 1,
-                            backgroundColor: "rgba(25,118,210,0.1)",
-                            borderColor: "primary.main",
-                          }}
-                          variant="outlined"
-                        >
-                          <Typography
-                            textAlign={"center"}
-                            component="div"
-                            variant="caption"
-                            gutterBottom
-                            color="primary"
-                          >
-                            Rarity
-                          </Typography>
-                          <Typography textAlign={"center"}>
-                            {
-                              filter_type_label["rarity"][
-                                data?.lotr_all_cards_pricing_by_pk.rarity
-                              ]
-                            }
-                          </Typography>
-                        </Card>
-                      </Grid>
+                            <Typography
+                              textAlign={"center"}
+                              component="div"
+                              variant="caption"
+                              gutterBottom
+                              color={blue[500]}
+                            >
+                              Subtype
+                            </Typography>
+                            <Typography textAlign={"center"}>
+                              {data?.lotr_all_cards_pricing_by_pk.subtype}
+                            </Typography>
+                          </Card>
+                        </Grid>
+                      )}
                       {data?.lotr_all_cards_pricing_by_pk.signet && (
                         <Grid item sm={4}>
                           <Card
@@ -253,6 +226,31 @@ const CardPage = (props) => {
                             </Typography>
                             <Typography textAlign={"center"}>
                               {data?.lotr_all_cards_pricing_by_pk.signet}
+                            </Typography>
+                          </Card>
+                        </Grid>
+                      )}
+                      {data?.lotr_all_cards_pricing_by_pk.home && (
+                        <Grid item sm={4}>
+                          <Card
+                            sx={{
+                              p: 1,
+                              backgroundColor: alpha(blue[500], 0.1),
+                              borderColor: blue[500],
+                            }}
+                            variant="outlined"
+                          >
+                            <Typography
+                              textAlign={"center"}
+                              component="div"
+                              variant="caption"
+                              gutterBottom
+                              color={blue[500]}
+                            >
+                              Home Site
+                            </Typography>
+                            <Typography textAlign={"center"}>
+                              {data?.lotr_all_cards_pricing_by_pk.home}
                             </Typography>
                           </Card>
                         </Grid>
@@ -374,63 +372,13 @@ const CardPage = (props) => {
                           </Card>
                         </Grid>
                       )}
-                      {data?.lotr_all_cards_pricing_by_pk.subtype && (
-                        <Grid item sm={4}>
-                          <Card
-                            sx={{
-                              p: 1,
-                              backgroundColor: alpha(purple[500], 0.1),
-                              borderColor: purple[500],
-                            }}
-                            variant="outlined"
-                          >
-                            <Typography
-                              textAlign={"center"}
-                              component="div"
-                              variant="caption"
-                              gutterBottom
-                              color={purple[500]}
-                            >
-                              Subtype
-                            </Typography>
-                            <Typography textAlign={"center"}>
-                              {data?.lotr_all_cards_pricing_by_pk.subtype}
-                            </Typography>
-                          </Card>
-                        </Grid>
-                      )}
-                      {data?.lotr_all_cards_pricing_by_pk.home && (
-                        <Grid item sm={4}>
-                          <Card
-                            sx={{
-                              p: 1,
-                              backgroundColor: alpha(purple[500], 0.1),
-                              borderColor: purple[500],
-                            }}
-                            variant="outlined"
-                          >
-                            <Typography
-                              textAlign={"center"}
-                              component="div"
-                              variant="caption"
-                              gutterBottom
-                              color={purple[500]}
-                            >
-                              Home Site
-                            </Typography>
-                            <Typography textAlign={"center"}>
-                              {data?.lotr_all_cards_pricing_by_pk.home}
-                            </Typography>
-                          </Card>
-                        </Grid>
-                      )}
                       {data?.lotr_all_cards_pricing_by_pk.site && (
                         <Grid item sm={4}>
                           <Card
                             sx={{
                               p: 1,
-                              backgroundColor: alpha(purple[500], 0.1),
-                              borderColor: purple[500],
+                              backgroundColor: alpha(grey[500], 0.1),
+                              borderColor: grey[500],
                             }}
                             variant="outlined"
                           >
@@ -439,7 +387,7 @@ const CardPage = (props) => {
                               component="div"
                               variant="caption"
                               gutterBottom
-                              color={purple[500]}
+                              color={grey[500]}
                             >
                               Site
                             </Typography>
@@ -449,6 +397,100 @@ const CardPage = (props) => {
                           </Card>
                         </Grid>
                       )}
+                    </Grid>
+                  </CardContent>
+                </Collapse>
+                <Divider />
+                <CardHeader
+                  title="Card Details"
+                  avatar={<Label />}
+                  action={
+                    <IconButton onClick={() => setDetailsOpen((p) => !p)}>
+                      {!isDetailsOpen ? <ExpandMore /> : <ExpandLess />}
+                    </IconButton>
+                  }
+                />
+                <Collapse in={isDetailsOpen}>
+                  <Divider />
+                  <CardContent>
+                    <Grid container display="flex" spacing={1}>
+                      <Grid item sm={4}>
+                        <Card
+                          sx={{
+                            p: 1,
+                            backgroundColor: "rgba(25,118,210,0.1)",
+                            borderColor: "primary.main",
+                          }}
+                          variant="outlined"
+                        >
+                          <Typography
+                            textAlign={"center"}
+                            component="div"
+                            variant="caption"
+                            gutterBottom
+                            color="primary"
+                          >
+                            Set
+                          </Typography>
+                          <Typography textAlign={"center"} noWrap>
+                            {
+                              filter_type_label["set"][
+                                data?.lotr_all_cards_pricing_by_pk.set
+                              ]
+                            }
+                          </Typography>
+                        </Card>
+                      </Grid>
+                      <Grid item sm={4}>
+                        <Card
+                          sx={{
+                            p: 1,
+                            backgroundColor: "rgba(25,118,210,0.1)",
+                            borderColor: "primary.main",
+                          }}
+                          variant="outlined"
+                        >
+                          <Typography
+                            textAlign={"center"}
+                            component="div"
+                            variant="caption"
+                            gutterBottom
+                            color="primary"
+                          >
+                            Card ID
+                          </Typography>
+                          <Typography textAlign={"center"} noWrap>
+                            {data?.lotr_all_cards_pricing_by_pk.card_id}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                      <Grid item sm={4}>
+                        <Card
+                          sx={{
+                            p: 1,
+                            backgroundColor: "rgba(25,118,210,0.1)",
+                            borderColor: "primary.main",
+                          }}
+                          variant="outlined"
+                        >
+                          <Typography
+                            textAlign={"center"}
+                            component="div"
+                            variant="caption"
+                            gutterBottom
+                            color="primary"
+                          >
+                            Rarity
+                          </Typography>
+                          <Typography textAlign={"center"}>
+                            {
+                              filter_type_label["rarity"][
+                                data?.lotr_all_cards_pricing_by_pk.rarity
+                              ]
+                            }
+                          </Typography>
+                        </Card>
+                      </Grid>
                     </Grid>
                   </CardContent>
                 </Collapse>
