@@ -9,12 +9,22 @@ from GQL import GQL
 RestClient.configure('f2272cb7-adb2-4e2a-9384-2d64e983fca2')
 
 gql_connector = GQL()
-card = Card.find('xy1-1')
-gql_connector.gqlInsertGenericCard("pokemon",
-                                   card.id,
-                                   card.name,
-                                   card.images.small,
-                                   card.set.id,
-                                   card.number,
-                                   card.rarity
+card = Card.where(q='name:Altaria')
+
+def printInsert(option):
+    if option ==1:
+        print(card[0])
+    else:
+        gql_connector.gqlInsertGenericCard("pokemon",
+                                   card[0].id,
+                                   card[0].name,
+                                   card[0].images.small,
+                                   card[0].set.id,
+                                   card[0].number,
+                                   card[0].rarity
                                 )
+
+printInsert(2)
+
+
+
