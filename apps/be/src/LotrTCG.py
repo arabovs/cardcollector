@@ -148,7 +148,7 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if increment > 182:
+            if increment == 182:
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
               card_name = str(row.find('td', class_= 'col1').string).replace("•","")
@@ -209,29 +209,38 @@ def scrapeLatestPricing():
                 print(json.dumps(str(card_dict),sort_keys=True, indent=4))
     
                 # insert to hasura
-                gql_connector.gqlInsertCard(card_dict.get("card_name",""),
-                                        card_dict.get("set",""),
-                                        card_price,
-                                        price_foil,
-                                        price_tng,
-                                        source, 
-                                        card_dict.get("card_id",""),
-                                        card_dict.get("card_image",""),
-                                        card_dict.get("kind",""),
-                                        card_dict.get("culture",""),
-                                        card_dict.get("twilight",""),
-                                        card_dict.get("card_type",""),
-                                        card_dict.get("card_number",""),
-                                        card_dict.get("lore",""),
-                                        card_dict.get("game_text",""),
-                                        card_dict.get("strength",""),
-                                        card_dict.get("vitality",""),
-                                        card_dict.get("resistance",""),
-                                        card_dict.get("rarity",""),
-                                        card_dict.get("signet",""),
-                                        card_dict.get("site",""),
-                                        card_dict.get("subtype",""),
-                                         card_dict.get("home_site",""))
+                gql_connector.gqlInsertGenericCard(
+                  "lotr",
+                  card_dict.get("card_id",""),
+                  card_dict.get("card_name",""),
+                  card_dict.get("card_image",""),
+                  card_dict.get("set",""),
+                  card_dict.get("card_number",""),
+                  card_dict.get("rarity",""),
+                )
+               #gql_connector.gqlInsertCard(card_dict.get("card_name",""),
+               #                        card_dict.get("set",""),
+               #                        card_price,
+               #                        price_foil,
+               #                        price_tng,
+               #                        source, 
+               #                        card_dict.get("card_id",""),
+               #                        card_dict.get("card_image",""),
+               #                        card_dict.get("kind",""),
+               #                        card_dict.get("culture",""),
+               #                        card_dict.get("twilight",""),
+               #                        card_dict.get("card_type",""),
+               #                        card_dict.get("card_number",""),
+               #                        card_dict.get("lore",""),
+               #                        card_dict.get("game_text",""),
+               #                        card_dict.get("strength",""),
+               #                        card_dict.get("vitality",""),
+               #                        card_dict.get("resistance",""),
+               #                        card_dict.get("rarity",""),
+               #                        card_dict.get("signet",""),
+               #                        card_dict.get("site",""),
+               #                        card_dict.get("subtype",""),
+               #                         card_dict.get("home_site",""))
               else:
                   # need to find a way to handle this better
                 continue

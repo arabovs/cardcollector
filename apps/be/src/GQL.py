@@ -134,3 +134,52 @@ class GQL:
         }
         result = client.execute(query, variable_values=params)
         return result
+
+    def gqlInsertGenericCard(self,
+                            tcg,
+                            id,
+                            name,
+                            image,
+                            set,
+                            set_number,
+                            rarity
+                          ):
+            HASURA_URL = "https://lotrtcgwebscrapper.herokuapp.com/v1/graphql"
+
+            transport = RequestsHTTPTransport(
+                url=HASURA_URL,
+                verify=True,
+                retries=3,
+            )
+            client = Client(transport=transport, fetch_schema_from_transport=True)
+            query = gql("""mutation MyMutation($tcg: String!,
+                                               $id: String!,
+                                               $name: String!,
+                                               $image: String!, 
+                                               $set: String!,
+                                               $set_number: String!,
+                                               $rarity: String!,
+                                             ) {
+              insert_card_generic(objects: {tcg: $tcg,
+                                              id: $id,
+                                              name: $name, 
+                                              image: $image,
+                                              set: $set,
+                                              set_number: $set_number,
+                                              rarity: $rarity,
+
+                                              }) {
+                affected_rows
+              }
+            }""")
+            params = {
+                "tcg": tcg,
+                "id": id,
+                "name": name,
+                "image": image,
+                "set": set,
+                "set_number": set_number,
+                "rarity": rarity,            
+            }
+            result = client.execute(query, variable_values=params)
+            return result
