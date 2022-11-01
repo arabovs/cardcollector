@@ -199,7 +199,7 @@ def scrapeLatestPricing():
                   card_dict["kind"] = "The One Ring"
 
                 
-                # create file
+                # Download images from lotrtcgwiki
                 #filename = card_dict.get("card_image","").replace("https://lotrtcgwiki.com/wiki/_media/","")
                 #img_data = requests.get(card_dict.get("card_image","")).content
                 #with open("C:\\Users\\arabo\\Coding\\lotr-tcg-scrapper\\apps\\fe\\src\\res\\images\\"+ filename.replace(":","-"), 'wb') as handler:
