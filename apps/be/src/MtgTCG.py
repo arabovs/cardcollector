@@ -1,34 +1,72 @@
 import requests
 import sys
 from GQL import GQL
-
+import re
 gql_connector = GQL()
-url = 'https://api.scryfall.com/cards/search?q=!"smokestack"&unique=prints'
-mtg_cards = requests.get(url).json()
+urls = [
+    'https://api.scryfall.com/cards/search?q=!"Snapcaster%20Mage"&unique=prints',
+    'https://api.scryfall.com/cards/search?q=!"Abrupt%20Decay"&unique=prints',
+    'https://api.scryfall.com/cards/search?q=!"Balance"&unique=prints',
+    'https://api.scryfall.com/cards/search?q=!"Guttersnipe"&unique=prints',
+    'https://api.scryfall.com/cards/search?q=!"Ponder"&unique=prints',
+    'https://api.scryfall.com/cards/search?q=!"Brain%20Freeze"&unique=prints',
+    'https://api.scryfall.com/cards/search?q=!"Serum%20Visions"&unique=prints',
+    'https://api.scryfall.com/cards/search?q=!"Opposition"&unique=prints',
+    'https://api.scryfall.com/cards/search?q=!"Thoughtseize"&unique=prints',
+    'https://api.scryfall.com/cards/search?q=!"Counterspell"&unique=prints',
+]
 
 
+
+def cardSearch(url):
+    mtg_cards = requests.get(url).json()
 # option == 1 for printing card/cards/
 # else insert to db
-def printInsert(option):
-    if option == 1:
-        print(card)
-    else:
-        gql_connector.gqlInsertGenericCard(
-                                   "mtg",
-                                   card.get("id",""),
-                                   card.get("name",""),
-                                   card["image_uris"]["normal"],
-                                   card.get("set",""),
-                                   card.get("collector_number",""),
-                                   card.get("rarity",""),
-                                )
+    def printInsert(option):
+        if option == 1:
+            print(card)
+
+        else:
+            card_types = card.get("type_line").split(" � ")
+            card_types_cleaned = re.sub(r"[^a-zA-Z0-9.:;!?,\s+]","",card_types[0])
+            card_types_list = card_types_cleaned.split("  ")
+            if len(card_types_list) == 1:
+                card_type = card_types_list[0]
+                card_subtype = ""
+            else:
+                card_type = card_types_list[0]
+                card_subtype = card_types_list[1]
+            prices_cleaned = 0 if card["prices"]["usd"] is None else float(card["prices"]["usd"])
+            prices_foil_cleaned = 0 if card["prices"]["usd_foil"] is None else float(card["prices"]["usd_foil"])
+            prices_etched_cleaned = 0 if card["prices"]["usd_etched"] is None else float(card["prices"]["usd_etched"])
+            
+            gql_connector.gqlInsertGenericCard(
+                                       "mtg",
+                                       card.get("id",""),
+                                       card.get("name",""),
+                                       card["image_uris"]["normal"],
+                                       card.get("set_name",""),
+                                       card.get("set",""),
+                                       card.get("collector_number",""),
+                                       card.get("rarity",""),
+                                       prices_cleaned,
+                                       prices_foil_cleaned,
+                                       prices_etched_cleaned,
+                                       card_type,
+                                       card_subtype,
+                                       card.get("oracle_text",""),
+                                       card.get("flavor_text",""),
+
+                                    )
 
 
-mtg_cards = requests.get(url).json()
+    mtg_cards = requests.get(url).json()
 
-#loop through all cards
-for card in mtg_cards["data"]:
-    printInsert(2)
-    break
+    #loop through all cards
+    for card in mtg_cards["data"]:
+        printInsert(2)
+        break
 
-
+for url in urls:
+    cardSearch(url)
+    

@@ -141,8 +141,16 @@ class GQL:
                             name,
                             image,
                             set,
-                            set_number,
-                            rarity
+                            set_code,
+                            set_id,
+                            rarity,
+                            price,
+                            price_foil,
+                            price_other,
+                            type,
+                            subtype,
+                            game_text,
+                            flavor_text,
                           ):
             HASURA_URL = "https://lotrtcgwebscrapper.herokuapp.com/v1/graphql"
 
@@ -157,17 +165,32 @@ class GQL:
                                                $name: String!,
                                                $image: String!, 
                                                $set: String!,
-                                               $set_number: String!,
+                                               $set_code: String!
+                                               $set_id: String!,
                                                $rarity: String!,
+                                               $price: float8!,
+                                               $price_foil: float8!,
+                                               $price_other: float8!,
+                                               $type: String!,
+                                               $subtype: String!,
+                                               $game_text: String!,
+                                               $flavor_text: String!,
                                              ) {
               insert_card_generic(objects: {tcg: $tcg,
                                               id: $id,
                                               name: $name, 
                                               image: $image,
                                               set: $set,
-                                              set_number: $set_number,
+                                              set_code: $set_code
+                                              set_id: $set_id,
                                               rarity: $rarity,
-
+                                              price: $price,
+                                              price_foil: $price_foil,
+                                              price_other: $price_other
+                                              type: $type,
+                                              subtype: $subtype,
+                                              game_text: $game_text,
+                                              flavor_text: $flavor_text,
                                               }) {
                 affected_rows
               }
@@ -178,8 +201,16 @@ class GQL:
                 "name": name,
                 "image": image,
                 "set": set,
-                "set_number": set_number,
-                "rarity": rarity,            
+                "set_id": set_id,
+                "set_code": set_code,
+                "rarity": rarity,
+                "price": price,
+                "price_foil": price_foil,
+                "price_other": price_other,
+                "type": type,
+                "subtype": subtype,
+                "game_text": game_text,
+                "flavor_text": flavor_text,            
             }
             result = client.execute(query, variable_values=params)
             return result

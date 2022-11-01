@@ -148,7 +148,7 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if increment == 191:
+            if increment >= 100 and increment <=109:
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
               card_name = str(row.find('td', class_= 'col1').string).replace("•","")
@@ -200,13 +200,13 @@ def scrapeLatestPricing():
 
                 
                 # Download images from lotrtcgwiki
-                #filename = card_dict.get("card_image","").replace("https://lotrtcgwiki.com/wiki/_media/","")
-                #img_data = requests.get(card_dict.get("card_image","")).content
-                #with open("C:\\Users\\arabo\\Coding\\lotr-tcg-scrapper\\apps\\fe\\src\\res\\images\\"+ filename.replace(":","-"), 'wb') as handler:
+                #    filename = card_dict.get("card_image","").replace("https://lotrtcgwiki.com/wiki/_media/","")
+                #    img_data = requests.get(card_dict.get("card_image","")).content
+                #    with open("C:\\Users\\arabo\\Coding\\lotr-tcg-scrapper\\apps\\fe\\src\\res\\images\\"+ filename.replace(":","-"), 'wb') as handler:
                 #    handler.write(img_data)
                     
                 # log
-                print(json.dumps(str(card_dict),sort_keys=True, indent=4))
+                # print(json.dumps(str(card_dict),sort_keys=True, indent=4))
     
                 # insert to hasura
                 gql_connector.gqlInsertGenericCard(
@@ -215,8 +215,16 @@ def scrapeLatestPricing():
                   card_dict.get("card_name",""),
                   card_dict.get("card_image",""),
                   card_dict.get("set",""),
+                  card_dict.get("card_id",""),
                   card_dict.get("card_number",""),
                   card_dict.get("rarity",""),
+                  float(card_price),
+                  float(price_foil),
+                  float(price_tng),
+                  card_dict.get("card_type",""),
+                  card_dict.get("subtype",""),
+                  card_dict.get("game_text",""),
+                  card_dict.get("lore",""),
                 )
                #gql_connector.gqlInsertCard(card_dict.get("card_name",""),
                #                        card_dict.get("set",""),
