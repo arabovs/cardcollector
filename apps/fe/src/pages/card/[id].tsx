@@ -1,6 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
 import {
   AutoStories,
+  Ballot,
+  Bolt,
   Dashboard,
   ExpandLess,
   ExpandMore,
@@ -10,6 +12,7 @@ import {
   Label,
   LocalOffer,
   Numbers,
+  Power,
   Report,
   Share,
   Timeline,
@@ -17,8 +20,10 @@ import {
 import {
   Button,
   Card,
+  CardActionArea,
   CardContent,
   CardHeader,
+  CardMedia,
   Collapse,
   Container,
   Divider,
@@ -30,13 +35,68 @@ import { blue, brown, grey, purple, red } from "@mui/material/colors";
 import { alpha, Box } from "@mui/system";
 import React, { useState } from "react";
 import { filter_type_label } from "..";
+import demoChart from "./../../res/demo-chart.png";
+import DataGridDemo from "../../components/DataGridDemo";
+import { Link } from "gatsby";
+
+const CardCollapse = ({
+  title,
+  avatar,
+  children = null,
+  initialOpen = false,
+  noContentPadding = false,
+}) => {
+  const [open, setOpen] = useState(initialOpen);
+
+  return (
+    <Card sx={{ mt: 2 }} variant="outlined">
+      <CardHeader
+        title={title}
+        avatar={avatar}
+        action={
+          <IconButton onClick={() => setOpen((o) => !o)}>
+            <ExpandMore />
+          </IconButton>
+        }
+      />
+      <Collapse in={open}>
+        <Divider />
+        <CardContent sx={noContentPadding && { p: "0px !important" }}>
+          {children}
+        </CardContent>
+      </Collapse>
+    </Card>
+  );
+};
+
+const StatCard = ({ title, text, color = null }) => (
+  <Card
+    sx={{
+      p: 1,
+      backgroundColor: alpha(color || blue[500], 0.1),
+      borderColor: color || blue[500],
+    }}
+    variant="outlined"
+  >
+    <Typography
+      textAlign={"center"}
+      component="div"
+      variant="caption"
+      gutterBottom
+      color={color || blue[500]}
+    >
+      {title}
+    </Typography>
+    <Typography textAlign={"center"}>{text}</Typography>
+  </Card>
+);
 
 const CardPage = (props) => {
   const { id } = props.params;
   const [isPropertiesOpen, setPropertiesOpen] = useState(true);
-  const [isDetailsOpen, setDetailsOpen] = useState(true);
-  const [isStatsOpen, setStatsOpen] = useState(true);
-  const { data, loading, error } = useQuery(
+  const [isDetailsOpen, setDetailsOpen] = useState(false);
+  const [isStatsOpen, setStatsOpen] = useState(false);
+  const { data, error } = useQuery(
     gql`
       query CardById($id: uuid!) {
         lotr_all_cards_pricing_by_pk(id: $id) {
@@ -60,6 +120,14 @@ const CardPage = (props) => {
           subtype
           site
           home
+        }
+        similar_cards: lotr_all_cards_pricing(limit: 6) {
+          id
+          card_name
+          card_price
+          price_foil
+          price_tng
+          card_img
         }
       }
     `,
@@ -93,11 +161,10 @@ const CardPage = (props) => {
                     {data?.lotr_all_cards_pricing_by_pk.text}
                   </Typography>
                   <Typography variant="body2" sx={{ fontStyle: "italic" }}>
-                    {data?.lotr_all_cards_pricing_by_pk.lore}
+                    "{data?.lotr_all_cards_pricing_by_pk.lore}"
                   </Typography>
                 </CardContent>
                 <Divider />
-
                 <CardHeader
                   title="Properties"
                   avatar={<Label />}
@@ -112,147 +179,45 @@ const CardPage = (props) => {
                   <CardContent>
                     <Grid container display="flex" spacing={1}>
                       <Grid item sm={4}>
-                        <Card
-                          sx={{
-                            p: 1,
-                            backgroundColor: "rgba(25,118,210,0.1)",
-                            borderColor: "primary.main",
-                          }}
-                          variant="outlined"
-                        >
-                          <Typography
-                            textAlign={"center"}
-                            component="div"
-                            variant="caption"
-                            gutterBottom
-                            color="primary"
-                          >
-                            Culture
-                          </Typography>
-                          <Typography textAlign={"center"}>
-                            {data?.lotr_all_cards_pricing_by_pk.culture}
-                          </Typography>
-                        </Card>
+                        <StatCard
+                          title="Culture"
+                          text={data?.lotr_all_cards_pricing_by_pk.culture}
+                        />
                       </Grid>
                       <Grid item sm={4}>
-                        <Card
-                          sx={{
-                            p: 1,
-                            backgroundColor: "rgba(25,118,210,0.1)",
-                            borderColor: "primary.main",
-                          }}
-                          variant="outlined"
-                        >
-                          <Typography
-                            textAlign={"center"}
-                            component="div"
-                            variant="caption"
-                            gutterBottom
-                            color="primary"
-                          >
-                            Kind
-                          </Typography>
-                          <Typography textAlign={"center"}>
-                            {data?.lotr_all_cards_pricing_by_pk.kind}
-                          </Typography>
-                        </Card>
+                        <StatCard
+                          title="Kind"
+                          text={data?.lotr_all_cards_pricing_by_pk.kind}
+                        />
                       </Grid>
                       <Grid item sm={4}>
-                        <Card
-                          sx={{
-                            p: 1,
-                            backgroundColor: "rgba(25,118,210,0.1)",
-                            borderColor: "primary.main",
-                          }}
-                          variant="outlined"
-                        >
-                          <Typography
-                            textAlign={"center"}
-                            component="div"
-                            variant="caption"
-                            gutterBottom
-                            color="primary"
-                          >
-                            Тype
-                          </Typography>
-                          <Typography textAlign={"center"}>
-                            {data?.lotr_all_cards_pricing_by_pk.type}
-                          </Typography>
-                        </Card>
+                        <StatCard
+                          title="Тype"
+                          text={data?.lotr_all_cards_pricing_by_pk.type}
+                        />
                       </Grid>
                       {data?.lotr_all_cards_pricing_by_pk.subtype && (
                         <Grid item sm={4}>
-                          <Card
-                            sx={{
-                              p: 1,
-                              backgroundColor: alpha(blue[500], 0.1),
-                              borderColor: blue[500],
-                            }}
-                            variant="outlined"
-                          >
-                            <Typography
-                              textAlign={"center"}
-                              component="div"
-                              variant="caption"
-                              gutterBottom
-                              color={blue[500]}
-                            >
-                              Subtype
-                            </Typography>
-                            <Typography textAlign={"center"}>
-                              {data?.lotr_all_cards_pricing_by_pk.subtype}
-                            </Typography>
-                          </Card>
+                          <StatCard
+                            title="Subtype"
+                            text={data?.lotr_all_cards_pricing_by_pk.subtype}
+                          />
                         </Grid>
                       )}
                       {data?.lotr_all_cards_pricing_by_pk.signet && (
                         <Grid item sm={4}>
-                          <Card
-                            sx={{
-                              p: 1,
-                              backgroundColor: "rgba(25,118,210,0.1)",
-                              borderColor: "primary.main",
-                            }}
-                            variant="outlined"
-                          >
-                            <Typography
-                              textAlign={"center"}
-                              component="div"
-                              variant="caption"
-                              gutterBottom
-                              color="primary"
-                            >
-                              Signet
-                            </Typography>
-                            <Typography textAlign={"center"}>
-                              {data?.lotr_all_cards_pricing_by_pk.signet}
-                            </Typography>
-                          </Card>
+                          <StatCard
+                            title="Signet"
+                            text={data?.lotr_all_cards_pricing_by_pk.signet}
+                          />
                         </Grid>
                       )}
                       {data?.lotr_all_cards_pricing_by_pk.home && (
                         <Grid item sm={4}>
-                          <Card
-                            sx={{
-                              p: 1,
-                              backgroundColor: alpha(blue[500], 0.1),
-                              borderColor: blue[500],
-                            }}
-                            variant="outlined"
-                          >
-                            <Typography
-                              textAlign={"center"}
-                              component="div"
-                              variant="caption"
-                              gutterBottom
-                              color={blue[500]}
-                            >
-                              Home Site
-                            </Typography>
-                            <Typography textAlign={"center"}>
-                              {data?.lotr_all_cards_pricing_by_pk.home}
-                            </Typography>
-                          </Card>
+                          <StatCard
+                            title="Home Site"
+                            text={data?.lotr_all_cards_pricing_by_pk.home}
+                          />
                         </Grid>
                       )}
                     </Grid>
@@ -261,7 +226,7 @@ const CardPage = (props) => {
                 <Divider />
                 <CardHeader
                   title="Stats"
-                  avatar={<Numbers />}
+                  avatar={<Bolt />}
                   action={
                     <IconButton onClick={() => setStatsOpen((p) => !p)}>
                       {!isStatsOpen ? <ExpandMore /> : <ExpandLess />}
@@ -274,127 +239,46 @@ const CardPage = (props) => {
                     <Grid container spacing={1}>
                       {data?.lotr_all_cards_pricing_by_pk.twilight && (
                         <Grid item sm={4}>
-                          <Card
-                            sx={{
-                              p: 1,
-                              backgroundColor: "rgba(25,118,210,0.1)",
-                              borderColor: "primary.main",
-                            }}
-                            variant="outlined"
-                          >
-                            <Typography
-                              textAlign={"center"}
-                              component="div"
-                              variant="caption"
-                              gutterBottom
-                              color="primary"
-                            >
-                              Twilight
-                            </Typography>
-                            <Typography textAlign={"center"}>
-                              {data?.lotr_all_cards_pricing_by_pk.twilight}
-                            </Typography>
-                          </Card>
+                          <StatCard
+                            title="Twilight"
+                            text={data?.lotr_all_cards_pricing_by_pk.twilight}
+                          />
                         </Grid>
                       )}
                       {data?.lotr_all_cards_pricing_by_pk.strength && (
                         <Grid item sm={4}>
-                          <Card
-                            sx={{
-                              p: 1,
-                              backgroundColor: alpha(brown[500], 0.1),
-                              borderColor: brown[500],
-                            }}
-                            variant="outlined"
-                          >
-                            <Typography
-                              textAlign={"center"}
-                              component="div"
-                              variant="caption"
-                              gutterBottom
-                              color={brown[500]}
-                            >
-                              Strength
-                            </Typography>
-                            <Typography textAlign={"center"}>
-                              {data?.lotr_all_cards_pricing_by_pk.strength}
-                            </Typography>
-                          </Card>
+                          <StatCard
+                            title="Strength"
+                            text={data?.lotr_all_cards_pricing_by_pk.strength}
+                            color={brown[500]}
+                          />
                         </Grid>
                       )}
                       {data?.lotr_all_cards_pricing_by_pk.vitality && (
                         <Grid item sm={4}>
-                          <Card
-                            sx={{
-                              p: 1,
-                              backgroundColor: alpha(red[500], 0.1),
-                              borderColor: red[500],
-                            }}
-                            variant="outlined"
-                          >
-                            <Typography
-                              textAlign={"center"}
-                              component="div"
-                              variant="caption"
-                              gutterBottom
-                              color={red[500]}
-                            >
-                              Vitality
-                            </Typography>
-                            <Typography textAlign={"center"}>
-                              {data?.lotr_all_cards_pricing_by_pk.vitality}
-                            </Typography>
-                          </Card>
+                          <StatCard
+                            title="Vitality"
+                            text={data?.lotr_all_cards_pricing_by_pk.vitality}
+                            color={red[500]}
+                          />
                         </Grid>
                       )}
                       {data?.lotr_all_cards_pricing_by_pk.resistance && (
                         <Grid item sm={4}>
-                          <Card
-                            sx={{
-                              p: 1,
-                              backgroundColor: alpha(purple[500], 0.1),
-                              borderColor: purple[500],
-                            }}
-                            variant="outlined"
-                          >
-                            <Typography
-                              textAlign={"center"}
-                              component="div"
-                              variant="caption"
-                              gutterBottom
-                              color={purple[500]}
-                            >
-                              Resistance
-                            </Typography>
-                            <Typography textAlign={"center"}>
-                              {data?.lotr_all_cards_pricing_by_pk.resistance}
-                            </Typography>
-                          </Card>
+                          <StatCard
+                            title="Resistance"
+                            text={data?.lotr_all_cards_pricing_by_pk.resistance}
+                            color={purple[500]}
+                          />
                         </Grid>
                       )}
                       {data?.lotr_all_cards_pricing_by_pk.site && (
                         <Grid item sm={4}>
-                          <Card
-                            sx={{
-                              p: 1,
-                              backgroundColor: alpha(grey[500], 0.1),
-                              borderColor: grey[500],
-                            }}
-                            variant="outlined"
-                          >
-                            <Typography
-                              textAlign={"center"}
-                              component="div"
-                              variant="caption"
-                              gutterBottom
-                              color={grey[500]}
-                            >
-                              Site
-                            </Typography>
-                            <Typography textAlign={"center"}>
-                              {data?.lotr_all_cards_pricing_by_pk.site}
-                            </Typography>
-                          </Card>
+                          <StatCard
+                            title="Site"
+                            text={data?.lotr_all_cards_pricing_by_pk.site}
+                            color={grey[500]}
+                          />
                         </Grid>
                       )}
                     </Grid>
@@ -402,8 +286,8 @@ const CardPage = (props) => {
                 </Collapse>
                 <Divider />
                 <CardHeader
-                  title="Card Details"
-                  avatar={<Label />}
+                  title="Details"
+                  avatar={<Ballot />}
                   action={
                     <IconButton onClick={() => setDetailsOpen((p) => !p)}>
                       {!isDetailsOpen ? <ExpandMore /> : <ExpandLess />}
@@ -415,81 +299,26 @@ const CardPage = (props) => {
                   <CardContent>
                     <Grid container display="flex" spacing={1}>
                       <Grid item sm={4}>
-                        <Card
-                          sx={{
-                            p: 1,
-                            backgroundColor: "rgba(25,118,210,0.1)",
-                            borderColor: "primary.main",
-                          }}
-                          variant="outlined"
-                        >
-                          <Typography
-                            textAlign={"center"}
-                            component="div"
-                            variant="caption"
-                            gutterBottom
-                            color="primary"
-                          >
-                            Set
-                          </Typography>
-                          <Typography textAlign={"center"} noWrap>
-                            {
-                              filter_type_label["set"][
-                                data?.lotr_all_cards_pricing_by_pk.set
-                              ]
-                            }
-                          </Typography>
-                        </Card>
+                        <StatCard
+                          title="Set"
+                          text={data?.lotr_all_cards_pricing_by_pk.set}
+                        />
                       </Grid>
                       <Grid item sm={4}>
-                        <Card
-                          sx={{
-                            p: 1,
-                            backgroundColor: "rgba(25,118,210,0.1)",
-                            borderColor: "primary.main",
-                          }}
-                          variant="outlined"
-                        >
-                          <Typography
-                            textAlign={"center"}
-                            component="div"
-                            variant="caption"
-                            gutterBottom
-                            color="primary"
-                          >
-                            Card ID
-                          </Typography>
-                          <Typography textAlign={"center"} noWrap>
-                            {data?.lotr_all_cards_pricing_by_pk.card_id}
-                          </Typography>
-                        </Card>
+                        <StatCard
+                          title="Card ID"
+                          text={data?.lotr_all_cards_pricing_by_pk.card_id}
+                        />
                       </Grid>
                       <Grid item sm={4}>
-                        <Card
-                          sx={{
-                            p: 1,
-                            backgroundColor: "rgba(25,118,210,0.1)",
-                            borderColor: "primary.main",
-                          }}
-                          variant="outlined"
-                        >
-                          <Typography
-                            textAlign={"center"}
-                            component="div"
-                            variant="caption"
-                            gutterBottom
-                            color="primary"
-                          >
-                            Rarity
-                          </Typography>
-                          <Typography textAlign={"center"}>
-                            {
-                              filter_type_label["rarity"][
-                                data?.lotr_all_cards_pricing_by_pk.rarity
-                              ]
-                            }
-                          </Typography>
-                        </Card>
+                        <StatCard
+                          title="Rarity"
+                          text={
+                            filter_type_label["rarity"][
+                              data?.lotr_all_cards_pricing_by_pk.rarity
+                            ]
+                          }
+                        />
                       </Grid>
                     </Grid>
                   </CardContent>
@@ -524,7 +353,7 @@ const CardPage = (props) => {
                   {new Intl.NumberFormat("en-US", {
                     style: "currency",
                     currency: "USD",
-                  }).format(data?.lotr_all_cards_pricing_by_pk.card_price)}
+                  }).format(data?.lotr_all_cards_pricing_by_pk.card_price || 0)}
                 </Typography>
               </Box>
               <Grid container spacing={2}>
@@ -541,52 +370,59 @@ const CardPage = (props) => {
               </Grid>
             </CardContent>
           </Card>
-          <Card sx={{ mt: 2 }} variant="outlined">
-            <CardHeader
-              title={`Price history`}
-              avatar={<Timeline />}
-              action={
-                <IconButton>
-                  <ExpandMore />
-                </IconButton>
-              }
-            />
-          </Card>
-          <Card sx={{ mt: 2 }} variant="outlined">
-            <CardHeader
-              title={`Listings`}
-              avatar={<LocalOffer />}
-              action={
-                <IconButton>
-                  <ExpandMore />
-                </IconButton>
-              }
-            />
-          </Card>
-          <Card sx={{ mt: 2 }} variant="outlined">
-            <CardHeader
-              title={`Offers`}
-              avatar={<FormatListBulleted />}
-              action={
-                <IconButton>
-                  <ExpandMore />
-                </IconButton>
-              }
-            />
-          </Card>
+          <CardCollapse
+            title={`Price history`}
+            avatar={<Timeline />}
+            initialOpen
+          >
+            <img src={demoChart} width={"100%"} />
+          </CardCollapse>
+          <CardCollapse
+            title={`Listings`}
+            avatar={<LocalOffer />}
+            noContentPadding
+          >
+            <DataGridDemo />
+          </CardCollapse>
+          <CardCollapse
+            title={`Offers`}
+            avatar={<FormatListBulleted />}
+            noContentPadding
+          >
+            <DataGridDemo />
+          </CardCollapse>
         </Grid>
       </Grid>
-      <Card sx={{ mt: 2 }} variant="outlined">
-        <CardHeader
-          title={`More cards like this one`}
-          avatar={<Dashboard />}
-          action={
-            <IconButton>
-              <ExpandMore />
-            </IconButton>
-          }
-        />
-      </Card>
+      <CardCollapse title={`More cards like this one`} avatar={<Dashboard />}>
+        <Grid container spacing={1}>
+          {data?.similar_cards.map((item) => (
+            <Grid item sm={2}>
+              <Card variant="outlined">
+                <CardActionArea component={Link} to={`/card/${item.id}`}>
+                  <CardMedia component="img" image={item.card_img} />
+                  <CardContent>
+                    <Typography gutterBottom variant="subtitle2" noWrap>
+                      {item.card_name}
+                    </Typography>
+                    <Box display="flex" alignItems={"center"}>
+                      <Typography variant="body2" color="text.secondary">
+                        {new Intl.NumberFormat("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        }).format(item.card_price)}
+                      </Typography>
+                      <Box flex={1} />
+                      <Button variant="contained" size="small">
+                        buy now
+                      </Button>
+                    </Box>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </CardCollapse>
     </Container>
   );
 };
