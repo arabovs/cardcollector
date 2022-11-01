@@ -3,3 +3,4 @@ node_modules
 public
 __pycache__
 apps/fe/src/res/images/
+apps/be/etc/all-cards-20221031212157.json
