@@ -97,9 +97,9 @@ def insertCard(card):
 def insertCards(cards):
     i = 0
     for card in cards:
-            if i < 50 and i >= 0:
+            if i < 300 and i >= 0:
                 insertCard(card)    
-            if i == 51:
+            if i == 300:
                 break
             i+=1
 
