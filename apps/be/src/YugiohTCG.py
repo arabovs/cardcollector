@@ -20,47 +20,51 @@ urls = [
     ]
 
 def cardSearch(url):
-    def printInsert(option):
-        if option ==1:
-            print(card)
 
+            
+    yugioh_cards = requests.get(url).json()
+    for card in yugioh_cards["data"]:
+        print(card)
+        # Card sets - some cards have [] others {} and some None ( we return in this case)
+        if "card_sets" not in card.keys():
+            return
+        set_codes = None
+        if card["card_sets"] is list:
+            set_codes = card["card_sets"][0]
         else:
+            set_codes = card["card_sets"]
             
-            
-            
-            
-            # Card sets - some cards have [] others {} and some None ( we return in this case)
-            if "card_sets" not in card.keys():
-                return
-            set_codes = None
-            if card["card_sets"] is list:
-                set_codes = card["card_sets"][0]
-            else:
-                set_codes = card["card_sets"]
-            
-            set_codes = card["card_sets"][0]["set_code"].split("-")
-            set_code = set_codes[0]
-            set_id   = set_codes[1]
+        set_codes = card["card_sets"][0]["set_code"].split("-")
+        set_code = set_codes[0]
+        set_id   = set_codes[1]
              
-            # GAME TEXT and FLAVOR TEXT clean
-            game_text_cleaned = ''
-            flavor_text_cleaned = ''
-            if card["desc"][0:2] == "''":
-               game_text_cleaned = None
-               flavor_text_cleaned = card["desc"]
-            else:
-               game_text_cleaned = card["desc"]
-               flavor_text_cleaned = None
+        # GAME TEXT and FLAVOR TEXT clean
+        game_text_cleaned = ''
+        flavor_text_cleaned = ''
+        if card["desc"][0:2] == "''":
+            game_text_cleaned = None
+            flavor_text_cleaned = card["desc"]
+        else:
+            game_text_cleaned = card["desc"]
+            flavor_text_cleaned = None
                
-            # LEVEL cleanup  
-            level_cleaned = ""
-            if "level" not in card.keys():
-                level_cleaned = 0
-            else:
-                level_cleaned = card["level"]
+        # LEVEL cleanup  
+        level_cleaned = ""
+        if "level" not in card.keys():
+            level_cleaned = 0
+        else:
+            level_cleaned = card["level"]
+            
+        card_atk_cleaned = None
+        if "atk" in card.keys():
+            card_atk_cleaned = float(card["atk"])
+        
+        card_def_cleaned = None
+        if "def" in card.keys():
+            card_def_cleaned = float(card["atk"])
                 
                  
-            gql_connector.gqlInsertGenericCard(
+        gql_connector.gqlInsertGenericCard(
                                             "yugioh",
                                             str(card.get("id","")),
                                             card.get("name",""),
@@ -78,14 +82,9 @@ def cardSearch(url):
                                             flavor_text_cleaned,
                                             level_cleaned,
                                             str(level_cleaned),
-                                            float(card.get("atk",0)),
-                                            float(card.get("def",0)),
-                                        )
-
-    yugioh_cards = requests.get(url).json()
-    for card in yugioh_cards["data"]:
-        printInsert(2)
-
-
+                                            card_atk_cleaned,
+                                            card_def_cleaned,
+                                            )
+                                        
 for url in urls:
     cardSearch(url)

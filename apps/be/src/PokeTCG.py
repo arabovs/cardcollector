@@ -104,12 +104,6 @@ def insertCards(cards):
             i+=1
 
 #cards = [
-#         Card.where(q='name:"Caterpie" set.name:"McDonald\'s Collection 2019"')[0]
-#        Card.where(q='name:"Charizard"'),
-#        Card.where(q='name:"Charmander"'),
-#        Card.where(q='name:"Abra"'),
-#        Card.where(q='name:"Alakazam"'),
-#        Card.where(q='name:"Pikachu"'),
 #        Card.where(q='name:"Gym Trainer"'),
 #    ]
 

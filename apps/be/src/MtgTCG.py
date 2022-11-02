@@ -27,7 +27,7 @@ def cardSearch(urls):
         card_types_list = card_types_cleaned.split("  ")
         if len(card_types_list) == 1:
             card_type = card_types_list[0]
-            card_subtype = ""
+            card_subtype = None
         else:
             card_type = card_types_list[0]
             card_subtype = card_types_list[1]
@@ -64,8 +64,8 @@ def cardSearch(urls):
                                    prices_etched_cleaned,
                                    card_type,
                                    card_subtype,
-                                   card.get("oracle_text",""),
-                                   card.get("flavor_text",""),
+                                   card.get("oracle_text",None),
+                                   card.get("flavor_text",None),
                                    card.get("cmc",0),
                                    card.get("mana_cost",""),
                                    power_cleaned,

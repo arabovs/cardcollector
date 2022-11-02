@@ -148,15 +148,21 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if increment >= 300 and increment <=320:
+            if increment >= 1964:
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
               card_name = str(row.find('td', class_= 'col1').string).replace("•","")
               card_id_regex_number = re.compile(r"^([^a-zA-Z]*)\w+(\d+)") 
               
-              if card_id[-1].isnumeric():
-                set = re.search(card_id_regex_number, card_id).group(1)
-                card_number = re.search(card_id_regex_number, card_id).group(2)
+              set = ""
+              card_number = ""
+              if "+" in list(card_id) or card_id[-1].isnumeric():
+                if "+" in list(card_id):
+                  for id in card_id.split("+"):
+                    continue
+                else:
+                  set = re.search(card_id_regex_number, card_id).group(1)
+                  card_number = re.search(card_id_regex_number, card_id).group(2)
               
                 card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string)     
             
@@ -184,17 +190,21 @@ def scrapeLatestPricing():
                 card_price = getPriceFromURL(URL_PRICE) 
                 price_foil = getPriceFromURL(URL_PRICE + "-foil") 
                 price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
-                if len(card_dict.get("rarity")) > 1:
+                
+                if "rarity" not in card_dict.keys():
+                  card_dict["rarity"] = "R"
+                
+                if len(card_dict.get("rarity","")) > 1:
                   card_dict["rarity"] = "P"
                 for key, value in card_dict.items():
                   if(key in ["culture","kind","set","card_type","lore","signet"]): 
                     card_dict[key] = value.title()
-                
-                if card_dict["card_type"] == "Site":
+                                
+                if card_dict.get("card_type","") == "Site":
                   card_dict["culture"] = "Site"
                   card_dict["kind"]    = "Site"
                   
-                if card_dict["card_type"] == "The One Ring":
+                if card_dict.get("card_type","") == "The One Ring":
                   card_dict["culture"] = "The One Ring"
                   card_dict["kind"] = "The One Ring"
 
@@ -204,6 +214,11 @@ def scrapeLatestPricing():
                   strength_cleaned = float(card_dict["strength"])
                 if "vitality" in card_dict.keys():
                   vitality_cleaned = float(card_dict["vitality"])
+                  
+                  
+                twilight_cleaned = None
+                if "twilight" in card_dict.keys():
+                  twilight_cleaned = float(card_dict["twilight"])
                 
                 # Download images from lotrtcgwiki
                 #    filename = card_dict.get("card_image","").replace("https://lotrtcgwiki.com/wiki/_media/","")
@@ -227,13 +242,13 @@ def scrapeLatestPricing():
                   float(card_price),
                   float(price_foil),
                   float(price_tng),
-                  card_dict.get("card_type",""),
-                  card_dict.get("subtype",""),
-                  card_dict.get("game_text",""),
-                  card_dict.get("lore",""),
-                  float(card_dict.get("twilight",0)),
+                  card_dict.get("card_type",None),
+                  card_dict.get("subtype",None),
+                  card_dict.get("game_text",None),
+                  card_dict.get("lore",None),
+                  twilight_cleaned,
                   ##### WILL RESULT IN A BUG 100%
-                  str(card_dict.get("site","")),
+                  card_dict.get("site",None),
                   strength_cleaned,
                   vitality_cleaned,
                 )
@@ -241,31 +256,15 @@ def scrapeLatestPricing():
                 
                 
               ##################### LEGACY SHIT WILL REMOVE AFTER IM DONE WITH ALL FIELDS
-               #gql_connector.gqlInsertCard(card_dict.get("card_name",""),
-               #                        card_dict.get("set",""),
-               #                        card_price,
-               #                        price_foil,
-               #                        price_tng,
-               #                        source, 
-               #                        card_dict.get("card_id",""),
-               #                        card_dict.get("card_image",""),
+               #gql_connector.gqlInsertCard(
                #                        card_dict.get("kind",""),
                #                        card_dict.get("culture",""),
-               #                        card_dict.get("twilight",""),
-               #                        card_dict.get("card_type",""),
-               #                        card_dict.get("card_number",""),
-               #                        card_dict.get("lore",""),
-               #                        card_dict.get("game_text",""),
-               #                        card_dict.get("strength",""),
-               #                        card_dict.get("vitality",""),
                #                        card_dict.get("resistance",""),
-               #                        card_dict.get("site",""),
-               #                        card_dict.get("subtype",""),
                #                         card_dict.get("home_site",""))
               else:
                   # need to find a way to handle this better
                 continue
-            #print("Card number: ", increment)
+            #print(increment)
             increment += 1
 
 scrapeLatestPricing()
