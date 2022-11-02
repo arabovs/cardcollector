@@ -48,7 +48,7 @@ def cardSearch(url):
                                        card.get("set_name",""),
                                        card.get("set",""),
                                        card.get("collector_number",""),
-                                       card.get("rarity",""),
+                                       card.get("rarity","").title(),
                                        prices_cleaned,
                                        prices_foil_cleaned,
                                        prices_etched_cleaned,

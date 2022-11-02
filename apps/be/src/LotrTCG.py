@@ -14,7 +14,6 @@ from os.path  import basename
 source = "ccgcastle"
 URL = "https://lotrtcgwiki.com/wiki/grand" 
 URL_PRICING = "https://www.ccgcastle.com/product/lotr-tcg/" 
-list_char = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','y','x','z']
 
 page = requests.get(URL)
 soup = BeautifulSoup(page.content, "html.parser")
@@ -25,6 +24,7 @@ gql_connector = GQL()
 
 # src/etc.py
 editions_dict = etc().editions_dict
+rarity_dict = etc().rarity_dict
 
 #get price from url, 0 if no valid url
 def getPriceFromURL(page_url): 
@@ -68,7 +68,7 @@ def splitEditionID(id,option):
     card_number = 0
     position = 0
     for c in list(id):
-        if c.lower() in list_char:
+        if c.lower().isalpha():
             position+=1
             set = id[0:position-1]
             card_number = id[position:len(id)]
@@ -148,7 +148,7 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if increment >= 100 and increment <=109:
+            if increment >= 300 and increment <=320:
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
               card_name = str(row.find('td', class_= 'col1').string).replace("•","")
@@ -214,10 +214,10 @@ def scrapeLatestPricing():
                   card_dict.get("card_id",""),
                   card_dict.get("card_name",""),
                   card_dict.get("card_image",""),
+                  editions_dict[card_dict.get("set","")],
                   card_dict.get("set",""),
-                  card_dict.get("card_id",""),
                   card_dict.get("card_number",""),
-                  card_dict.get("rarity",""),
+                  rarity_dict[card_dict.get("rarity","")],
                   float(card_price),
                   float(price_foil),
                   float(price_tng),

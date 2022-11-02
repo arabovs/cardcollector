@@ -33,7 +33,7 @@ def cardSearch(url):
                                            card["card_sets"][0]["set_name"],
                                            set_code,
                                            set_id,
-                                           card["card_sets"][0]["set_rarity_code"],
+                                           card["card_sets"][0]["set_rarity_code"].replace("(","").replace(")","").title(),
                                            card["card_prices"][0]["cardmarket_price"],
                                            card["card_prices"][0]["tcgplayer_price"],
                                            card["card_prices"][0]["ebay_price"],

@@ -11,12 +11,12 @@ RestClient.configure('f2272cb7-adb2-4e2a-9384-2d64e983fca2')
 gql_connector = GQL()
 cards = [
         Card.where(q='name:"Spell Tag"'),
-        Card.where(q='name:"Charizard"'),
-        Card.where(q='name:"Charmander"'),
-        Card.where(q='name:"Abra"'),
-        Card.where(q='name:"Alakazam"'),
-        Card.where(q='name:"Pikachu"'),
-        Card.where(q='name:"Gym Trainer"'),
+        #Card.where(q='name:"Charizard"'),
+        #Card.where(q='name:"Charmander"'),
+        #Card.where(q='name:"Abra"'),
+        #Card.where(q='name:"Alakazam"'),
+        #Card.where(q='name:"Pikachu"'),
+        #Card.where(q='name:"Gym Trainer"'),
     ]
 
 
@@ -57,7 +57,7 @@ def cardSearch(card):
                                        card[0].set.id,
                                        card[0].set.id,
                                        card[0].number,
-                                       card[0].rarity,
+                                       card[0].rarity.title(),
                                        card[0].cardmarket.prices.averageSellPrice,
                                        card[0].cardmarket.prices.lowPrice,
                                        card[0].cardmarket.prices.trendPrice,
@@ -67,7 +67,7 @@ def cardSearch(card):
                                        card[0].flavorText,
                                     )
 
-    printInsert(21)
+    printInsert(1)
 
 
 
