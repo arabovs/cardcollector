@@ -11,12 +11,12 @@ RestClient.configure('f2272cb7-adb2-4e2a-9384-2d64e983fca2')
 gql_connector = GQL()
 cards = [
         Card.where(q='name:"Spell Tag"'),
-        #Card.where(q='name:"Charizard"'),
-        #Card.where(q='name:"Charmander"'),
-        #Card.where(q='name:"Abra"'),
-        #Card.where(q='name:"Alakazam"'),
-        #Card.where(q='name:"Pikachu"'),
-        #Card.where(q='name:"Gym Trainer"'),
+        Card.where(q='name:"Charizard"'),
+        Card.where(q='name:"Charmander"'),
+        Card.where(q='name:"Abra"'),
+        Card.where(q='name:"Alakazam"'),
+        Card.where(q='name:"Pikachu"'),
+        Card.where(q='name:"Gym Trainer"'),
     ]
 
 
@@ -34,10 +34,17 @@ def cardSearch(card):
             #clean flavour text
             if card[0].flavorText is None:
                 card[0].flavorText = ""
+            
+            hp_cleaned = None
+            if card[0].hp is None:
+                card[0].hp = None
+            else:
+                hp_cleaned = float(card[0].hp)
 
             #clean rules
+            # MAYBE BUG
             card_text_cleaned = ""
-            if card[0].rules is None:
+            if card[0].rules is None: ### why not is not None???? doesnt make sense here
                 for attack in card[0].attacks:
                     cost_cleaned = ""
                     for cost in attack.cost:
@@ -49,6 +56,20 @@ def cardSearch(card):
 
             card_types_cleaned = re.sub(r"[^a-zA-Z0-9.:;!?,\s+]","é",card[0].supertype)
             
+            card_retreat_cost_cleaned = None
+            if card[0].convertedRetreatCost is None:
+                card_retreat_cost_cleaned = None
+            else:
+                card_retreat_cost_cleaned = float(card[0].convertedRetreatCost)
+            
+            card_retreat_cost_text_cleaned = None
+            if card[0].retreatCost is not None:
+                for cost in card[0].retreatCost:
+                    for cost in attack.cost:
+                        card_retreat_cost_text_cleaned = cost_cleaned + "[" + cost + "]"                        
+            else:
+                card_retreat_cost_text_cleaned = None
+                  
             gql_connector.gqlInsertGenericCard(
                                       "pokemon",
                                        card[0].id,
@@ -65,9 +86,14 @@ def cardSearch(card):
                                        subtype_cleaned,
                                        card_text_cleaned,
                                        card[0].flavorText,
+                                       card_retreat_cost_cleaned,
+                                       card_retreat_cost_text_cleaned,
+                                       None, # pokemon monsters' attack/s are included in card_text_cleaned. BUG we should find a way
+                                       hp_cleaned, 
                                     )
+            
 
-    printInsert(1)
+    printInsert(2)
 
 
 

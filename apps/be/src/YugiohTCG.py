@@ -24,25 +24,48 @@ def cardSearch(url):
         else:
             set_codes = card["card_sets"][0]["set_code"].split("-")
             set_code = set_codes[0]
-            set_id   = set_codes[1]      
+            set_id   = set_codes[1]
+             
+             
+            # GAME TEXT and FLAVOR TEXT clean
+            game_text_cleaned = ''
+            flavor_text_cleaned = ''
+            if card["desc"][0:2] == "''":
+               game_text_cleaned = None
+               flavor_text_cleaned = card["desc"]
+            else:
+               game_text_cleaned = card["desc"]
+               flavor_text_cleaned = None
+               
+            # LEVEL cleanup  
+            level_cleaned = ""
+            if "level" not in card.keys():
+                level_cleaned = 0
+            else:
+                level_cleaned = card["level"]
+                
                  
-            gql_connector.gqlInsertGenericCard("yugioh",
-                                           str(card.get("id","")),
-                                           card.get("name",""),
-                                           card["card_images"][0]["image_url"],
-                                           card["card_sets"][0]["set_name"],
-                                           set_code,
-                                           set_id,
-                                           card["card_sets"][0]["set_rarity_code"].replace("(","").replace(")","").title(),
-                                           card["card_prices"][0]["cardmarket_price"],
-                                           card["card_prices"][0]["tcgplayer_price"],
-                                           card["card_prices"][0]["ebay_price"],
-                                           card["type"],
-                                           card["race"],
-                                           card["desc"],
-                                           "",
-                                           )
-
+            gql_connector.gqlInsertGenericCard(
+                                            "yugioh",
+                                            str(card.get("id","")),
+                                            card.get("name",""),
+                                            card["card_images"][0]["image_url"],
+                                            card["card_sets"][0]["set_name"],
+                                            set_code,
+                                            set_id,
+                                            card["card_sets"][0]["set_rarity_code"].replace("(","").replace(")","").title(),
+                                            card["card_prices"][0]["cardmarket_price"],
+                                            card["card_prices"][0]["tcgplayer_price"],
+                                            card["card_prices"][0]["ebay_price"],
+                                            card["type"],
+                                            card["race"],
+                                            game_text_cleaned,
+                                            flavor_text_cleaned,
+                                            level_cleaned,
+                                            str(level_cleaned),
+                                            float(card.get("atk",0)),
+                                            float(card.get("def",0)),
+                                        )
 
     yugioh_cards = requests.get(url).json()
     for card in yugioh_cards["data"]:

@@ -39,6 +39,21 @@ def cardSearch(url):
             prices_cleaned = 0 if card["prices"]["usd"] is None else float(card["prices"]["usd"])
             prices_foil_cleaned = 0 if card["prices"]["usd_foil"] is None else float(card["prices"]["usd_foil"])
             prices_etched_cleaned = 0 if card["prices"]["usd_etched"] is None else float(card["prices"]["usd_etched"])
+
+            # Power clean-up
+            power_cleaned = ""
+            if 'power' in card.keys():
+              power_cleaned = int(card["power"])
+            else:
+              power_cleaned = None
+              
+            # Toughness clean-up
+            toughness_cleaned = ""
+            if 'toughness' in card.keys():
+              toughness_cleaned = int(card["toughness"])
+            else:
+              toughness_cleaned = None
+                
             
             gql_connector.gqlInsertGenericCard(
                                        "mtg",
@@ -56,6 +71,10 @@ def cardSearch(url):
                                        card_subtype,
                                        card.get("oracle_text",""),
                                        card.get("flavor_text",""),
+                                       card.get("cmc",0),
+                                       card.get("mana_cost",""),
+                                       power_cleaned,
+                                       toughness_cleaned
 
                                     )
 

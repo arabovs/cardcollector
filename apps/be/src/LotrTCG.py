@@ -198,6 +198,12 @@ def scrapeLatestPricing():
                   card_dict["culture"] = "The One Ring"
                   card_dict["kind"] = "The One Ring"
 
+                strength_cleaned = None
+                vitality_cleaned = None
+                if "strength" in card_dict.keys():
+                  strength_cleaned = float(card_dict["strength"])
+                if "vitality" in card_dict.keys():
+                  vitality_cleaned = float(card_dict["vitality"])
                 
                 # Download images from lotrtcgwiki
                 #    filename = card_dict.get("card_image","").replace("https://lotrtcgwiki.com/wiki/_media/","")
@@ -208,7 +214,7 @@ def scrapeLatestPricing():
                 # log
                 # print(json.dumps(str(card_dict),sort_keys=True, indent=4))
     
-                # insert to hasura
+                # Insert to hasura
                 gql_connector.gqlInsertGenericCard(
                   "lotr",
                   card_dict.get("card_id",""),
@@ -225,7 +231,16 @@ def scrapeLatestPricing():
                   card_dict.get("subtype",""),
                   card_dict.get("game_text",""),
                   card_dict.get("lore",""),
+                  float(card_dict.get("twilight",0)),
+                  ##### WILL RESULT IN A BUG 100%
+                  str(card_dict.get("site","")),
+                  strength_cleaned,
+                  vitality_cleaned,
                 )
+                
+                
+                
+              ##################### LEGACY SHIT WILL REMOVE AFTER IM DONE WITH ALL FIELDS
                #gql_connector.gqlInsertCard(card_dict.get("card_name",""),
                #                        card_dict.get("set",""),
                #                        card_price,
@@ -244,8 +259,6 @@ def scrapeLatestPricing():
                #                        card_dict.get("strength",""),
                #                        card_dict.get("vitality",""),
                #                        card_dict.get("resistance",""),
-               #                        card_dict.get("rarity",""),
-               #                        card_dict.get("signet",""),
                #                        card_dict.get("site",""),
                #                        card_dict.get("subtype",""),
                #                         card_dict.get("home_site",""))

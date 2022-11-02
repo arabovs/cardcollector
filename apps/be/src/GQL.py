@@ -24,6 +24,10 @@ class GQL:
                             subtype,
                             game_text,
                             flavor_text,
+                            cost,
+                            cost_text,
+                            attack,
+                            defence,
                           ):
             HASURA_URL = "https://lotrtcgwebscrapper.herokuapp.com/v1/graphql"
 
@@ -38,7 +42,7 @@ class GQL:
                                                $name: String!,
                                                $image: String!, 
                                                $set: String!,
-                                               $set_code: String!
+                                               $set_code: String!,
                                                $set_id: String!,
                                                $rarity: String!,
                                                $price: float8!,
@@ -48,6 +52,10 @@ class GQL:
                                                $subtype: String!,
                                                $game_text: String!,
                                                $flavor_text: String!,
+                                               $cost: Int!,
+                                               $cost_text: String!,
+                                               $attack: float8!,
+                                               $defence: float8!,
                                              ) {
               insert_card_generic(objects: {tcg: $tcg,
                                               id: $id,
@@ -64,6 +72,10 @@ class GQL:
                                               subtype: $subtype,
                                               game_text: $game_text,
                                               flavor_text: $flavor_text,
+                                              cost: $cost,
+                                              cost_text: $cost_text,
+                                              attack: $attack,
+                                              defence: $defence,
                                               }) {
                 affected_rows
               }
@@ -83,7 +95,11 @@ class GQL:
                 "type": type,
                 "subtype": subtype,
                 "game_text": game_text,
-                "flavor_text": flavor_text,            
+                "flavor_text": flavor_text,  
+                "cost": cost,
+                "cost_text": cost_text,
+                "attack": attack,
+                "defence": defence,          
             }
             result = client.execute(query, variable_values=params)
             return result
@@ -115,7 +131,7 @@ class GQL:
                           home,
                           ):
             HASURA_URL = "https://lotrtcgwebscrapper.herokuapp.com/v1/graphql"
-    
+
             transport = RequestsHTTPTransport(
                 url=HASURA_URL,
                 verify=True,
@@ -196,7 +212,7 @@ class GQL:
                 "site": site,
                 "subtype": subtype,
                 "home": home,
-                
+
             }
             result = client.execute(query, variable_values=params)
             return result
