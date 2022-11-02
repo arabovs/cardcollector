@@ -5,15 +5,18 @@ from GQL import GQL
 #%20
 
 gql_connector = GQL() 
+
+
 urls = [
-        'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Pot%20Of%20Greed',
-        'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Dark%20Magician',
-        'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Dark%20Magician%20Girl',
-        'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Mystic%20Tomato',
-        'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Beaver%20Warrior',
-        'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Kuriboh',
-        'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Morphing%20Jar',
-        'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Man-Eater%20Bug',
+        'https://db.ygoprodeck.com/api/v7/cardinfo.php',
+        #'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Pot%20Of%20Greed',
+        #'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Dark%20Magician',
+        #'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Dark%20Magician%20Girl',
+        #'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Mystic%20Tomato',
+        #'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Beaver%20Warrior',
+        #'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Kuriboh',
+        #'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Morphing%20Jar',
+        #'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Man-Eater%20Bug',
     ]
 
 def cardSearch(url):
@@ -22,10 +25,18 @@ def cardSearch(url):
             print(card)
 
         else:
+            # Card sets - some cards have [] others {} and some None ( we return in this case)
+            if "card_sets" not in card.keys():
+                return
+            set_codes = None
+            if card["card_sets"] is list:
+                set_codes = card["card_sets"][0]
+            else:
+                set_codes = card["card_sets"]
+            
             set_codes = card["card_sets"][0]["set_code"].split("-")
             set_code = set_codes[0]
             set_id   = set_codes[1]
-             
              
             # GAME TEXT and FLAVOR TEXT clean
             game_text_cleaned = ''
