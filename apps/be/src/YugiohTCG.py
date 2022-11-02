@@ -25,6 +25,10 @@ def cardSearch(url):
             print(card)
 
         else:
+            
+            
+            
+            
             # Card sets - some cards have [] others {} and some None ( we return in this case)
             if "card_sets" not in card.keys():
                 return
