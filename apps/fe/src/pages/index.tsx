@@ -27,6 +27,7 @@ import {
 import React, { useState } from "react";
 import { Close, ExpandLess, ExpandMore, FilterList } from "@mui/icons-material";
 import { Link } from "gatsby";
+import { useGameSelectorContext } from "../gatsby-theme-material-ui-top-layout/components/top-layout";
 
 const filter_icons = {
   culture: {
@@ -153,31 +154,35 @@ const IndexPage = () => {
   const handlePageChange = (event, value: number) => {
     setPage(value);
   };
-  const filterTypesQuery = useQuery(gql`
-    query FilterTypes {
-      type: lotr_all_cards_pricing(distinct_on: type) {
-        type
+  const { selectedGame } = useGameSelectorContext();
+  const filterTypesQuery = useQuery(
+    gql`
+      query FilterTypes($tcg: String_comparison_exp!) {
+        type: card_generic(distinct_on: type, where: { tcg: $tcg }) {
+          type
+        }
+        # kind: lotr_all_cards_pricing(distinct_on: kind) {
+        #   kind
+        # }
+        # culture: lotr_all_cards_pricing(distinct_on: culture) {
+        #   culture
+        # }
+        set: card_generic(distinct_on: set, where: { tcg: $tcg }) {
+          set
+        }
+        rarity: card_generic(distinct_on: rarity, where: { tcg: $tcg }) {
+          rarity
+        }
+        # signet: lotr_all_cards_pricing(
+        #   distinct_on: signet
+        #   where: { signet: { _neq: "" } }
+        # ) {
+        #   signet
+        # }
       }
-      kind: lotr_all_cards_pricing(distinct_on: kind) {
-        kind
-      }
-      culture: lotr_all_cards_pricing(distinct_on: culture) {
-        culture
-      }
-      set: lotr_all_cards_pricing(distinct_on: set) {
-        set
-      }
-      rarity: lotr_all_cards_pricing(distinct_on: rarity) {
-        rarity
-      }
-      signet: lotr_all_cards_pricing(
-        distinct_on: signet
-        where: { signet: { _neq: "" } }
-      ) {
-        signet
-      }
-    }
-  `);
+    `,
+    { variables: { tcg: { _eq: selectedGame } } }
+  );
   const queryFilters = selectedFilters.reduce((acc, filter) => {
     return {
       ...acc,
@@ -188,8 +193,8 @@ const IndexPage = () => {
   }, {});
   const paginationCountQuery = useQuery(
     gql`
-      query PaginationCount($where: lotr_all_cards_pricing_bool_exp = {}) {
-        lotr_all_cards_pricing_aggregate(where: $where) {
+      query PaginationCount($where: card_generic_bool_exp = {}) {
+        card_generic_aggregate(where: $where) {
           aggregate {
             count
           }
@@ -199,7 +204,8 @@ const IndexPage = () => {
     {
       variables: {
         where: {
-          card_name: { _ilike: `%${searchField}%` },
+          name: { _ilike: `%${searchField}%` },
+          tcg: { _eq: selectedGame },
           _or: {
             ...queryFilters,
           },
@@ -221,36 +227,35 @@ const IndexPage = () => {
   }));
   const { data, error, loading } = useSubscription(
     gql`
-      subscription(
-        $where: lotr_all_cards_pricing_bool_exp
-        $order_by: [lotr_all_cards_pricing_order_by!]
+      subscription (
+        $where: card_generic_bool_exp
+        $order_by: [card_generic_order_by!]
         $limit: Int
         $offset: Int
       ) {
-        lotr_all_cards_pricing: lotr_all_cards_pricing(
+        card_generic(
           where: $where
           order_by: $order_by
           limit: $limit
           offset: $offset
         ) {
           id
-          card_name
-          card_price
-          price_foil
-          price_tng
-          card_img
+          name
+          price
+          image
         }
       }
     `,
     {
       variables: {
         where: {
-          card_name: { _ilike: `%${searchField}%` },
+          name: { _ilike: `%${searchField}%` },
+          tcg: { _eq: selectedGame },
           _or: {
             ...queryFilters,
           },
         },
-        order_by: { card_price: orderBy },
+        order_by: { price: orderBy },
         limit: limitItems,
         offset: limitItems * page - limitItems,
       },
@@ -317,11 +322,11 @@ const IndexPage = () => {
         )}
         <Grid container spacing={1} item sm={isFilterOpen ? 10 : 12}>
           <Grid item sm={10}>
-            {paginationCountQuery.data?.lotr_all_cards_pricing_aggregate && (
+            {paginationCountQuery.data?.card_generic_aggregate && (
               <Typography variant="subtitle2">
                 {
-                  paginationCountQuery.data?.lotr_all_cards_pricing_aggregate
-                    .aggregate.count
+                  paginationCountQuery.data?.card_generic_aggregate.aggregate
+                    .count
                 }{" "}
                 items
               </Typography>
@@ -384,21 +389,21 @@ const IndexPage = () => {
                 </Card>
               </Grid>
             ))}
-          {data?.lotr_all_cards_pricing.map((item) => (
+          {data?.card_generic.map((item) => (
             <Grid item sm={2}>
               <Card variant="outlined">
                 <CardActionArea component={Link} to={`/card/${item.id}`}>
-                  <CardMedia component="img" image={item.card_img} />
+                  <CardMedia component="img" image={item.image} />
                   <CardContent>
                     <Typography gutterBottom variant="subtitle2" noWrap>
-                      {item.card_name}
+                      {item.name}
                     </Typography>
                     <Box display="flex" alignItems={"center"}>
                       <Typography variant="body2" color="text.secondary">
                         {new Intl.NumberFormat("en-US", {
                           style: "currency",
                           currency: "USD",
-                        }).format(item.card_price)}
+                        }).format(item.price)}
                       </Typography>
                       <Box flex={1} />
                       <Button variant="contained" size="small">
@@ -414,8 +419,8 @@ const IndexPage = () => {
             {paginationCountQuery?.data && (
               <Pagination
                 count={Math.ceil(
-                  paginationCountQuery.data?.lotr_all_cards_pricing_aggregate
-                    .aggregate.count / limitItems
+                  paginationCountQuery.data?.card_generic_aggregate.aggregate
+                    .count / limitItems
                 )}
                 page={page}
                 onChange={handlePageChange}
