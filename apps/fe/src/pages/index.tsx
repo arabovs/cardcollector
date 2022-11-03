@@ -254,7 +254,7 @@ const IndexPage = () => {
   }));
   const { data, error, loading } = useSubscription(
     gql`
-      subscription(
+      subscription (
         $where: card_generic_bool_exp
         $order_by: [card_generic_order_by!]
         $limit: Int
