@@ -204,7 +204,6 @@ const CardPage = (props) => {
                   </CardContent>
                 </Collapse>
                 <Divider />
-
                 <CardHeader
                   title="Stats"
                   avatar={<Bolt />}

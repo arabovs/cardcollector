@@ -173,7 +173,7 @@ const IndexPage = () => {
   const [isFilterOpen, setFilterOpen] = useState(true);
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [orderBy, setOrderBy] = useState(null);
-  const [limitItems, setLimitItems] = useState(50);
+  const [limitItems, setLimitItems] = useState(48);
   const [page, setPage] = React.useState(1);
   const handlePageChange = (event, value: number) => {
     setPage(value);
@@ -254,7 +254,7 @@ const IndexPage = () => {
   }));
   const { data, error, loading } = useSubscription(
     gql`
-      subscription (
+      subscription(
         $where: card_generic_bool_exp
         $order_by: [card_generic_order_by!]
         $limit: Int
