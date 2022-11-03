@@ -108,6 +108,7 @@ const CardPage = (props) => {
           set
           rarity
           card_id
+          set_code
           # id
           # card_img
           # card_name
@@ -340,6 +341,7 @@ const CardPage = (props) => {
           <Card variant="outlined">
             <CardHeader
               title={`${data?.lotr_all_cards_pricing_by_pk.card_name} (#${
+                data?.lotr_all_cards_pricing_by_pk.set_code +
                 data?.lotr_all_cards_pricing_by_pk.card_id
               }) ${
                 filter_type_label["set"][
