@@ -79,6 +79,8 @@ def splitEditionID(id,option):
   if option == 2:
     card_number = id[-1:]
     return "00SPD" + card_number
+  if option == 3:
+    return id.replace("RF","F")
   return
     
 
@@ -150,7 +152,7 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if i > 0:
+            if i > 2874:
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
               card_name = str(row.find('td', class_= 'col1').string).replace("•","")
@@ -172,10 +174,13 @@ def scrapeLatestPricing():
               if "+" not in str(card_id) and card_id[-1].isnumeric():
                 set = re.search(card_id_regex_number, card_id).group(1)
                 card_number = re.search(card_id_regex_number, card_id).group(2)
-              
+
                 if card_name_cleaned[-3:] not in ("SPD"):
                   card_image = "https://lotrtcgwiki.com/wiki/_media/cards:lotr" + splitEditionID(card_id,1) + ".jpg"
                   card_dict = fetchCardDetailsDict("https://lotrtcgwiki.com/wiki/lotr" + splitEditionID(card_id,1))
+                elif "RF" in card_name_cleaned:
+                  card_image = "https://lotrtcgwiki.com/wiki/_media/cards:lotr" + splitEditionID(card_id,3) + ".jpg"
+                  card_dict = fetchCardDetailsDict("https://lotrtcgwiki.com/wiki/lotr" + splitEditionID(card_id,3))
                 else:
                   card_image = "https://lotrtcgwiki.com/wiki/_media/cards:lotr" + splitEditionID(card_id,2) + ".jpg"
                   card_dict = fetchCardDetailsDict("https://lotrtcgwiki.com/wiki/lotr" + splitEditionID(card_id,2))

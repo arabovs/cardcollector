@@ -5,6 +5,8 @@ class etc():
       "U": "Uncommon",
       "C": "Common",
       "P": "Promo",
+      "RF": "Rare Foil",
+      "S": "Special Foil" # BUG with data 
     }
     # used for translating edition code to url path
     editions_dict = {

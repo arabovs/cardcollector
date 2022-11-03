@@ -69,28 +69,31 @@ def insertCard(card):
             if card.rarity is not None:
                 card_rarity_cleaned = str(card.rarity).title()
             
-            print(card)
-            #gql_connector.gqlInsertGenericCard(
-            #                          "pokemon",
-            #                           card.id,
-            #                           card.name,
-            #                           card.images.small,
-            #                           card.set.id,
-            #                           card.set.id,
-            #                           card.number,
-            #                           card_rarity_cleaned,
-            #                           card.cardmarket.prices.averageSellPrice,
-            #                           card.cardmarket.prices.lowPrice,
-            #                           card.cardmarket.prices.trendPrice,
-            #                           card_types_cleaned,
-            #                           subtype_cleaned,
-            #                           card_text_cleaned,
-            #                           card.flavorText,
-            #                           card_retreat_cost_cleaned,
-            #                           card_retreat_cost_text_cleaned,
-            #                           None, # pokemon monsters' attack/s are included in card_text_cleaned. BUG we should find a way
-            #                           hp_cleaned, 
-            #                        )
+            card_types_cleaned = ""
+            if card.types is not None:
+                for type in card.types:
+                    print(type)
+            gql_connector.gqlInsertGenericCard(
+                                      "pokemon",
+                                       card.id,
+                                       card.name,
+                                       card.images.small,
+                                       card.set.id,
+                                       card.set.id,
+                                       card.number,
+                                       card_rarity_cleaned,
+                                       card.cardmarket.prices.averageSellPrice,
+                                       card.cardmarket.prices.lowPrice,
+                                       card.cardmarket.prices.trendPrice,
+                                       card_types_cleaned,
+                                       subtype_cleaned,
+                                       card_text_cleaned,
+                                       card.flavorText,
+                                       card_retreat_cost_cleaned,
+                                       card_retreat_cost_text_cleaned,
+                                       None, # pokemon monsters' attack/s are included in card_text_cleaned. BUG we should find a way
+                                       hp_cleaned, 
+                                    )
             
 
     printInsert(2)
