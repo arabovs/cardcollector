@@ -31,9 +31,11 @@ def getPriceFromURL(page_url):
   page_price_url = requests.get(page_url)
   soup_price = BeautifulSoup(page_price_url.content, "html.parser")
   card_price = soup_price.find(class_='item-price')
-  card_price_formatted = cleanPrice(card_price)
-  
-  return card_price_formatted
+  if card_price is not None:
+    card_price_formatted = cleanPrice(card_price)
+    return card_price_formatted
+  else:
+    return 0
 
 #removes and format's card name
 def cleanCardName( card_name ):
@@ -144,27 +146,23 @@ print("Process Start:", now.strftime("%d/%m/%Y %H:%M:%S"))
 
 def scrapeLatestPricing():
     cards_table = soup.find_all('table', class_='inline')
-    increment = 0
+    i = 0
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if increment >= 1964:
+            if i > 1964:
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
               card_name = str(row.find('td', class_= 'col1').string).replace("•","")
               card_id_regex_number = re.compile(r"^([^a-zA-Z]*)\w+(\d+)") 
-              
+              card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string)     
+
               set = ""
               card_number = ""
-              if "+" in list(card_id) or card_id[-1].isnumeric():
-                if "+" in list(card_id):
-                  for id in card_id.split("+"):
-                    continue
-                else:
-                  set = re.search(card_id_regex_number, card_id).group(1)
-                  card_number = re.search(card_id_regex_number, card_id).group(2)
+              if "+" not in str(card_id) and card_id[-1].isnumeric():
+                set = re.search(card_id_regex_number, card_id).group(1)
+                card_number = re.search(card_id_regex_number, card_id).group(2)
               
-                card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string)     
             
                 # Detailed Card Info from - we need to handle SPD and rest better  
                 if "(AI)" in card_name_cleaned:
@@ -252,7 +250,7 @@ def scrapeLatestPricing():
                   strength_cleaned,
                   vitality_cleaned,
                 )
-                
+                print("Inserted" + str(i) + ": " + card_name_cleaned)
                 
                 
               ##################### LEGACY SHIT WILL REMOVE AFTER IM DONE WITH ALL FIELDS
@@ -263,9 +261,11 @@ def scrapeLatestPricing():
                #                         card_dict.get("home_site",""))
               else:
                   # need to find a way to handle this better
+                print("Skipping " + str(i) + ": " + card_name_cleaned)
+                i +=1
                 continue
-            #print(increment)
-            increment += 1
+            #print(i)
+            i += 1
 
 scrapeLatestPricing()
   

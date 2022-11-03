@@ -15,13 +15,15 @@ gql_connector = GQL()
 
 
 def cardSearch(urls):
+    i = 1
     for url in urls:
         card = requests.get(url).json()
         if "object" in card.keys() and card["object"] == "error":
+            print("Skipping " + str(i) + ": " + card.get("name",url))
+            time.sleep(0.1)
             continue
         # option == 1 for printing card/cards/
         # else insert to db
-        time.sleep(0.5)
         card_types = card.get("type_line").split(" � ")
         card_types_cleaned = re.sub(r"[^a-zA-Z0-9.:;!?,\s+]","",card_types[0])
         card_types_list = card_types_cleaned.split("  ")
@@ -49,7 +51,8 @@ def cardSearch(urls):
         else:
           toughness_cleaned = None
             
-        time.sleep(0.5)
+        time.sleep(0.1)
+        print("Inserting " + str(i) + ": " + card.get("name",""))
         gql_connector.gqlInsertGenericCard(
                                    "mtg",
                                    card.get("id",""),
@@ -72,7 +75,7 @@ def cardSearch(urls):
                                    toughness_cleaned
     
                                 )
-    
+        i += 1
 
 def getAllMagicLinks():
     urls = []

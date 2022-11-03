@@ -23,11 +23,12 @@ def cardSearch(url):
 
             
     yugioh_cards = requests.get(url).json()
+    i = 1
     for card in yugioh_cards["data"]:
-        print(card)
-        # Card sets - some cards have [] others {} and some None ( we return in this case)
+        # Card sets - some cards have [] others {} and some None ( we skip in this case)
         if "card_sets" not in card.keys():
-            return
+            print("Skipping " + str(i) + ": " + card.get("name",""))
+            continue
         set_codes = None
         if card["card_sets"] is list:
             set_codes = card["card_sets"][0]
@@ -63,7 +64,7 @@ def cardSearch(url):
         if "def" in card.keys():
             card_def_cleaned = float(card["atk"])
                 
-                 
+        print("Inserted " + str(i) + ": " + card.get("name",""))         
         gql_connector.gqlInsertGenericCard(
                                             "yugioh",
                                             str(card.get("id","")),
@@ -85,6 +86,6 @@ def cardSearch(url):
                                             card_atk_cleaned,
                                             card_def_cleaned,
                                             )
-                                        
+        i += 1                                
 for url in urls:
     cardSearch(url)
