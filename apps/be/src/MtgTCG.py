@@ -63,14 +63,18 @@ def cardSearch(urls):
           toughness_cleaned = int(special_case)
         else:
           toughness_cleaned = None
-            
+        
+        card_image_cleaned = None
+        if card["image_uris"]["normal"] is not None:
+            card_image_cleaned = card["image_uris"]["normal"]
+        
         time.sleep(0.1)
         print("Number " + str(i) + " : " + card.get("id",""))
         gql_connector.gqlInsertGenericCard(
                                    "mtg",
                                    card.get("id",""),
                                    card.get("name",""),
-                                   card["image_uris"]["normal"],
+                                   card_image_cleaned,
                                    card.get("set_name",""),
                                    card.get("set",""),
                                    card.get("collector_number",""),
@@ -86,7 +90,7 @@ def cardSearch(urls):
                                    card.get("mana_cost",None),
                                    power_cleaned,
                                    toughness_cleaned,
-                                   None
+                                   ""
                                 )
         i += 1
 

@@ -24,7 +24,7 @@ def cardSearch(url):
             
     yugioh_cards = requests.get(url).json()
     i = 1
-    for card in yugioh_cards["data"]:
+    for card in yugioh_cards["data"]:           
         # Card sets - some cards have [] others {} and some None ( we skip in this case)
         if "card_sets" not in card.keys():
             print("Skipping " + str(i))
@@ -59,11 +59,13 @@ def cardSearch(url):
             
         card_atk_cleaned = None
         if "atk" in card.keys():
-            card_atk_cleaned = float(card["atk"])
+            if card["atk"] is not None:
+                card_atk_cleaned = float(card["atk"])
         
         card_def_cleaned = None
         if "def" in card.keys():
-            card_def_cleaned = float(card["atk"])
+            if card["def"] is not None:
+                card_def_cleaned = float(card["def"])
                 
         print("Inserted " + str(i)) 
         i += 1 

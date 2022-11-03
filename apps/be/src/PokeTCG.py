@@ -69,10 +69,14 @@ def insertCard(card):
             if card.rarity is not None:
                 card_rarity_cleaned = str(card.rarity).title()
             
-            card_types_cleaned = ""
+            
+            # FIRE, GRASS, AIR etc
+            card_kind_cleaned = ""
             if card.types is not None:
                 for type in card.types:
-                    print(type)
+                    card_kind_cleaned += "[" + type + "]"
+            else:
+                card_kind_cleaned = None
             gql_connector.gqlInsertGenericCard(
                                       "pokemon",
                                        card.id,
@@ -93,6 +97,7 @@ def insertCard(card):
                                        card_retreat_cost_text_cleaned,
                                        None, # pokemon monsters' attack/s are included in card_text_cleaned. BUG we should find a way
                                        hp_cleaned, 
+                                       card_kind_cleaned,
                                     )
             
 
@@ -103,7 +108,7 @@ def insertCards(cards):
         insertCard(card)    
 
 #cards = [
-#        Card.where(q='name:"Gym Trainer"'),
+#        Card.where(q='name:"Pikachu"'),
 #    ]
 
 cards = Card.all()
