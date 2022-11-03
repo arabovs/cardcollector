@@ -330,7 +330,7 @@ const IndexPage = () => {
       </Grid>
       <Grid container spacing={1} sx={{ mt: 1 }}>
         {isFilterOpen && (
-          <Grid item sm={2} xs={12}>
+          <Grid item sm={1} xs={12}>
             <Card variant="outlined">
               <CardContent>
                 <List>
@@ -347,7 +347,7 @@ const IndexPage = () => {
             </Card>
           </Grid>
         )}
-        <Grid container spacing={1} item sm={isFilterOpen ? 10 : 12}>
+        <Grid container spacing={1} item sm={isFilterOpen ? 11 : 12}>
           <Grid item sm={10}>
             {paginationCountQuery.data?.card_generic_aggregate && (
               <Typography variant="subtitle2">
@@ -402,7 +402,7 @@ const IndexPage = () => {
           </Grid>
           {loading &&
             Array.from({ length: limitItems }).map((i) => (
-              <Grid item sm={2}>
+              <Grid item xs={6} sm={1.5}>
                 <Card variant="outlined">
                   <Skeleton variant="rounded" width={210} height={240} />
                   <CardContent>
@@ -417,7 +417,7 @@ const IndexPage = () => {
               </Grid>
             ))}
           {data?.card_generic.map((item) => (
-            <Grid item sm={2}>
+            <Grid item xs={6} sm={1.5}>
               <Card variant="outlined">
                 <CardActionArea component={Link} to={`/card/${item.id}`}>
                   <CardMedia component="img" image={item.image} />
