@@ -188,9 +188,9 @@ const IndexPage = () => {
         subtype: card_generic(distinct_on: subtype, where: { tcg: $tcg }) {
           subtype
         }
-        # kind: lotr_all_cards_pricing(distinct_on: kind) {
-        #   kind
-        # }
+        kind: card_generic(distinct_on: kind, where: { tcg: $tcg }) {
+          kind
+        }
         # culture: lotr_all_cards_pricing(distinct_on: culture) {
         #   culture
         # }
