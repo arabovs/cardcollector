@@ -10,12 +10,12 @@ class GQL:
 
     def gqlInsertGenericCard(self,
                             tcg,
-                            card_id,
+                            api_id,
                             name,
                             image,
                             set,
                             set_code,
-                            set_id,
+                            card_id,
                             rarity,
                             price,
                             price_foil,
@@ -39,12 +39,12 @@ class GQL:
             )
             client = Client(transport=transport, fetch_schema_from_transport=True)
             query = gql("""mutation MyMutation($tcg: String!,
-                                               $card_id: String!,
+                                               $api_id: String!,
                                                $name: String!,
                                                $image: String!, 
                                                $set: String!,
                                                $set_code: String!,
-                                               $set_id: String!,
+                                               $card_id: String!,
                                                $rarity: String!,
                                                $price: float8!,
                                                $price_foil: float8!,
@@ -60,12 +60,12 @@ class GQL:
                                                $kind: String!,
                                              ) {
               insert_card_generic(objects: {tcg: $tcg,
-                                              card_id: $card_id,
+                                              api_id: $api_id,
                                               name: $name, 
                                               image: $image,
                                               set: $set,
                                               set_code: $set_code
-                                              set_id: $set_id,
+                                              card_id: $card_id,
                                               rarity: $rarity,
                                               price: $price,
                                               price_foil: $price_foil,
@@ -85,11 +85,11 @@ class GQL:
             }""")
             params = {
                 "tcg": tcg,
-                "card_id": card_id,
+                "api_id": api_id,
                 "name": name,
                 "image": image,
                 "set": set,
-                "set_id": set_id,
+                "card_id": card_id,
                 "set_code": set_code,
                 "rarity": rarity,
                 "price": price,
