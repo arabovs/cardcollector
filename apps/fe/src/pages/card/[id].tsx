@@ -200,26 +200,11 @@ const CardPage = (props) => {
                           />
                         </Grid>
                       )}
-                      {data?.card_generic_by_pk.signet && (
-                        <Grid item sm={4}>
-                          <StatCard
-                            title="Signet"
-                            text={data?.card_generic_by_pk.signet}
-                          />
-                        </Grid>
-                      )}
-                      {data?.card_generic_by_pk.home && (
-                        <Grid item sm={4}>
-                          <StatCard
-                            title="Home Site"
-                            text={data?.card_generic_by_pk.home}
-                          />
-                        </Grid>
-                      )}
                     </Grid>
                   </CardContent>
                 </Collapse>
                 <Divider />
+
                 <CardHeader
                   title="Stats"
                   avatar={<Bolt />}
@@ -264,24 +249,6 @@ const CardPage = (props) => {
                             title="Health"
                             text={data?.card_generic_by_pk.defence}
                             color={red[500]}
-                          />
-                        </Grid>
-                      )}
-                      {data?.card_generic_by_pk.resistance && (
-                        <Grid item sm={4}>
-                          <StatCard
-                            title="Resistance"
-                            text={data?.card_generic_by_pk.resistance}
-                            color={purple[500]}
-                          />
-                        </Grid>
-                      )}
-                      {data?.card_generic_by_pk.site && (
-                        <Grid item sm={4}>
-                          <StatCard
-                            title="Site"
-                            text={data?.card_generic_by_pk.site}
-                            color={grey[500]}
                           />
                         </Grid>
                       )}
@@ -350,7 +317,7 @@ const CardPage = (props) => {
             <CardContent>
               <Box display="flex" alignItems={"center"}>
                 <Box sx={{ mb: 2 }}>
-                  Current price <br />{" "}
+                  Current price <br />
                   <Typography variant="h4">
                     {new Intl.NumberFormat("en-US", {
                       style: "currency",
@@ -358,8 +325,8 @@ const CardPage = (props) => {
                     }).format(data?.card_generic_by_pk.price || 0)}
                   </Typography>
                 </Box>
-                <Box sx={{ mb: 2 }}>
-                  Current price <br />{" "}
+                <Box sx={{ mb: 2, ml: 2 }}>
+                  Foil price <br />
                   <Typography variant="h4">
                     {new Intl.NumberFormat("en-US", {
                       style: "currency",
@@ -367,8 +334,8 @@ const CardPage = (props) => {
                     }).format(data?.card_generic_by_pk.price_foil || 0)}
                   </Typography>
                 </Box>
-                <Box sx={{ mb: 2 }}>
-                  Current price <br />{" "}
+                <Box sx={{ mb: 2, ml: 2 }}>
+                  Other price <br />
                   <Typography variant="h4">
                     {new Intl.NumberFormat("en-US", {
                       style: "currency",
