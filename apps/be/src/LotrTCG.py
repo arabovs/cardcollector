@@ -129,10 +129,7 @@ def fetchCardDetailsDict(card_url):
      if (str(key) not in ['game_text','lore',"card_type"]):
       dict[key] = str(value).lower().replace("<em>","").replace("�","").replace("</em>","")
       
-   except:
-     if(str(key) == "card_type"):
-      print("Haha")
-      
+   except:     
      try:
        key = str(card_detail_row.find('td', class_='col0').a.string)
      except:
@@ -174,13 +171,13 @@ def scrapeLatestPricing():
               if "+" not in str(card_id) and card_id[-1].isnumeric():
                 set = re.search(card_id_regex_number, card_id).group(1)
                 card_number = re.search(card_id_regex_number, card_id).group(2)
-
+                card_name_cleaned.replace("+","")
                 if card_name_cleaned[-3:] not in ("SPD"):
                   card_image = "https://lotrtcgwiki.com/wiki/_media/cards:lotr" + splitEditionID(card_id,1) + ".jpg"
                   card_dict = fetchCardDetailsDict("https://lotrtcgwiki.com/wiki/lotr" + splitEditionID(card_id,1))
                 elif "RF" in card_name_cleaned:
                   card_image = "https://lotrtcgwiki.com/wiki/_media/cards:lotr" + splitEditionID(card_id,3) + ".jpg"
-                  card_dict = fetchCardDetailsDict("https://lotrtcgwiki.com/wiki/lotr" + splitEditionID(card_id,3))
+                  card_dict = fetchCardDetailsDict("https://lotrtcgwiki.com/wiki/lotr" + splitEditionID(card_id,3))       
                 else:
                   card_image = "https://lotrtcgwiki.com/wiki/_media/cards:lotr" + splitEditionID(card_id,2) + ".jpg"
                   card_dict = fetchCardDetailsDict("https://lotrtcgwiki.com/wiki/lotr" + splitEditionID(card_id,2))
@@ -192,7 +189,8 @@ def scrapeLatestPricing():
       
                 # skipping here as we need to handle promo cards better
                 if  "Title" in card_name_cleaned:
-                  print("Skipping: " + card_name_cleaned)
+                  print("Skipping: " + card_dict.get("card_name",""))
+                  i+=1
                   continue
                 URL_PRICE = createNewURL(set, card_name_cleaned)
                 card_price = getPriceFromURL(URL_PRICE) 
@@ -261,7 +259,7 @@ def scrapeLatestPricing():
                   vitality_cleaned,
                   card_dict.get("kind",""),
                 )
-                print("Inserted" + str(i) + ": " + card_name_cleaned)
+                print("Inserted" + str(i) + ": " + card_dict.get("card_name",""))
                 
                 
               ##################### LEGACY SHIT WILL REMOVE AFTER IM DONE WITH ALL FIELDS
@@ -272,10 +270,9 @@ def scrapeLatestPricing():
                #                         card_dict.get("home_site",""))
               else:
                   # need to find a way to handle this better
-                print("Skipping " + str(i) + ": " + card_name_cleaned)
+                print("Skipping " + str(i) + ": " + card_dict.get("card_name",""))
                 i +=1
                 continue
-            #print(i)
             i += 1
 
 scrapeLatestPricing()

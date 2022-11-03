@@ -30,7 +30,6 @@ def cardSearch(urls):
         if "object" in card.keys() and card["object"] == "error":
             print("Skipping " + str(i) + ": " + card.get("name",url))
             i+=1
-            time.sleep(0.1)
             continue
         # else insert to db
         card_types = card.get("type_line").split(" � ")
@@ -66,7 +65,7 @@ def cardSearch(urls):
           toughness_cleaned = None
             
         time.sleep(0.1)
-        print("Inserting " + str(i) + ": " + card.get("name",""))
+        print("Number " + str(i) + " : " + card.get("id",""))
         gql_connector.gqlInsertGenericCard(
                                    "mtg",
                                    card.get("id",""),
