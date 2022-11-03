@@ -34,7 +34,6 @@ import {
 import { blue, brown, grey, purple, red } from "@mui/material/colors";
 import { alpha, Box } from "@mui/system";
 import React, { useState } from "react";
-import { filter_type_label } from "..";
 import demoChart from "./../../res/demo-chart.png";
 import DataGridDemo from "../../components/DataGridDemo";
 import { Link } from "gatsby";
@@ -102,20 +101,27 @@ const CardPage = (props) => {
         lotr_all_cards_pricing_by_pk: card_generic_by_pk(id: $id) {
           id
           card_name: name
-          card_price: price
+          price
+          price_foil
+          price_other
           card_img: image
           type
+          subtype
           set
           rarity
           card_id
           set_code
+          cost
+          cost_text
+          attack
+          defence
           # id
           # card_img
           # card_name
-          lore: flavor_text
+          flavor_text
           # card_price
           # type
-          # kind
+          kind
           # culture
           # set
           # rarity
@@ -123,11 +129,7 @@ const CardPage = (props) => {
           # card_id
           text: game_text
 
-          # twilight
-          # strength
-          # vitality
           # resistance
-          # subtype
           # site
           # home
         }
@@ -171,7 +173,7 @@ const CardPage = (props) => {
                     {data?.lotr_all_cards_pricing_by_pk.text}
                   </Typography>
                   <Typography variant="body2" sx={{ fontStyle: "italic" }}>
-                    "{data?.lotr_all_cards_pricing_by_pk.lore}"
+                    "{data?.lotr_all_cards_pricing_by_pk.flavor_text}"
                   </Typography>
                 </CardContent>
                 <Divider />
@@ -188,29 +190,27 @@ const CardPage = (props) => {
                   <Divider />
                   <CardContent>
                     <Grid container display="flex" spacing={1}>
-                      <Grid item sm={4}>
-                        <StatCard
-                          title="Culture"
-                          text={data?.lotr_all_cards_pricing_by_pk.culture}
-                        />
-                      </Grid>
-                      <Grid item sm={4}>
-                        <StatCard
-                          title="Kind"
-                          text={data?.lotr_all_cards_pricing_by_pk.kind}
-                        />
-                      </Grid>
-                      <Grid item sm={4}>
-                        <StatCard
-                          title="Тype"
-                          text={data?.lotr_all_cards_pricing_by_pk.type}
-                        />
-                      </Grid>
+                      {data?.lotr_all_cards_pricing_by_pk.type && (
+                        <Grid item sm={4}>
+                          <StatCard
+                            title="Type"
+                            text={data?.lotr_all_cards_pricing_by_pk.type}
+                          />
+                        </Grid>
+                      )}
                       {data?.lotr_all_cards_pricing_by_pk.subtype && (
                         <Grid item sm={4}>
                           <StatCard
                             title="Subtype"
                             text={data?.lotr_all_cards_pricing_by_pk.subtype}
+                          />
+                        </Grid>
+                      )}
+                      {data?.lotr_all_cards_pricing_by_pk.kind && (
+                        <Grid item sm={4}>
+                          <StatCard
+                            title="Kind"
+                            text={data?.lotr_all_cards_pricing_by_pk.kind}
                           />
                         </Grid>
                       )}
@@ -247,28 +247,36 @@ const CardPage = (props) => {
                   <Divider />
                   <CardContent>
                     <Grid container spacing={1}>
-                      {data?.lotr_all_cards_pricing_by_pk.twilight && (
+                      {data?.lotr_all_cards_pricing_by_pk.cost && (
                         <Grid item sm={4}>
                           <StatCard
-                            title="Twilight"
-                            text={data?.lotr_all_cards_pricing_by_pk.twilight}
+                            title="Value"
+                            text={data?.lotr_all_cards_pricing_by_pk.cost}
                           />
                         </Grid>
                       )}
-                      {data?.lotr_all_cards_pricing_by_pk.strength && (
+                      {data?.lotr_all_cards_pricing_by_pk.cost_text && (
                         <Grid item sm={4}>
                           <StatCard
-                            title="Strength"
-                            text={data?.lotr_all_cards_pricing_by_pk.strength}
+                            title="Cost"
+                            text={data?.lotr_all_cards_pricing_by_pk.cost_text}
+                          />
+                        </Grid>
+                      )}
+                      {data?.lotr_all_cards_pricing_by_pk.attack && (
+                        <Grid item sm={4}>
+                          <StatCard
+                            title="Attack"
+                            text={data?.lotr_all_cards_pricing_by_pk.attack}
                             color={brown[500]}
                           />
                         </Grid>
                       )}
-                      {data?.lotr_all_cards_pricing_by_pk.vitality && (
+                      {data?.lotr_all_cards_pricing_by_pk.defence && (
                         <Grid item sm={4}>
                           <StatCard
-                            title="Vitality"
-                            text={data?.lotr_all_cards_pricing_by_pk.vitality}
+                            title="Health"
+                            text={data?.lotr_all_cards_pricing_by_pk.defence}
                             color={red[500]}
                           />
                         </Grid>
@@ -311,7 +319,7 @@ const CardPage = (props) => {
                       <Grid item sm={4}>
                         <StatCard
                           title="Set"
-                          text={data?.lotr_all_cards_pricing_by_pk.set}
+                          text={data?.lotr_all_cards_pricing_by_pk.set_code}
                         />
                       </Grid>
                       <Grid item sm={4}>
@@ -323,11 +331,7 @@ const CardPage = (props) => {
                       <Grid item sm={4}>
                         <StatCard
                           title="Rarity"
-                          text={
-                            filter_type_label["rarity"][
-                              data?.lotr_all_cards_pricing_by_pk.rarity
-                            ]
-                          }
+                          text={data?.lotr_all_cards_pricing_by_pk.rarity}
                         />
                       </Grid>
                     </Grid>
@@ -344,9 +348,8 @@ const CardPage = (props) => {
                 data?.lotr_all_cards_pricing_by_pk.set_code +
                 data?.lotr_all_cards_pricing_by_pk.card_id
               }) ${
-                filter_type_label["set"][
-                  data?.lotr_all_cards_pricing_by_pk.set
-                ] || data?.lotr_all_cards_pricing_by_pk.set
+                data?.lotr_all_cards_pricing_by_pk.set ||
+                data?.lotr_all_cards_pricing_by_pk.set
               }`}
               action={
                 <>
@@ -360,14 +363,38 @@ const CardPage = (props) => {
               }
             />
             <CardContent>
-              <Box sx={{ mb: 2 }}>
-                Current price <br />{" "}
-                <Typography variant="h4">
-                  {new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  }).format(data?.lotr_all_cards_pricing_by_pk.card_price || 0)}
-                </Typography>
+              <Box display="flex" alignItems={"center"}>
+                <Box sx={{ mb: 2 }}>
+                  Current price <br />{" "}
+                  <Typography variant="h4">
+                    {new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    }).format(data?.lotr_all_cards_pricing_by_pk.price || 0)}
+                  </Typography>
+                </Box>
+                <Box sx={{ mb: 2 }}>
+                  Current price <br />{" "}
+                  <Typography variant="h4">
+                    {new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    }).format(
+                      data?.lotr_all_cards_pricing_by_pk.price_foil || 0
+                    )}
+                  </Typography>
+                </Box>
+                <Box sx={{ mb: 2 }}>
+                  Current price <br />{" "}
+                  <Typography variant="h4">
+                    {new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    }).format(
+                      data?.lotr_all_cards_pricing_by_pk.price_other || 0
+                    )}
+                  </Typography>
+                </Box>
               </Box>
               <Grid container spacing={2}>
                 <Grid item sm={6}>
@@ -422,7 +449,7 @@ const CardPage = (props) => {
                         {new Intl.NumberFormat("en-US", {
                           style: "currency",
                           currency: "USD",
-                        }).format(item.card_price)}
+                        }).format(item.price)}
                       </Typography>
                       <Box flex={1} />
                       <Button variant="contained" size="small">
