@@ -84,51 +84,74 @@ const CardFilter = ({
   setSelectedFilters,
 }) => {
   const [isFilterTypeOpen, setFilterTypeOpen] = useState(false);
+  const [searchKeyword, setSearchKeyWord] = useState("");
   return (
     <>
       <ListItemButton onClick={() => setFilterTypeOpen((p) => !p)}>
         <ListItemText primary={filterName} />
+        <Typography variant="caption" sx={{ mr: 1 }}>
+          {filters.length}
+        </Typography>
         {isFilterTypeOpen ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse in={isFilterTypeOpen} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          {filters.map((type) => (
-            <ListItem
-              sx={{ pl: 4 }}
-              secondaryAction={
-                <Checkbox
-                  edge="end"
-                  onChange={() => {
-                    const includes = selectedFilters
+          <ListItem sx={{ pl: 4 }}>
+            <TextField
+              variant="outlined"
+              placeholder="Search"
+              size="small"
+              fullWidth
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyWord(e.target.value)}
+            />
+          </ListItem>
+          {filters
+            .filter((type) => {
+              return type.value
+                ?.toLowerCase()
+                ?.includes(searchKeyword.toLowerCase());
+            })
+            .map((type) => (
+              <ListItem
+                sx={{ pl: 4 }}
+                secondaryAction={
+                  <Checkbox
+                    edge="end"
+                    onChange={() => {
+                      const includes = selectedFilters
+                        .map((filter) => filter.value)
+                        .includes(type.value);
+                      if (includes) {
+                        return setSelectedFilters(
+                          selectedFilters.filter((i) => i.value !== type.value)
+                        );
+                      }
+                      setSelectedFilters([...selectedFilters, type]);
+                    }}
+                    checked={selectedFilters
                       .map((filter) => filter.value)
-                      .includes(type.value);
-                    if (includes) {
-                      return setSelectedFilters(
-                        selectedFilters.filter((i) => i.value !== type.value)
-                      );
-                    }
-                    setSelectedFilters([...selectedFilters, type]);
-                  }}
-                  checked={selectedFilters
-                    .map((filter) => filter.value)
-                    .includes(type.value)}
-                />
-              }
-            >
-              {filter_icons[type.key] && (
-                <ListItemIcon>
-                  <img src={filter_icons[type.key][type.value]} />
-                </ListItemIcon>
-              )}
-              <ListItemText
-                primary={
-                  (filter_type_label[type.key] &&
-                    filter_type_label[type.key][type.value]) ||
-                  type.value
+                      .includes(type.value)}
+                  />
                 }
-              />
-            </ListItem>
-          ))}
+              >
+                {filter_icons[type.key] && (
+                  <ListItemIcon>
+                    <img
+                      src={filter_icons[type.key][type.value]}
+                      loading="lazy"
+                    />
+                  </ListItemIcon>
+                )}
+                <ListItemText
+                  primary={
+                    (filter_type_label[type.key] &&
+                      filter_type_label[type.key][type.value]) ||
+                    type.value
+                  }
+                />
+              </ListItem>
+            ))}
         </List>
       </Collapse>
     </>
@@ -137,6 +160,7 @@ const CardFilter = ({
 
 const labels = {
   type: "Type",
+  subtype: "Subtype",
   kind: "Kind",
   culture: "Culture",
   set: "Edition",
@@ -160,6 +184,9 @@ const IndexPage = () => {
       query FilterTypes($tcg: String_comparison_exp!) {
         type: card_generic(distinct_on: type, where: { tcg: $tcg }) {
           type
+        }
+        subtype: card_generic(distinct_on: subtype, where: { tcg: $tcg }) {
+          subtype
         }
         # kind: lotr_all_cards_pricing(distinct_on: kind) {
         #   kind
@@ -227,7 +254,7 @@ const IndexPage = () => {
   }));
   const { data, error, loading } = useSubscription(
     gql`
-      subscription(
+      subscription (
         $where: card_generic_bool_exp
         $order_by: [card_generic_order_by!]
         $limit: Int
