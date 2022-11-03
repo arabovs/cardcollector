@@ -115,11 +115,8 @@ const CardPage = (props) => {
           cost_text
           attack
           defence
-
           flavor_text
-
           kind
-
           text: game_text
         }
         similar_cards: lotr_all_cards_pricing(limit: 6) {
