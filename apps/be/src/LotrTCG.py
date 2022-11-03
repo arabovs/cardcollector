@@ -243,7 +243,7 @@ def scrapeLatestPricing():
                   card_dict.get("card_image",""),
                   editions_dict[card_dict.get("set","")],
                   card_dict.get("set",""),
-                  card_dict.get("card_number",""),
+                  card_dict.get("rarity","") + card_dict.get("card_number",""),
                   rarity_dict[card_dict.get("rarity","")],
                   float(card_price),
                   float(price_foil),
