@@ -95,13 +95,8 @@ def insertCard(card):
     printInsert(2)
 
 def insertCards(cards):
-    i = 0
     for card in cards:
-            
-                insertCard(card)    
-            if i == 300:
-                break
-            i+=1
+        insertCard(card)    
 
 #cards = [
 #        Card.where(q='name:"Gym Trainer"'),
