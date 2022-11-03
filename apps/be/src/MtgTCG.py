@@ -31,68 +31,69 @@ def cardSearch(urls):
             print("Skipping " + str(i) + ": " + card.get("name",url))
             i+=1
             continue
+        if "image_uris" not in card.keys():
+            print("No Image " + str(i) + ": " + card.get("name",url))
+            i+=1
+            continue
+        else:
         # else insert to db
-        card_types = card.get("type_line").split(" � ")
-        card_types_cleaned = re.sub(r"[^a-zA-Z0-9.:;!?,\s+]","",card_types[0])
-        card_types_list = card_types_cleaned.split("  ")
-        if len(card_types_list) == 1:
-            card_type = card_types_list[0]
-            card_subtype = None
-        else:
-            card_type = card_types_list[0]
-            card_subtype = card_types_list[1]
-        prices_cleaned = 0 if card["prices"]["usd"] is None else float(card["prices"]["usd"])
-        prices_foil_cleaned = 0 if card["prices"]["usd_foil"] is None else float(card["prices"]["usd_foil"])
-        prices_etched_cleaned = 0 if card["prices"]["usd_etched"] is None else float(card["prices"]["usd_etched"])
-    
-        # Power clean-up
-        # 11111111 = *
-        # 22222222 = -
-        # 33333333 = +
-        power_cleaned = ""
-        if 'power' in card.keys():
-          special_case = card["power"].replace("*","11111111").replace("+","33333333").replace("-","22222222")
-          power_cleaned = int(special_case)
-        else:
-          power_cleaned = None
-          
-        # Toughness clean-up
-        toughness_cleaned = ""
-        if 'toughness' in card.keys():
-          special_case = card["toughness"].replace("*","11111111").replace("+","33333333").replace("-","22222222")
-          toughness_cleaned = int(special_case)
-        else:
-          toughness_cleaned = None
-        
-        card_image_cleaned = None
-        if card["image_uris"]["normal"] is not None:
-            card_image_cleaned = card["image_uris"]["normal"]
-        
-        time.sleep(0.1)
-        print("Number " + str(i) + " : " + card.get("id",""))
-        gql_connector.gqlInsertGenericCard(
-                                   "mtg",
-                                   card.get("id",""),
-                                   card.get("name",""),
-                                   card_image_cleaned,
-                                   card.get("set_name",""),
-                                   card.get("set",""),
-                                   card.get("collector_number",""),
-                                   card.get("rarity","").title(),
-                                   prices_cleaned,
-                                   prices_foil_cleaned,
-                                   prices_etched_cleaned,
-                                   card_type,
-                                   card_subtype,
-                                   card.get("oracle_text",None),
-                                   card.get("flavor_text",None),
-                                   card.get("cmc",0),
-                                   card.get("mana_cost",None),
-                                   power_cleaned,
-                                   toughness_cleaned,
-                                   ""
-                                )
-        i += 1
+            card_types = card.get("type_line").split(" � ")
+            card_types_cleaned = re.sub(r"[^a-zA-Z0-9.:;!?,\s+]","",card_types[0])
+            card_types_list = card_types_cleaned.split("  ")
+            if len(card_types_list) == 1:
+                card_type = card_types_list[0]
+                card_subtype = None
+            else:
+                card_type = card_types_list[0]
+                card_subtype = card_types_list[1]
+            prices_cleaned = 0 if card["prices"]["usd"] is None else float(card["prices"]["usd"])
+            prices_foil_cleaned = 0 if card["prices"]["usd_foil"] is None else float(card["prices"]["usd_foil"])
+            prices_etched_cleaned = 0 if card["prices"]["usd_etched"] is None else float(card["prices"]["usd_etched"])
+
+            # Power clean-up
+            # 11111111 = *
+            # 22222222 = -
+            # 33333333 = +
+            power_cleaned = ""
+            if 'power' in card.keys():
+              special_case = card["power"].replace("*","11111111").replace("+","33333333").replace("-","22222222")
+              power_cleaned = int(special_case)
+            else:
+              power_cleaned = None
+
+            # Toughness clean-up
+            toughness_cleaned = ""
+            if 'toughness' in card.keys():
+              special_case = card["toughness"].replace("*","11111111").replace("+","33333333").replace("-","22222222")
+              toughness_cleaned = int(special_case)
+            else:
+              toughness_cleaned = None
+
+            time.sleep(0.1)
+            print("Number " + str(i) + " : " + url)
+            gql_connector.gqlInsertGenericCard(
+                                       "mtg",
+                                       card.get("id",""),
+                                       card.get("name",""),
+                                       card["image_uris"]["small"],
+                                       card.get("set_name",""),
+                                       card.get("set",""),
+                                       card.get("collector_number",""),
+                                       card.get("rarity","").title(),
+                                       prices_cleaned,
+                                       prices_foil_cleaned,
+                                       prices_etched_cleaned,
+                                       card_type,
+                                       card_subtype,
+                                       card.get("oracle_text",None),
+                                       card.get("flavor_text",None),
+                                       card.get("cmc",0),
+                                       card.get("mana_cost",None),
+                                       power_cleaned,
+                                       toughness_cleaned,
+                                       ""
+                                    )
+            i += 1
 
 def getAllMagicLinks():
     urls = []

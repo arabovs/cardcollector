@@ -43,10 +43,11 @@ def insertCard(card):
                 for attack in card.attacks:
                     cost_cleaned = ""
                     for cost in attack.cost:
-                        cost_cleaned = cost_cleaned + "[" + cost + "]"
+                        if cost is not None:
+                            cost_cleaned = cost_cleaned + "[" + cost + "]"
                     card_text_cleaned = "[Attack] Name: " + attack.name + "," + " Cost: " + cost_cleaned + "," + "Cost: " + str(attack.convertedEnergyCost) + "," + "Damage: " + attack.damage + ",\n" + "Text: " + attack.text
 
-            card_types_cleaned = re.sub(r"[^a-zA-Z0-9.:;!?,\s+]","é",card.supertype)
+            card_types_cleaned = re.sub(r"[^a-zA-Z0-9.:;!?,\s+]","e",card.supertype)
             
             
             # RETREAT Cleanup
