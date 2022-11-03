@@ -99,27 +99,36 @@ const CardPage = (props) => {
   const { data, error } = useQuery(
     gql`
       query CardById($id: uuid!) {
-        lotr_all_cards_pricing_by_pk(id: $id) {
+        lotr_all_cards_pricing_by_pk: card_generic_by_pk(id: $id) {
           id
-          card_img
-          card_name
-          lore
-          card_price
+          card_name: name
+          card_price: price
+          card_img: image
           type
-          kind
-          culture
           set
           rarity
-          signet
           card_id
-          text
-          twilight
-          strength
-          vitality
-          resistance
-          subtype
-          site
-          home
+          # id
+          # card_img
+          # card_name
+          lore: flavor_text
+          # card_price
+          # type
+          # kind
+          # culture
+          # set
+          # rarity
+          # signet
+          # card_id
+          text: game_text
+
+          # twilight
+          # strength
+          # vitality
+          # resistance
+          # subtype
+          # site
+          # home
         }
         similar_cards: lotr_all_cards_pricing(limit: 6) {
           id
@@ -333,7 +342,9 @@ const CardPage = (props) => {
               title={`${data?.lotr_all_cards_pricing_by_pk.card_name} (#${
                 data?.lotr_all_cards_pricing_by_pk.card_id
               }) ${
-                filter_type_label["set"][data?.lotr_all_cards_pricing_by_pk.set]
+                filter_type_label["set"][
+                  data?.lotr_all_cards_pricing_by_pk.set
+                ] || data?.lotr_all_cards_pricing_by_pk.set
               }`}
               action={
                 <>
