@@ -6,7 +6,7 @@ from GQL import GQL
 
 gql_connector = GQL() 
 
-
+#https://api.gwentapi.com/v0?
 urls = [
         'https://db.ygoprodeck.com/api/v7/cardinfo.php',
         #'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Pot%20Of%20Greed',
@@ -64,7 +64,7 @@ def cardSearch(url):
         if "def" in card.keys():
             card_def_cleaned = float(card["atk"])
                 
-        print("Inserted " + str(i) + ": " + card.get("name",""))         
+        print("Inserted " + str(i) + ": " + card.get("name","")) 
         gql_connector.gqlInsertGenericCard(
                                             "yugioh",
                                             str(card.get("id","")),
@@ -85,6 +85,7 @@ def cardSearch(url):
                                             str(level_cleaned),
                                             card_atk_cleaned,
                                             card_def_cleaned,
+                                            card.get("archetype",None)
                                             )
         i += 1                                
 for url in urls:

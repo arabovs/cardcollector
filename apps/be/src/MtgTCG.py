@@ -12,6 +12,15 @@ gql_connector = GQL()
 #    'https://api.scryfall.com/cards/search?q=!"Abrupt%20Decay"&unique=prints',
 #]
 
+def checkField(field):
+    if type(field) == "int":
+        return type(field)
+    if type(field) == "str":
+        return type(field)
+    if type(field) == "float":
+        return type(field)
+    if type(field) is None:
+        return None
 
 
 def cardSearch(urls):
@@ -20,9 +29,9 @@ def cardSearch(urls):
         card = requests.get(url).json()
         if "object" in card.keys() and card["object"] == "error":
             print("Skipping " + str(i) + ": " + card.get("name",url))
+            i+=1
             time.sleep(0.1)
             continue
-        # option == 1 for printing card/cards/
         # else insert to db
         card_types = card.get("type_line").split(" � ")
         card_types_cleaned = re.sub(r"[^a-zA-Z0-9.:;!?,\s+]","",card_types[0])
@@ -38,16 +47,21 @@ def cardSearch(urls):
         prices_etched_cleaned = 0 if card["prices"]["usd_etched"] is None else float(card["prices"]["usd_etched"])
     
         # Power clean-up
+        # 11111111 = *
+        # 22222222 = -
+        # 33333333 = +
         power_cleaned = ""
         if 'power' in card.keys():
-          power_cleaned = int(card["power"])
+          special_case = card["power"].replace("*","11111111").replace("+","33333333").replace("-","22222222")
+          power_cleaned = int(special_case)
         else:
           power_cleaned = None
           
         # Toughness clean-up
         toughness_cleaned = ""
         if 'toughness' in card.keys():
-          toughness_cleaned = int(card["toughness"])
+          special_case = card["toughness"].replace("*","11111111").replace("+","33333333").replace("-","22222222")
+          toughness_cleaned = int(special_case)
         else:
           toughness_cleaned = None
             
@@ -70,10 +84,10 @@ def cardSearch(urls):
                                    card.get("oracle_text",None),
                                    card.get("flavor_text",None),
                                    card.get("cmc",0),
-                                   card.get("mana_cost",""),
+                                   card.get("mana_cost",None),
                                    power_cleaned,
-                                   toughness_cleaned
-    
+                                   toughness_cleaned,
+                                   None
                                 )
         i += 1
 

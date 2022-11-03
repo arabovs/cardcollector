@@ -150,12 +150,22 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if i > 1964:
+            if i > 0:
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
               card_name = str(row.find('td', class_= 'col1').string).replace("•","")
               card_id_regex_number = re.compile(r"^([^a-zA-Z]*)\w+(\d+)") 
-              card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string)     
+              card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string) 
+              
+              # Detailed Card Info from - we need to handle SPD and rest better  
+              if "(AI)" in card_name_cleaned:
+                print("Skipping: " + card_name_cleaned)
+                i+=1
+                continue      
+              if "S" in card_id:
+                print("Skipping: " + card_name_cleaned)
+                i+=1
+                continue            
 
               set = ""
               card_number = ""
@@ -163,11 +173,6 @@ def scrapeLatestPricing():
                 set = re.search(card_id_regex_number, card_id).group(1)
                 card_number = re.search(card_id_regex_number, card_id).group(2)
               
-            
-                # Detailed Card Info from - we need to handle SPD and rest better  
-                if "(AI)" in card_name_cleaned:
-                  print("Skipping")
-                  continue              
                 if card_name_cleaned[-3:] not in ("SPD"):
                   card_image = "https://lotrtcgwiki.com/wiki/_media/cards:lotr" + splitEditionID(card_id,1) + ".jpg"
                   card_dict = fetchCardDetailsDict("https://lotrtcgwiki.com/wiki/lotr" + splitEditionID(card_id,1))
@@ -249,6 +254,7 @@ def scrapeLatestPricing():
                   card_dict.get("site",None),
                   strength_cleaned,
                   vitality_cleaned,
+                  card_dict.get("kind",""),
                 )
                 print("Inserted" + str(i) + ": " + card_name_cleaned)
                 

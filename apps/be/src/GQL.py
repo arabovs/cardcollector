@@ -6,11 +6,11 @@ from gql import Client, gql
 class GQL:
 
     def __init__(self):
-        print("Starting DB")
+        print("Initialising Hasura Connector")
 
     def gqlInsertGenericCard(self,
                             tcg,
-                            id,
+                            card_id,
                             name,
                             image,
                             set,
@@ -28,6 +28,7 @@ class GQL:
                             cost_text,
                             attack,
                             defence,
+                            kind
                           ):
             HASURA_URL = "https://lotrtcgwebscrapper.herokuapp.com/v1/graphql"
 
@@ -38,7 +39,7 @@ class GQL:
             )
             client = Client(transport=transport, fetch_schema_from_transport=True)
             query = gql("""mutation MyMutation($tcg: String!,
-                                               $id: String!,
+                                               $card_id: String!,
                                                $name: String!,
                                                $image: String!, 
                                                $set: String!,
@@ -56,9 +57,10 @@ class GQL:
                                                $cost_text: String!,
                                                $attack: float8!,
                                                $defence: float8!,
+                                               $kind: String!,
                                              ) {
               insert_card_generic(objects: {tcg: $tcg,
-                                              id: $id,
+                                              card_id: $card_id,
                                               name: $name, 
                                               image: $image,
                                               set: $set,
@@ -76,13 +78,14 @@ class GQL:
                                               cost_text: $cost_text,
                                               attack: $attack,
                                               defence: $defence,
+                                              kind: $kind
                                               }) {
                 affected_rows
               }
             }""")
             params = {
                 "tcg": tcg,
-                "id": id,
+                "card_id": card_id,
                 "name": name,
                 "image": image,
                 "set": set,
@@ -99,7 +102,8 @@ class GQL:
                 "cost": cost,
                 "cost_text": cost_text,
                 "attack": attack,
-                "defence": defence,          
+                "defence": defence,
+                "kind": kind,          
             }
             result = client.execute(query, variable_values=params)
             return result
