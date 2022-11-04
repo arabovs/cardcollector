@@ -15,34 +15,48 @@ params = {
 print("getting access Token")
 response = requests.post(url, data=params)
 access_token = json.loads(response.text.replace("'", "\""))["access_token"]
-url_card = f"https://us.api.blizzard.com/hearthstone/cards/52119-arch-villain-rafaam?locale=en_US&gameMode=%22constructed%22&access_token={access_token}"
+url_card = f"https://us.api.blizzard.com/hearthstone/cards?locale=en_US&access_token={access_token}"
 
-print(url_card)
-card = requests.get(url_card).json()
-print(card)
+cards = requests.get(url_card).json()
 
-gql_connector.gqlInsertGenericCard(
-            "hearthstone",
-            str(card.get("slug","")),
-            card.get("name",""),
-            card.get("imageGold",""),
-            str(card.get("cardTypeId","")),
-            str(card.get("cardSetId","")),
-            str(card.get("cardSetId","")),
-            str(card.get("rarityId","")),
-            None,
-            None,
-            None,
-            str(card.get("cardTypeId","")),
-            None,
-            str(card.get("text","")),
-            str(card.get("flavorText","")),
-            str(card.get("manaCost","")),
-            None,
-            str(card.get("attack","")),
-            str(card.get("health","")),
-            None
-        )
+for card in cards["cards"]:
+    
+        # clean up attack and health
+        attack_cleaned = None
+        if "attack" in card.keys():
+            attack_cleaned = float(card["attack"])
+            
+        health_cleaned = None
+        if "attack" in card.keys():
+            health_cleaned = float(card["health"])
+
+        # mana cost clean up
+        mana_cleaned = None
+        if "manaCost" in card.keys():
+            mana_cleaned = card["manaCost"]
+    
+        gql_connector.gqlInsertGenericCard(
+                "hearthstone",
+                str(card.get("slug","")),
+                card.get("name",""),
+                card.get("image",""),
+                str(card.get("cardTypeId",None)),
+                str(card.get("cardSetId",None)),
+                str(card.get("cardSetId",None)),
+                str(card.get("rarityId",None)),
+                None,
+                None,
+                None,
+                str(card.get("cardTypeId",None)),
+                None,
+                card.get("text",None),
+                card.get("flavorText",None),
+                mana_cleaned,
+                None,
+                attack_cleaned,
+                health_cleaned,
+                None
+            )
 
 print("inserted")
 
