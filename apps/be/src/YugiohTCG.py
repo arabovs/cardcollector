@@ -30,67 +30,69 @@ def cardSearch(url):
             print("Skipping " + str(i))
             i+=1
             continue
-        set_codes = None
-        if card["card_sets"] is list:
-            set_codes = card["card_sets"][0]
-        else:
-            set_codes = card["card_sets"]
-            
-        set_codes = card["card_sets"][0]["set_code"].split("-")
-        set_code = set_codes[0]
-        set_id   = set_codes[1]
-             
-        # GAME TEXT and FLAVOR TEXT clean
-        game_text_cleaned = ''
-        flavor_text_cleaned = ''
-        if card["desc"][0:2] == "''":
-            game_text_cleaned = None
-            flavor_text_cleaned = card["desc"]
-        else:
-            game_text_cleaned = card["desc"]
-            flavor_text_cleaned = None
-               
-        # LEVEL cleanup  
-        level_cleaned = ""
-        if "level" not in card.keys():
-            level_cleaned = 0
-        else:
-            level_cleaned = card["level"]
-            
-        card_atk_cleaned = None
-        if "atk" in card.keys():
-            if card["atk"] is not None:
-                card_atk_cleaned = float(card["atk"])
-        
-        card_def_cleaned = None
-        if "def" in card.keys():
-            if card["def"] is not None:
-                card_def_cleaned = float(card["def"])
-                
-        print("Inserted " + str(i)) 
-        i += 1 
-        gql_connector.gqlInsertGenericCard(
-                                            "yugioh",
-                                            str(card.get("id","")),
-                                            card.get("name",""),
-                                            card["card_images"][0]["image_url"],
-                                            card["card_sets"][0]["set_name"],
-                                            set_code,
-                                            set_id,
-                                            card["card_sets"][0]["set_rarity_code"].replace("(","").replace(")","").title(),
-                                            card["card_prices"][0]["cardmarket_price"],
-                                            card["card_prices"][0]["tcgplayer_price"],
-                                            card["card_prices"][0]["ebay_price"],
-                                            card["type"],
-                                            card["race"],
-                                            game_text_cleaned,
-                                            flavor_text_cleaned,
-                                            level_cleaned,
-                                            str(level_cleaned),
-                                            card_atk_cleaned,
-                                            card_def_cleaned,
-                                            card.get("archetype",None)
-                                            )
+        for y in range(len(card["card_sets"])):
+            print(card)
+            set_codes = None
+            if card["card_sets"] is list:
+                set_codes = card["card_sets"][y]
+            else:
+                set_codes = card["card_sets"]
+
+            set_codes = card["card_sets"][y]["set_code"].split("-")
+            set_code = set_codes[0]
+            set_id   = set_codes[1]
+
+            # GAME TEXT and FLAVOR TEXT clean
+            game_text_cleaned = ''
+            flavor_text_cleaned = ''
+            if card["desc"][0:2] == "''":
+                game_text_cleaned = None
+                flavor_text_cleaned = card["desc"]
+            else:
+                game_text_cleaned = card["desc"]
+                flavor_text_cleaned = None
+
+            # LEVEL cleanup  
+            level_cleaned = ""
+            if "level" not in card.keys():
+                level_cleaned = 0
+            else:
+                level_cleaned = card["level"]
+
+            card_atk_cleaned = None
+            if "atk" in card.keys():
+                if card["atk"] is not None:
+                    card_atk_cleaned = float(card["atk"])
+
+            card_def_cleaned = None
+            if "def" in card.keys():
+                if card["def"] is not None:
+                    card_def_cleaned = float(card["def"])
+
+            print("Inserted " + str(i)) 
+            i += 1 
+            gql_connector.gqlInsertGenericCard(
+                                                "yugioh",
+                                                str(card.get("id","")),
+                                                card.get("name",""),
+                                                card["card_images"][0]["image_url"],
+                                                card["card_sets"][y]["set_name"],
+                                                set_code,
+                                                set_id,
+                                                card["card_sets"][y]["set_rarity_code"].replace("(","").replace(")","").title(),
+                                                card["card_prices"][0]["cardmarket_price"],
+                                                card["card_prices"][0]["tcgplayer_price"],
+                                                card["card_prices"][0]["ebay_price"],
+                                                card["type"],
+                                                card["race"],
+                                                game_text_cleaned,
+                                                flavor_text_cleaned,
+                                                level_cleaned,
+                                                str(level_cleaned),
+                                                card_atk_cleaned,
+                                                card_def_cleaned,
+                                                card.get("archetype",None)
+                                                )
                                
 for url in urls:
     cardSearch(url)
