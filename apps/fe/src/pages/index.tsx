@@ -427,7 +427,7 @@ const IndexPage = () => {
                       {item.name}
                     </Typography>
                     <Box display="flex" alignItems={"center"}>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" color="text.secondary" noWrap>
                         {item.set}
                       </Typography>
                     </Box>
