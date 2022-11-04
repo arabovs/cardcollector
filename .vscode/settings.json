@@ -1,0 +1,3 @@
+{
+  "python.analysis.extraPaths": ["./apps/be/src/etc/postgre"]
+}

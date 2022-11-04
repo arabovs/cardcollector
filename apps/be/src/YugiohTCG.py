@@ -1,6 +1,6 @@
 import requests
 import sys
-from GQL import GQL
+from etc.postgre import GQL
 
 #%20
 

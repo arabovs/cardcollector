@@ -5,8 +5,8 @@ import json
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
-from GQL import GQL
-from etc import etc
+from etc.postgre import GQL
+from etc.lotrtcg.metadata import HsMetadata
 import subprocess
 import re
 from os.path  import basename
@@ -23,8 +23,8 @@ now = now = datetime.now()
 gql_connector = GQL()
 
 # src/etc.py
-editions_dict = etc().editions_dict
-rarity_dict = etc().rarity_dict
+editions_dict = HsMetadata().editions_dict
+rarity_dict = HsMetadata().rarity_dict
 
 #get price from url, 0 if no valid url
 def getPriceFromURL(page_url): 
@@ -236,29 +236,29 @@ def scrapeLatestPricing():
                 # print(json.dumps(str(card_dict),sort_keys=True, indent=4))
     
                 # Insert to hasura
-                gql_connector.gqlInsertGenericCard(
-                  "lotr",
-                  card_dict.get("card_id",""),
-                  card_dict.get("card_name",""),
-                  card_dict.get("card_image",""),
-                  editions_dict[card_dict.get("set","")],
-                  card_dict.get("set",""),
-                  card_dict.get("rarity","") + card_dict.get("card_number",""),
-                  rarity_dict[card_dict.get("rarity","")],
-                  float(card_price),
-                  float(price_foil),
-                  float(price_tng),
-                  card_dict.get("card_type",None),
-                  card_dict.get("subtype",None),
-                  card_dict.get("game_text",None),
-                  card_dict.get("lore",None),
-                  twilight_cleaned,
-                  ##### WILL RESULT IN A BUG 100%
-                  card_dict.get("site",None),
-                  strength_cleaned,
-                  vitality_cleaned,
-                  card_dict.get("kind",""),
-                )
+                #gql_connector.gqlInsertGenericCard(
+                #  "lotr",
+                #  card_dict.get("card_id",""),
+                #  card_dict.get("card_name",""),
+                #  card_dict.get("card_image",""),
+                #  editions_dict[card_dict.get("set","")],
+                #  card_dict.get("set",""),
+                #  card_dict.get("rarity","") + card_dict.get("card_number",""),
+                #  rarity_dict[card_dict.get("rarity","")],
+                #  float(card_price),
+                #  float(price_foil),
+                #  float(price_tng),
+                #  card_dict.get("card_type",None),
+                #  card_dict.get("subtype",None),
+                #  card_dict.get("game_text",None),
+                #  card_dict.get("lore",None),
+                #  twilight_cleaned,
+                #  ##### WILL RESULT IN A BUG 100%
+                #  card_dict.get("site",None),
+                #  strength_cleaned,
+                #  vitality_cleaned,
+                #  card_dict.get("kind",""),
+                #)
                 print("Inserted" + str(i) + ": " + card_dict.get("card_name",""))
                 
                 

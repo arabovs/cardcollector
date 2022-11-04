@@ -1,4 +1,4 @@
-class etc():
+class HsMetadata():
 
     rarity_dict = {
       "R": "Rare",
