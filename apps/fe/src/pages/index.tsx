@@ -269,6 +269,7 @@ const IndexPage = () => {
           id
           name
           price
+          set
           image
         }
       }
@@ -427,10 +428,7 @@ const IndexPage = () => {
                     </Typography>
                     <Box display="flex" alignItems={"center"}>
                       <Typography variant="body2" color="text.secondary">
-                        {new Intl.NumberFormat("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                        }).format(item.price)}
+                        {item.set}
                       </Typography>
                     </Box>
                   </CardContent>
