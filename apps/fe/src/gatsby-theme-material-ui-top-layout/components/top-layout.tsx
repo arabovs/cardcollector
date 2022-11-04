@@ -22,6 +22,7 @@ const GAME_NAMES = {
   mtg: "Magic: The Gathering",
   pokemon: "Pokémon",
   yugioh: "Yu-Gi-Oh!",
+  hearthstone: "Heartstone (new)",
 };
 
 const GameSelectorContext = createContext(null);
