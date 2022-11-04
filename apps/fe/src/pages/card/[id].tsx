@@ -217,7 +217,7 @@ const CardPage = (props) => {
                   <Divider />
                   <CardContent>
                     <Grid container spacing={1}>
-                      {data?.card_generic_by_pk.cost && (
+                      {data?.card_generic_by_pk.cost !== null && (
                         <Grid item sm={4}>
                           <StatCard
                             title="Value"
