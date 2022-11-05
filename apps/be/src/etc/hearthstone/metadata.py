@@ -105,6 +105,10 @@ metadata = {
       "alternateHeroCardIds": [50484, 56358, 57761, 60375, 64698]
     },
     {
+     "id": 12,
+     "name": "Generic"
+    },
+    {
       "slug": "hunter",
       "id": 3,
       "name": "Hunter",

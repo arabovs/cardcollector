@@ -1,28 +1,24 @@
 import requests
 import json
+import time
 
 from etc.postgre.GQL import GQL
 from etc.hearthstone.metadata import metadata
 
-#print(metadata["types"])
-#print(metadata["rarities"])
-#print(metadata["classes"])
-#print(metadata["minionTypes"])
-#print(metadata["keywords"])
-id = 1
-
-
-
 AUTH_URL = 'https://oauth.battle.net/token'
 
-URL_CARD = f"https://us.api.blizzard.com/hearthstone/cards?locale=en_US"
 
-# METADATA
-# URL_CARD = f"https://us.api.blizzard.com/hearthstone/metadata?locale=en_US&access_token={access_token}"
-# URL_CARD = f"https://us.api.blizzard.com/hearthstone/metadata/sets?locale=en_US"
-# URL_CARD = f"https://us.api.blizzard.com/hearthstone/metadata/classes?locale=en_US&access_token={access_token}"
-# URL_CARD = f"https://us.api.blizzard.com/hearthstone/metadata/keywords?locale=en_US&access_token={access_token}"
-
+url_pages = [
+"https://us.api.blizzard.com/hearthstone/cards?locale=en_US&pageSize=500",
+"https://us.api.blizzard.com/hearthstone/cards?locale=en_US&page=2&pageSize=500",
+"https://us.api.blizzard.com/hearthstone/cards?locale=en_US&page=3&pageSize=500",
+"https://us.api.blizzard.com/hearthstone/cards?locale=en_US&page=4&pageSize=500",
+"https://us.api.blizzard.com/hearthstone/cards?locale=en_US&page=5&pageSize=500",
+"https://us.api.blizzard.com/hearthstone/cards?locale=en_US&page=6&pageSize=500",
+"https://us.api.blizzard.com/hearthstone/cards?locale=en_US&page=7&pageSize=500",
+"https://us.api.blizzard.com/hearthstone/cards?locale=en_US&page=8&pageSize=500",
+"https://us.api.blizzard.com/hearthstone/cards?locale=en_US&page=9&pageSize=500",
+]
 
 gql_connector = GQL() # initialise postgre connector
 
@@ -35,9 +31,10 @@ def getAuthToken():
         'client_id': '7af929a351344362909d803901df5897',
     }
 
-    print("getting access Token")
+    print("Getting Access Token...")
     response = requests.post(AUTH_URL, data=params)
     access_token = json.loads(response.text.replace("'", "\""))["access_token"]
+    print("Access Token: " + access_token)
     return access_token
 
 # Fetch JSON from Blizzard's endpoint
@@ -47,6 +44,24 @@ def getJSONfromApi(access_token, endpoint):
 
 # takes a card objects and cleans various fields as per db model
 def cleanupCard(card):
+    
+    # clean up classId classes
+    if "classId" in card:
+        for type in metadata["classes"]:
+            for key, value in type.items():
+                if key == "id" and value == card["classId"]:
+                    card["classId"] = type["name"]
+                    break    
+    
+    # clean up minionTypes 
+    if "minionTypeId" in card:
+        for type in metadata["minionTypes"]:
+            for key, value in type.items():
+                if key == "id" and value == card["minionTypeId"]:
+                    card["minionTypeId"] = type["name"]
+                    break
+    else:
+        card["minionTypes"] = None
     
     # clean up cardTypeId
     if "cardTypeId" in card:
@@ -73,6 +88,7 @@ def cleanupCard(card):
         for setId in metadata["sets"]:
             for key, value in setId.items():
                 if key == "id" and value == card["cardSetId"]:
+                    card["cardSetIdOld"] = card["cardSetId"]
                     card["cardSetId"] = setId["name"]
                     break
     else:
@@ -97,36 +113,38 @@ def cleanupCard(card):
     
     return card
 
+# insert into db
 def insertIntoDatabase(cards):
-    i=0 # used for debug purposes
+    print("Inserting cards")
     #for card in cards: # for metadata
     for card in cards["cards"]: # for all cards
-        card = cleanupCard(card)
+        card = cleanupCard(card) # clean up required for all cards as part standartization
         gql_connector.gqlInsertGenericCard(
                 "hearthstone",
                 str(card.get("slug","")),
                 card.get("name",""),
                 card.get("image",""),
-                str(card.get("cardTypeId",None)),
                 str(card.get("cardSetId",None)),
-                str(card.get("cardSetId",None)),
+                str(card.get("cardSetIdOld","")),
+                str(card.get("id",None)),
                 str(card.get("rarityId",None)),
                 None,
                 None,
                 None,
                 str(card.get("cardTypeId",None)),
-                None, # minions array
+                card.get("minionTypeId",None), 
                 card.get("text",None),
                 card.get("flavorText",None),
                 card["manaCost"],
                 None,
                 card["attack"],
                 card["health"],
-                None
+                card.get("classId",None),
         )
-        i+=1 
-    print("Inserted " + str(i))
 
-    
-insertIntoDatabase(getJSONfromApi(getAuthToken(), URL_CARD))
+# loops through pages of 500 cards
+for url in url_pages:
+    insertIntoDatabase(getJSONfromApi(getAuthToken(), url))
+    print("Cards Inserted")
+    time.sleep(60)
 
