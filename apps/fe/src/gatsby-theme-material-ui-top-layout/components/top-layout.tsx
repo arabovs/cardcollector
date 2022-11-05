@@ -10,7 +10,6 @@ import {
   MenuItem,
   Select,
   ListItemIcon,
-  ListItemText,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import {
@@ -56,7 +55,7 @@ const GameSelector = () => {
         renderValue={(selected) => {
           return (
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <ListItemIcon sx={{ mr: 2 }}>
+              <ListItemIcon>
                 <TcgIcon tcg={selected}></TcgIcon>
               </ListItemIcon>
             </Box>
@@ -65,7 +64,7 @@ const GameSelector = () => {
       >
         {data.card_generic.map(({ tcg }) => (
           <MenuItem value={tcg}>
-            <ListItemIcon sx={{ mr: 2 }}>
+            <ListItemIcon>
               <TcgIcon tcg={tcg}></TcgIcon>
             </ListItemIcon>
           </MenuItem>
