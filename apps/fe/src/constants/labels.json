@@ -59,5 +59,14 @@
     "cost": "Mana Cost",
     "attack": "Attack",
     "defence": "Health"
+  },
+  "fnb": {
+    "set": "Set",
+    "set_code": "Set Code",
+    "card_id": "Set Number",
+    "rarity": "Rarity",
+    "cost": "Cost",
+    "attack": "Attack",
+    "defence": "Defense"
   }
 }

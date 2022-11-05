@@ -18,6 +18,9 @@ export const TcgIcon = ({ tcg }) => {
       {tcg === "yugioh" && (
         <img src="https://i.imgur.com/nqpLbCj.png" height="30px" width="106" />
       )}
+      {tcg === "fnb" && (
+        <img src="https://i.imgur.com/rNHnnEd.png" height="30px" width="106" />
+      )}
     </>
   );
 };
