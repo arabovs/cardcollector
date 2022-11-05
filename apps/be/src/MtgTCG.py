@@ -69,7 +69,6 @@ def cardSearch(urls):
             else:
               toughness_cleaned = None
 
-            time.sleep(0.1)
             print("Number " + str(i) + " : " + url)
             gql_connector.gqlInsertGenericCard(
                                        "mtg",
