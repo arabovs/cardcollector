@@ -37,6 +37,9 @@ def cardSearch(url):
             else:
                 set_codes = card["card_sets"]
 
+            if "card_sets" not in card.keys() or card["card_sets"][y] is None:
+                print("Skipping " + str(i))
+                i+=1
             set_codes = card["card_sets"][y]["set_code"].split("-")
             set_code = set_codes[0]
             set_id   = set_codes[1]
