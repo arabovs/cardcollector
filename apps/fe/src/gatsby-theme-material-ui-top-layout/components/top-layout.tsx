@@ -9,6 +9,7 @@ import {
   IconButton,
   MenuItem,
   Select,
+  ListItemIcon,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import {
@@ -16,14 +17,7 @@ import {
   ShoppingCartOutlined,
 } from "@mui/icons-material";
 import { Link } from "gatsby-theme-material-ui";
-
-const GAME_NAMES = {
-  lotr: "The Lord of the Rings",
-  mtg: "Magic: The Gathering",
-  pokemon: "Pokémon",
-  yugioh: "Yu-Gi-Oh!",
-  hearthstone: "Heartstone (new)",
-};
+import { TcgIcon } from "../../components/TcgIcon";
 
 const GameSelectorContext = createContext(null);
 
@@ -58,9 +52,22 @@ const GameSelector = () => {
         onChange={(e) => setSelectedGame(e.target.value)}
         size="small"
         sx={{ ml: 2 }}
+        renderValue={(selected) => {
+          return (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <ListItemIcon>
+                <TcgIcon tcg={selected}></TcgIcon>
+              </ListItemIcon>
+            </Box>
+          );
+        }}
       >
         {data.card_generic.map(({ tcg }) => (
-          <MenuItem value={tcg}>{GAME_NAMES[tcg]}</MenuItem>
+          <MenuItem value={tcg}>
+            <ListItemIcon>
+              <TcgIcon tcg={tcg}></TcgIcon>
+            </ListItemIcon>
+          </MenuItem>
         ))}
       </Select>
     </>
