@@ -1,0 +1,63 @@
+{
+  "lotr": {
+    "type": "Type",
+    "subtype": "Subtype",
+    "kind": "Kind",
+    "set": "Set",
+    "set_code": "Set Code",
+    "card_id": "Set Number",
+    "rarity": "Rarity",
+    "cost": "Cost",
+    "attack": "Attack",
+    "defence": "Defence"
+  },
+  "mtg": {
+    "type": "Type",
+    "subtype": "Subtype",
+    "kind": null,
+    "set": "Set",
+    "set_code": "Set Code",
+    "card_id": "Set Number",
+    "rarity": "Rarity",
+    "cost": "Mana Value",
+    "cost_text": "Mana Cost",
+    "attack": "Power",
+    "defence": "Toughness"
+  },
+  "pokemon": {
+    "type": "Card Type",
+    "subtype": "Subtype",
+    "kind": "Type",
+    "set": "Set",
+    "set_code": "Set Code",
+    "card_id": "Set Number",
+    "rarity": "Rarity",
+    "cost": "Energy Value",
+    "cost_text": "Energy Cost",
+    "defence": "Health"
+  },
+  "yugioh": {
+    "type": "Supertype",
+    "subtype": "Subtype",
+    "kind": "Archetype",
+    "set": "Set",
+    "set_code": "Set Code",
+    "card_id": "Set Number",
+    "rarity": "Rarity",
+    "cost": "Level",
+    "attack": "Attack",
+    "defence": "Defence"
+  },
+  "hearthstone": {
+    "type": "Card Type",
+    "subtype": "Minion Type",
+    "kind": "Class",
+    "set": "Set",
+    "set_code": "Set Code",
+    "card_id": "Set Number",
+    "rarity": "Rarity",
+    "cost": "Mana Cost",
+    "attack": "Attack",
+    "defence": "Health"
+  }
+}
