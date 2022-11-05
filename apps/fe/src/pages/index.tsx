@@ -3,9 +3,7 @@ import {
   Box,
   Button,
   Card,
-  CardActionArea,
   CardContent,
-  CardMedia,
   Checkbox,
   Chip,
   Collapse,
@@ -26,8 +24,8 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { Close, ExpandLess, ExpandMore, FilterList } from "@mui/icons-material";
-import { Link } from "gatsby";
 import { useGameSelectorContext } from "../gatsby-theme-material-ui-top-layout/components/top-layout";
+import { GameCard } from "../components/GameCard";
 
 const filter_icons = {
   culture: {
@@ -254,7 +252,7 @@ const IndexPage = () => {
   }));
   const { data, error, loading } = useSubscription(
     gql`
-      subscription(
+      subscription (
         $where: card_generic_bool_exp
         $order_by: [card_generic_order_by!]
         $limit: Int
@@ -418,22 +416,13 @@ const IndexPage = () => {
               </Grid>
             ))}
           {data?.card_generic.map((item) => (
-            <Grid item xs={6} sm={1.5}>
-              <Card variant="outlined">
-                <CardActionArea component={Link} to={`/card/${item.id}`}>
-                  <CardMedia component="img" image={item.image} />
-                  <CardContent>
-                    <Typography gutterBottom variant="subtitle2" noWrap>
-                      {item.name}
-                    </Typography>
-                    <Box display="flex" alignItems={"center"}>
-                      <Typography variant="body2" color="text.secondary" noWrap>
-                        {item.set}
-                      </Typography>
-                    </Box>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
+            <Grid item xs={6} sm={1.5} key={item.id}>
+              <GameCard
+                id={item.id}
+                image={item.image}
+                name={item.name}
+                set={item.set}
+              />
             </Grid>
           ))}
           <Grid item sm={12} sx={{ display: "flex", justifyContent: "center" }}>

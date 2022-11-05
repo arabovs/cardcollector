@@ -6,13 +6,10 @@ import {
   Dashboard,
   ExpandLess,
   ExpandMore,
-  Favorite,
   FavoriteBorderOutlined,
   FormatListBulleted,
   Label,
   LocalOffer,
-  Numbers,
-  Power,
   Report,
   Share,
   Timeline,
@@ -20,10 +17,8 @@ import {
 import {
   Button,
   Card,
-  CardActionArea,
   CardContent,
   CardHeader,
-  CardMedia,
   Collapse,
   Container,
   Divider,
@@ -31,12 +26,13 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { blue, brown, grey, purple, red } from "@mui/material/colors";
+import { blue, brown, red } from "@mui/material/colors";
 import { alpha, Box } from "@mui/system";
 import React, { useState } from "react";
 import demoChart from "./../../res/demo-chart.png";
 import DataGridDemo from "../../components/DataGridDemo";
-import { Link } from "gatsby";
+import { useGameSelectorContext } from "../../gatsby-theme-material-ui-top-layout/components/top-layout";
+import { GameCard } from "../../components/GameCard";
 
 const CardCollapse = ({
   title,
@@ -44,6 +40,7 @@ const CardCollapse = ({
   children = null,
   initialOpen = false,
   noContentPadding = false,
+  disabled = false,
 }) => {
   const [open, setOpen] = useState(initialOpen);
 
@@ -53,7 +50,7 @@ const CardCollapse = ({
         title={title}
         avatar={avatar}
         action={
-          <IconButton onClick={() => setOpen((o) => !o)}>
+          <IconButton onClick={() => setOpen((o) => !o)} disabled={disabled}>
             <ExpandMore />
           </IconButton>
         }
@@ -95,6 +92,7 @@ const CardPage = (props) => {
   const [isPropertiesOpen, setPropertiesOpen] = useState(true);
   const [isDetailsOpen, setDetailsOpen] = useState(false);
   const [isStatsOpen, setStatsOpen] = useState(false);
+  const { selectedGame } = useGameSelectorContext();
   const { data, error } = useQuery(
     gql`
       query CardById($id: uuid!) {
@@ -119,17 +117,32 @@ const CardPage = (props) => {
           kind
           text: game_text
         }
-        similar_cards: lotr_all_cards_pricing(limit: 6) {
-          id
-          card_name
-          card_price
-          price_foil
-          price_tng
-          card_img
-        }
       }
     `,
     { variables: { id } }
+  );
+  const similarCardsQuery = useQuery(
+    gql`
+      query SimilarCards($where: card_generic_bool_exp) {
+        similar_cards: card_generic(limit: 6, where: $where) {
+          id
+          name
+          price
+          set
+          image
+        }
+      }
+    `,
+    {
+      variables: {
+        where: {
+          id: { _neq: data?.card_generic_by_pk.id },
+          name: { _ilike: `%${data?.card_generic_by_pk.name}%` },
+          tcg: { _eq: selectedGame },
+        },
+      },
+      skip: data?.card_generic_by_pk.name ? false : true,
+    }
   );
   if (error) return <div>{error.message}</div>;
   return (
@@ -380,32 +393,20 @@ const CardPage = (props) => {
           </CardCollapse>
         </Grid>
       </Grid>
-      <CardCollapse title={`More cards like this one`} avatar={<Dashboard />}>
+      <CardCollapse
+        title={`More cards like this one`}
+        avatar={<Dashboard />}
+        disabled={similarCardsQuery.loading}
+      >
         <Grid container spacing={1}>
-          {data?.similar_cards.map((item) => (
-            <Grid item sm={2}>
-              <Card variant="outlined">
-                <CardActionArea component={Link} to={`/card/${item.id}`}>
-                  <CardMedia component="img" image={item.card_img} />
-                  <CardContent>
-                    <Typography gutterBottom variant="subtitle2" noWrap>
-                      {item.card_name}
-                    </Typography>
-                    <Box display="flex" alignItems={"center"}>
-                      <Typography variant="body2" color="text.secondary">
-                        {new Intl.NumberFormat("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                        }).format(item.price)}
-                      </Typography>
-                      <Box flex={1} />
-                      <Button variant="contained" size="small">
-                        buy now
-                      </Button>
-                    </Box>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
+          {similarCardsQuery.data?.similar_cards.map((item) => (
+            <Grid item xs={6} sm={2} key={item.id}>
+              <GameCard
+                id={item.id}
+                image={item.image}
+                name={item.name}
+                set={item.set}
+              />
             </Grid>
           ))}
         </Grid>
