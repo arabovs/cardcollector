@@ -7,9 +7,11 @@ import {
   Checkbox,
   Chip,
   Collapse,
+  FormControl,
   Grid,
   IconButton,
   InputAdornment,
+  InputLabel,
   List,
   ListItem,
   ListItemButton,
@@ -26,24 +28,7 @@ import React, { useState } from "react";
 import { Close, ExpandLess, ExpandMore, FilterList } from "@mui/icons-material";
 import { useGameSelectorContext } from "../gatsby-theme-material-ui-top-layout/components/top-layout";
 import { GameCard } from "../components/GameCard";
-
-const filter_icons = {
-  culture: {
-    Dwarven: "https://lotrtcgwiki.com/wiki/_media/dwarven.gif",
-    Gandalf: "https://lotrtcgwiki.com/wiki/_media/gandalf.gif",
-    Elven: "https://lotrtcgwiki.com/wiki/_media/elven.gif",
-    Gollum: "https://lotrtcgwiki.com/wiki/_media/gollum.gif",
-    Gondor: "https://lotrtcgwiki.com/wiki/_media/gondor.gif",
-    Rohan: "https://lotrtcgwiki.com/wiki/_media/rohan.gif",
-    Shire: "https://lotrtcgwiki.com/wiki/_media/shire.gif",
-    Dunland: "https://lotrtcgwiki.com/wiki/_media/dunland.gif",
-    Isengard: "https://lotrtcgwiki.com/wiki/_media/isengard.gif",
-    Moria: "https://lotrtcgwiki.com/wiki/_media/moria.gif",
-    Raider: "https://lotrtcgwiki.com/wiki/_media/raider.gif",
-    Sauron: "https://lotrtcgwiki.com/wiki/_media/sauron.gif",
-    Wraith: "https://lotrtcgwiki.com/wiki/_media/wraith.gif",
-  },
-};
+import labels from "./../constants/labels.json";
 
 export const filter_type_label = {
   set: {
@@ -106,7 +91,7 @@ const CardFilter = ({
           </ListItem>
           {filters
             .filter((type) => {
-              return type.value
+              return String(type.value)
                 ?.toLowerCase()
                 ?.includes(searchKeyword.toLowerCase());
             })
@@ -133,20 +118,13 @@ const CardFilter = ({
                   />
                 }
               >
-                {filter_icons[type.key] && (
-                  <ListItemIcon>
-                    <img
-                      src={filter_icons[type.key][type.value]}
-                      loading="lazy"
-                    />
-                  </ListItemIcon>
-                )}
                 <ListItemText
                   primary={
                     (filter_type_label[type.key] &&
                       filter_type_label[type.key][type.value]) ||
                     type.value
                   }
+                  primaryTypographyProps={{ noWrap: true }}
                 />
               </ListItem>
             ))}
@@ -154,16 +132,6 @@ const CardFilter = ({
       </Collapse>
     </>
   );
-};
-
-const labels = {
-  type: "Type",
-  subtype: "Subtype",
-  kind: "Kind",
-  culture: "Culture",
-  set: "Edition",
-  rarity: "Rarity",
-  signet: "Signet",
 };
 
 const IndexPage = () => {
@@ -180,30 +148,54 @@ const IndexPage = () => {
   const filterTypesQuery = useQuery(
     gql`
       query FilterTypes($tcg: String_comparison_exp!) {
-        type: card_generic(distinct_on: type, where: { tcg: $tcg }) {
+        type: card_generic(
+          distinct_on: type
+          where: { tcg: $tcg, type: { _is_null: false } }
+        ) {
           type
         }
-        subtype: card_generic(distinct_on: subtype, where: { tcg: $tcg }) {
+        subtype: card_generic(
+          distinct_on: subtype
+          where: { tcg: $tcg, subtype: { _is_null: false } }
+        ) {
           subtype
         }
-        kind: card_generic(distinct_on: kind, where: { tcg: $tcg }) {
+        kind: card_generic(
+          distinct_on: kind
+          where: { tcg: $tcg, kind: { _is_null: false } }
+        ) {
           kind
         }
-        # culture: lotr_all_cards_pricing(distinct_on: culture) {
-        #   culture
-        # }
-        set: card_generic(distinct_on: set, where: { tcg: $tcg }) {
+        cost: card_generic(
+          distinct_on: cost
+          where: { tcg: $tcg, cost: { _is_null: false } }
+        ) {
+          cost
+        }
+        attack: card_generic(
+          distinct_on: attack
+          where: { tcg: $tcg, attack: { _is_null: false } }
+        ) {
+          attack
+        }
+        defence: card_generic(
+          distinct_on: defence
+          where: { tcg: $tcg, defence: { _is_null: false } }
+        ) {
+          defence
+        }
+        set: card_generic(
+          distinct_on: set
+          where: { tcg: $tcg, set: { _is_null: false } }
+        ) {
           set
         }
-        rarity: card_generic(distinct_on: rarity, where: { tcg: $tcg }) {
+        rarity: card_generic(
+          distinct_on: rarity
+          where: { tcg: $tcg, rarity: { _is_null: false } }
+        ) {
           rarity
         }
-        # signet: lotr_all_cards_pricing(
-        #   distinct_on: signet
-        #   where: { signet: { _neq: "" } }
-        # ) {
-        #   signet
-        # }
       }
     `,
     { variables: { tcg: { _eq: selectedGame } } }
@@ -241,15 +233,18 @@ const IndexPage = () => {
   const filterTypes = (
     (filterTypesQuery.data && Object.entries(filterTypesQuery.data)) ||
     []
-  ).map(([key, value]) => ({
-    key,
-    label: labels[key],
-    values: value.map((item) => ({
+  )
+    .filter(([_, value]) => value.length !== 0)
+    .map(([key, value]) => ({
       key,
-      value: item[key],
-      label: labels[key],
-    })),
-  }));
+      label: labels[selectedGame][key],
+      values: value.map((item) => ({
+        key,
+        value: item[key],
+        label: labels[selectedGame][key],
+      })),
+    }));
+
   const { data, error, loading } = useSubscription(
     gql`
       subscription (
@@ -291,7 +286,12 @@ const IndexPage = () => {
   return (
     <Box sx={{ mt: 2, mb: 2, pl: 1, pr: 1 }}>
       <Grid container spacing={1}>
-        <Grid item sm={10} sx={{ display: "flex", alignItems: "center" }}>
+        <Grid
+          item
+          xs={8}
+          sm={10}
+          sx={{ display: "flex", alignItems: "center" }}
+        >
           <IconButton sx={{ mr: 1 }} onClick={() => setFilterOpen((p) => !p)}>
             <FilterList />
           </IconButton>
@@ -306,31 +306,39 @@ const IndexPage = () => {
             autoComplete={"off"}
           />
         </Grid>
-        <Grid item sm={2}>
-          <Select
-            fullWidth
-            size="small"
-            value={orderBy}
-            onChange={(e) => setOrderBy(e.target.value)}
-            endAdornment={
-              orderBy && (
-                <InputAdornment position="end" sx={{ mr: 3 }}>
-                  <IconButton size="small" onClick={() => setOrderBy(null)}>
-                    <Close fontSize={"small"} />
-                  </IconButton>
-                </InputAdornment>
-              )
-            }
-          >
-            <MenuItem value={"asc"}>Price low to high</MenuItem>
-            <MenuItem value={"desc"}>Price high to low</MenuItem>
-          </Select>
+        <Grid item xs={4} sm={2}>
+          <FormControl fullWidth size="small">
+            <InputLabel id="demo-simple-select-label">Sort</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              label="Sort"
+              fullWidth
+              size="small"
+              value={orderBy}
+              onChange={(e) => setOrderBy(e.target.value)}
+              endAdornment={
+                orderBy && (
+                  <InputAdornment position="end" sx={{ mr: 1 }}>
+                    <IconButton size="small" onClick={() => setOrderBy(null)}>
+                      <Close fontSize={"small"} />
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }
+            >
+              <MenuItem value={"asc"}>Price low to high</MenuItem>
+              <MenuItem value={"desc"}>Price high to low</MenuItem>
+            </Select>
+          </FormControl>
         </Grid>
       </Grid>
       <Grid container spacing={1} sx={{ mt: 1 }}>
         {isFilterOpen && (
-          <Grid item sm={1} xs={12}>
-            <Card variant="outlined">
+          <Grid item xs={12} sm={4} md={3} lg={2} xl={1.5}>
+            <Card
+              variant="outlined"
+              sx={{ maxHeight: "90vh", overflowY: "auto" }}
+            >
               <CardContent>
                 <List>
                   {filterTypes.map((filterType) => (
@@ -346,7 +354,16 @@ const IndexPage = () => {
             </Card>
           </Grid>
         )}
-        <Grid container spacing={1} item sm={isFilterOpen ? 11 : 12}>
+        <Grid
+          container
+          spacing={1}
+          item
+          xs={12}
+          sm={isFilterOpen ? 8 : 12}
+          md={isFilterOpen ? 9 : 12}
+          lg={isFilterOpen ? 10 : 12}
+          xl={isFilterOpen ? 10.5 : 12}
+        >
           <Grid item sm={10}>
             {paginationCountQuery.data?.card_generic_aggregate && (
               <Typography variant="subtitle2">
@@ -359,16 +376,21 @@ const IndexPage = () => {
             )}
           </Grid>
           <Grid item sm={2}>
-            <Select
-              fullWidth
-              size="small"
-              value={limitItems}
-              onChange={(e) => setLimitItems(e.target.value)}
-            >
-              <MenuItem value={10}>10</MenuItem>
-              <MenuItem value={20}>20</MenuItem>
-              <MenuItem value={50}>50</MenuItem>
-            </Select>
+            <FormControl fullWidth size="small">
+              <InputLabel id="show_number">Show number</InputLabel>
+              <Select
+                labelId="show_number"
+                fullWidth
+                size="small"
+                value={limitItems}
+                onChange={(e) => setLimitItems(e.target.value)}
+                label="Show number"
+              >
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={20}>20</MenuItem>
+                <MenuItem value={50}>50</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item sm={12} container spacing={1}>
             {selectedFilters.map((typeFilter) => (
@@ -401,7 +423,7 @@ const IndexPage = () => {
           </Grid>
           {loading &&
             Array.from({ length: limitItems }).map((i) => (
-              <Grid item xs={6} sm={1.5}>
+              <Grid item xs={6} md={3} xl={1.5}>
                 <Card variant="outlined">
                   <Skeleton variant="rounded" width={210} height={240} />
                   <CardContent>
@@ -416,7 +438,7 @@ const IndexPage = () => {
               </Grid>
             ))}
           {data?.card_generic.map((item) => (
-            <Grid item xs={6} sm={1.5} key={item.id}>
+            <Grid item xs={6} md={3} xl={1.5} key={item.id}>
               <GameCard
                 id={item.id}
                 image={item.image}

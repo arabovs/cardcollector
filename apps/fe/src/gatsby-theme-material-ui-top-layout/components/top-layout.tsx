@@ -6,16 +6,11 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  IconButton,
   MenuItem,
   Select,
   ListItemIcon,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import {
-  AccountCircleOutlined,
-  ShoppingCartOutlined,
-} from "@mui/icons-material";
 import { Link } from "gatsby-theme-material-ui";
 import { TcgIcon } from "../../components/TcgIcon";
 
@@ -82,16 +77,9 @@ export default function TopLayout({ children, theme }) {
           <AppBar color="default" position="static" variant="outlined">
             <Toolbar>
               <Link to="/" color="inherit" sx={{ textDecoration: "none" }}>
-                <Typography variant="h5">Lotrmarket</Typography>
+                <Typography variant="h5">Cardcatalogue</Typography>
               </Link>
               <GameSelector />
-              <Box flex={1} />
-              <IconButton>
-                <AccountCircleOutlined />
-              </IconButton>
-              <IconButton>
-                <ShoppingCartOutlined />
-              </IconButton>
             </Toolbar>
           </AppBar>
           {children}
