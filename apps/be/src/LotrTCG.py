@@ -253,7 +253,7 @@ def scrapeLatestPricing():
                 #  card_dict.get("game_text",None),
                 #  card_dict.get("lore",None),
                 #  twilight_cleaned,
-                #  ##### WILL RESULT IN A BUG 100%
+                #  ##### WILL RESULT IN A BUG 100% below line
                 #  card_dict.get("site",None),
                 #  strength_cleaned,
                 #  vitality_cleaned,

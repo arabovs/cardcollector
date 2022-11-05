@@ -9,7 +9,7 @@ AUTH_URL = 'https://oauth.battle.net/token'
 
 
 url_pages = [
-"https://us.api.blizzard.com/hearthstone/cards?locale=en_US&pageSize=500",
+#"https://us.api.blizzard.com/hearthstone/cards?locale=en_US&pageSize=500",
 "https://us.api.blizzard.com/hearthstone/cards?locale=en_US&page=2&pageSize=500",
 "https://us.api.blizzard.com/hearthstone/cards?locale=en_US&page=3&pageSize=500",
 "https://us.api.blizzard.com/hearthstone/cards?locale=en_US&page=4&pageSize=500",
