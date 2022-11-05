@@ -7,9 +7,9 @@
     "set_code": "Set Code",
     "card_id": "Set Number",
     "rarity": "Rarity",
-    "cost": "Cost",
-    "attack": "Attack",
-    "defence": "Defence"
+    "cost": "Twillight",
+    "attack": "Strength",
+    "defence": "Vitality"
   },
   "mtg": {
     "type": "Type",
