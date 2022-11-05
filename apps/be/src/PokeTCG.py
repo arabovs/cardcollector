@@ -5,7 +5,7 @@ from pokemontcgsdk import Supertype
 from pokemontcgsdk import Subtype
 from pokemontcgsdk import Rarity
 from pokemontcgsdk import RestClient
-from GQL import GQL
+from etc.postgre import GQL
 import re
 RestClient.configure('f2272cb7-adb2-4e2a-9384-2d64e983fca2')
 gql_connector = GQL()

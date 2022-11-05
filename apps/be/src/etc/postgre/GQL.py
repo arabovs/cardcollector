@@ -5,9 +5,6 @@ from gql import Client, gql
 
 class GQL:
 
-    def __init__(self):
-        print("Initialising Hasura Connector")
-
     def gqlInsertGenericCard(self,
                             tcg,
                             api_id,

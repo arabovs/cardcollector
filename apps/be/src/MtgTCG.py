@@ -1,6 +1,6 @@
 import requests
 import time
-from GQL import GQL
+from etc.postgre import GQL
 import re
 import scrython
 
