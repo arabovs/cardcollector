@@ -171,9 +171,11 @@ const CardPage = (props) => {
                   <Typography gutterBottom>
                     {data?.card_generic_by_pk.text}
                   </Typography>
-                  <Typography variant="body2" sx={{ fontStyle: "italic" }}>
-                    "{data?.card_generic_by_pk.flavor_text}"
-                  </Typography>
+                  {data?.card_generic_by_pk.flavor_text && (
+                    <Typography variant="body2" sx={{ fontStyle: "italic" }}>
+                      "{data?.card_generic_by_pk.flavor_text}"
+                    </Typography>
+                  )}
                 </CardContent>
                 <Divider />
                 <CardHeader
