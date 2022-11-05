@@ -91,7 +91,7 @@ def cardSearch(urls):
                                        card.get("mana_cost",None),
                                        power_cleaned,
                                        toughness_cleaned,
-                                       ""
+                                       None
                                     )
             i += 1
 
