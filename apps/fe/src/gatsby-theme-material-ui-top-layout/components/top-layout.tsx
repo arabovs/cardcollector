@@ -9,6 +9,8 @@ import {
   IconButton,
   MenuItem,
   Select,
+  Grid,
+  TableCell,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import {
@@ -61,10 +63,14 @@ const GameSelector = () => {
         sx={{ ml: 2 }}
       >
         {data.card_generic.map(({ tcg }) => (
-          <Box display="flex">
-            <TcgIcon tcg={tcg}></TcgIcon>
-            <MenuItem value={tcg}>{GAME_NAMES[tcg]}</MenuItem>
-          </Box>
+          <>
+            <TableCell>
+              <MenuItem value={tcg}>{GAME_NAMES[tcg]}</MenuItem>
+            </TableCell>
+            <TableCell>
+              <TcgIcon tcg={tcg}></TcgIcon>
+            </TableCell>
+          </>
         ))}
       </Select>
     </>
