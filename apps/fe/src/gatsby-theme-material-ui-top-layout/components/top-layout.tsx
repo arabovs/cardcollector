@@ -16,6 +16,7 @@ import {
   ShoppingCartOutlined,
 } from "@mui/icons-material";
 import { Link } from "gatsby-theme-material-ui";
+import { TcgIcon } from "../../components/TcgIcon";
 
 const GAME_NAMES = {
   lotr: "The Lord of the Rings",
@@ -60,7 +61,10 @@ const GameSelector = () => {
         sx={{ ml: 2 }}
       >
         {data.card_generic.map(({ tcg }) => (
-          <MenuItem value={tcg}>{GAME_NAMES[tcg]}</MenuItem>
+          <Box display="flex">
+            <TcgIcon tcg={tcg}></TcgIcon>
+            <MenuItem value={tcg}>{GAME_NAMES[tcg]}</MenuItem>
+          </Box>
         ))}
       </Select>
     </>
