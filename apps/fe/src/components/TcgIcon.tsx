@@ -19,7 +19,7 @@ export const TcgIcon = ({ tcg }) => {
         <img src="https://i.imgur.com/nqpLbCj.png" height="30px" width="106" />
       )}
       {tcg === "fnb" && (
-        <img src="https://i.imgur.com/rNHnnEd.png" height="30px" width="106" />
+        <img src="https://i.imgur.com/iSjXh55.png" height="30px" width="106" />
       )}
     </>
   );
