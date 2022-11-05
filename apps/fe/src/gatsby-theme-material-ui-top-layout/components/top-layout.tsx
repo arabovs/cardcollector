@@ -9,8 +9,8 @@ import {
   IconButton,
   MenuItem,
   Select,
-  Grid,
-  TableCell,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import {
@@ -61,16 +61,24 @@ const GameSelector = () => {
         onChange={(e) => setSelectedGame(e.target.value)}
         size="small"
         sx={{ ml: 2 }}
+        renderValue={(selected) => {
+          return (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <ListItemIcon sx={{ mr: 2 }}>
+                <TcgIcon tcg={selected}></TcgIcon>
+              </ListItemIcon>
+              <ListItemText>{GAME_NAMES[selected]}</ListItemText>
+            </Box>
+          );
+        }}
       >
         {data.card_generic.map(({ tcg }) => (
-          <Box display="flex">
-            <TableCell>
+          <MenuItem value={tcg}>
+            <ListItemIcon sx={{ mr: 2 }}>
               <TcgIcon tcg={tcg}></TcgIcon>
-            </TableCell>
-            <TableCell>
-              <MenuItem value={tcg}>{GAME_NAMES[tcg]}</MenuItem>
-            </TableCell>
-          </Box>
+            </ListItemIcon>
+            <ListItemText>{GAME_NAMES[tcg]}</ListItemText>
+          </MenuItem>
         ))}
       </Select>
     </>
