@@ -1,6 +1,6 @@
 import requests
 import sys
-from etc.postgre import GQL
+from etc.postgre.GQL import GQL
 
 #%20
 
@@ -31,7 +31,6 @@ def cardSearch(url):
             i+=1
             continue
         for y in range(len(card["card_sets"])):
-            print(card)
             set_codes = None
             if card["card_sets"] is list:
                 set_codes = card["card_sets"][y]
