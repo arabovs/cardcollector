@@ -235,17 +235,15 @@ const IndexPage = () => {
     []
   )
     .filter(([_, value]) => value.length !== 0)
-    .map(([key, value]) => {
-      return {
+    .map(([key, value]) => ({
+      key,
+      label: labels[selectedGame][key],
+      values: value.map((item) => ({
         key,
+        value: item[key],
         label: labels[selectedGame][key],
-        values: value.map((item) => ({
-          key,
-          value: item[key],
-          label: labels[selectedGame][key],
-        })),
-      };
-    });
+      })),
+    }));
 
   const { data, error, loading } = useSubscription(
     gql`
