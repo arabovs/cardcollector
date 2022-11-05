@@ -145,6 +145,9 @@ const IndexPage = () => {
     setPage(value);
   };
   const { selectedGame } = useGameSelectorContext();
+  useEffect(() => {
+    setSelectedFilters([]);
+  }, [selectedGame]);
   const filterTypesQuery = useQuery(
     gql`
       query FilterTypes($tcg: String_comparison_exp!) {
