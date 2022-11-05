@@ -5,7 +5,7 @@ import json
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
-from etc.postgre import GQL
+from etc.postgre.GQL import GQL
 from etc.lotrtcg.metadata import HsMetadata
 import subprocess
 import re
@@ -150,6 +150,9 @@ def scrapeLatestPricing():
         rows = cards.find_all('tr')
         for row in rows:
             if i > 0:
+              if i < 504:
+                i+=1
+                continue
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
               card_name = str(row.find('td', class_= 'col1').string).replace("•","")
@@ -205,14 +208,6 @@ def scrapeLatestPricing():
                 for key, value in card_dict.items():
                   if(key in ["culture","kind","set","card_type","lore","signet"]): 
                     card_dict[key] = value.title()
-                                
-                if card_dict.get("card_type","") == "Site":
-                  card_dict["culture"] = "Site"
-                  card_dict["kind"]    = "Site"
-                  
-                if card_dict.get("card_type","") == "The One Ring":
-                  card_dict["culture"] = "The One Ring"
-                  card_dict["kind"] = "The One Ring"
 
                 strength_cleaned = None
                 vitality_cleaned = None
@@ -236,29 +231,29 @@ def scrapeLatestPricing():
                 # print(json.dumps(str(card_dict),sort_keys=True, indent=4))
     
                 # Insert to hasura
-                #gql_connector.gqlInsertGenericCard(
-                #  "lotr",
-                #  card_dict.get("card_id",""),
-                #  card_dict.get("card_name",""),
-                #  card_dict.get("card_image",""),
-                #  editions_dict[card_dict.get("set","")],
-                #  card_dict.get("set",""),
-                #  card_dict.get("rarity","") + card_dict.get("card_number",""),
-                #  rarity_dict[card_dict.get("rarity","")],
-                #  float(card_price),
-                #  float(price_foil),
-                #  float(price_tng),
-                #  card_dict.get("card_type",None),
-                #  card_dict.get("subtype",None),
-                #  card_dict.get("game_text",None),
-                #  card_dict.get("lore",None),
-                #  twilight_cleaned,
-                #  ##### WILL RESULT IN A BUG 100% below line
-                #  card_dict.get("site",None),
-                #  strength_cleaned,
-                #  vitality_cleaned,
-                #  card_dict.get("kind",""),
-                #)
+                gql_connector.gqlInsertGenericCard(
+                  "lotr",
+                  card_dict.get("card_id",""),
+                  card_dict.get("card_name",""),
+                  card_dict.get("card_image",""),
+                  editions_dict[card_dict.get("set","")],
+                  card_dict.get("set","s"),
+                  card_dict.get("rarity","") + card_dict.get("card_number",""),
+                  rarity_dict[card_dict.get("rarity","")],
+                  float(card_price),
+                  float(price_foil),
+                  float(price_tng),
+                  card_dict.get("card_type",None),
+                  card_dict.get("subtype",None),
+                  card_dict.get("game_text",None),
+                  card_dict.get("lore",None),
+                  twilight_cleaned,
+                  ##### WILL RESULT IN A BUG 100% below line
+                  card_dict.get("site",None),
+                  strength_cleaned,
+                  vitality_cleaned,
+                  card_dict.get("kind",None),
+                )
                 print("Inserted" + str(i) + ": " + card_dict.get("card_name",""))
                 
                 

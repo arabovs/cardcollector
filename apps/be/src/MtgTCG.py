@@ -56,16 +56,22 @@ def cardSearch(urls):
             # 33333333 = +
             power_cleaned = ""
             if 'power' in card.keys():
-              special_case = card["power"].replace("*","11111111").replace("+","33333333").replace("-","22222222")
-              power_cleaned = int(special_case)
+                if card['power'] == "∞":
+                    power_cleaned = 'Infinity'
+                else:
+                    special_case = card["power"].replace("*","11111111").replace("+","33333333").replace("-","22222222")
+                    power_cleaned = int(special_case)
             else:
               power_cleaned = None
 
             # Toughness clean-up
             toughness_cleaned = ""
             if 'toughness' in card.keys():
-              special_case = card["toughness"].replace("*","11111111").replace("+","33333333").replace("-","22222222")
-              toughness_cleaned = int(special_case)
+                if card['toughness'] == "∞":
+                    toughness_cleaned = 'Infinity' 
+                else:
+                    special_case = card["toughness"].replace("*","11111111").replace("+","33333333").replace("-","22222222")
+                    toughness_cleaned = int(special_case)
             else:
               toughness_cleaned = None
 
