@@ -15,7 +15,6 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
   MenuItem,
   Pagination,
@@ -24,7 +23,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Close, ExpandLess, ExpandMore, FilterList } from "@mui/icons-material";
 import { useGameSelectorContext } from "../gatsby-theme-material-ui-top-layout/components/top-layout";
 import { GameCard } from "../components/GameCard";
