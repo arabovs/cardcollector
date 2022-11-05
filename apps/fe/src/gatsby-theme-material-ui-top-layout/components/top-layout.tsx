@@ -20,14 +20,6 @@ import {
 import { Link } from "gatsby-theme-material-ui";
 import { TcgIcon } from "../../components/TcgIcon";
 
-const GAME_NAMES = {
-  lotr: "The Lord of the Rings",
-  mtg: "Magic: The Gathering",
-  pokemon: "Pokémon",
-  yugioh: "Yu-Gi-Oh!",
-  hearthstone: "Hearthstone",
-};
-
 const GameSelectorContext = createContext(null);
 
 const GameSelectorProvider = ({ children }) => {
@@ -67,7 +59,6 @@ const GameSelector = () => {
               <ListItemIcon sx={{ mr: 2 }}>
                 <TcgIcon tcg={selected}></TcgIcon>
               </ListItemIcon>
-              <ListItemText>{GAME_NAMES[selected]}</ListItemText>
             </Box>
           );
         }}
@@ -77,7 +68,6 @@ const GameSelector = () => {
             <ListItemIcon sx={{ mr: 2 }}>
               <TcgIcon tcg={tcg}></TcgIcon>
             </ListItemIcon>
-            <ListItemText>{GAME_NAMES[tcg]}</ListItemText>
           </MenuItem>
         ))}
       </Select>

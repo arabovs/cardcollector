@@ -4,7 +4,7 @@ export const TcgIcon = ({ tcg }) => {
   return (
     <>
       {tcg === "hearthstone" && (
-        <img src="https://i.imgur.com/8oUe1kX.png" height="40px" />
+        <img src="https://i.imgur.com/mWlj4DN.png" height="29px" width="106" />
       )}
       {tcg === "lotr" && (
         <img src="https://i.imgur.com/KHXNRx3.png" height="30px" />
@@ -13,10 +13,10 @@ export const TcgIcon = ({ tcg }) => {
         <img src="https://i.imgur.com/nzgIiXC.png" height="30px" />
       )}
       {tcg === "pokemon" && (
-        <img src="https://i.imgur.com/wWSijOI.png" height="30px" />
+        <img src="https://i.imgur.com/9kK9giw.png" height="30px" width="106" />
       )}
       {tcg === "yugioh" && (
-        <img src="https://i.imgur.com/0ktEksU.png" height="45px" />
+        <img src="https://i.imgur.com/nqpLbCj.png" height="30px" width="106" />
       )}
     </>
   );
