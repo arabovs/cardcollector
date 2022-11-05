@@ -25,6 +25,9 @@ def cardSearch(url):
     yugioh_cards = requests.get(url).json()
     i = 1
     for card in yugioh_cards["data"]:           
+        if i < 1945:
+            i+=1
+            continue
         # Card sets - some cards have [] others {} and some None ( we skip in this case)
         if "card_sets" not in card.keys():
             print("Skipping " + str(i))
@@ -40,9 +43,14 @@ def cardSearch(url):
             if "card_sets" not in card.keys() or card["card_sets"][y] is None:
                 print("Skipping " + str(i))
                 i+=1
-            set_codes = card["card_sets"][y]["set_code"].split("-")
-            set_code = set_codes[0]
-            set_id   = set_codes[1]
+            
+            set_code = None
+            set_id = None
+            if "card_sets" in card.keys():
+                if type(card["card_sets"]) == "list":
+                    set_codes = card["card_sets"][y]["set_code"].split("-")
+                    set_code = set_codes[0]
+                    set_id   = set_codes[1]                    
 
             # GAME TEXT and FLAVOR TEXT clean
             game_text_cleaned = ''
