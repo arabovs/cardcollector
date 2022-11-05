@@ -25,7 +25,7 @@ const GAME_NAMES = {
   mtg: "Magic: The Gathering",
   pokemon: "Pokémon",
   yugioh: "Yu-Gi-Oh!",
-  hearthstone: "Heartstone (new)",
+  hearthstone: "Hearthstone",
 };
 
 const GameSelectorContext = createContext(null);
@@ -63,14 +63,14 @@ const GameSelector = () => {
         sx={{ ml: 2 }}
       >
         {data.card_generic.map(({ tcg }) => (
-          <>
-            <TableCell>
-              <MenuItem value={tcg}>{GAME_NAMES[tcg]}</MenuItem>
-            </TableCell>
+          <Box display="flex">
             <TableCell>
               <TcgIcon tcg={tcg}></TcgIcon>
             </TableCell>
-          </>
+            <TableCell>
+              <MenuItem value={tcg}>{GAME_NAMES[tcg]}</MenuItem>
+            </TableCell>
+          </Box>
         ))}
       </Select>
     </>
