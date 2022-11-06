@@ -96,7 +96,7 @@ const CardPage = (props) => {
   const { data, error } = useQuery(
     gql`
       query CardById($id: uuid!) {
-        card_generic_by_pk(id: $id) {
+        card_details_by_pk(id: $id) {
           id
           name
           price
@@ -123,8 +123,8 @@ const CardPage = (props) => {
   );
   const similarCardsQuery = useQuery(
     gql`
-      query SimilarCards($where: card_generic_bool_exp) {
-        similar_cards: card_generic(limit: 6, where: $where) {
+      query SimilarCards($where: card_details_bool_exp) {
+        similar_cards: card_details(limit: 6, where: $where) {
           id
           name
           price
@@ -136,12 +136,12 @@ const CardPage = (props) => {
     {
       variables: {
         where: {
-          id: { _neq: data?.card_generic_by_pk.id },
-          name: { _ilike: `%${data?.card_generic_by_pk.name}%` },
+          id: { _neq: data?.card_details_by_pk.id },
+          name: { _ilike: `%${data?.card_details_by_pk.name}%` },
           tcg: { _eq: selectedGame },
         },
       },
-      skip: data?.card_generic_by_pk.name ? false : true,
+      skip: data?.card_details_by_pk.name ? false : true,
     }
   );
   if (error) return <div>{error.message}</div>;
@@ -159,7 +159,7 @@ const CardPage = (props) => {
                     </IconButton>
                   </Box>
                   <img
-                    src={data?.card_generic_by_pk.card_img}
+                    src={data?.card_details_by_pk.card_img}
                     style={{ width: "100%" }}
                   />
                 </CardContent>
@@ -169,11 +169,11 @@ const CardPage = (props) => {
                 <Divider />
                 <CardContent>
                   <Typography gutterBottom>
-                    {data?.card_generic_by_pk.text}
+                    {data?.card_details_by_pk.text}
                   </Typography>
-                  {data?.card_generic_by_pk.flavor_text && (
+                  {data?.card_details_by_pk.flavor_text && (
                     <Typography variant="body2" sx={{ fontStyle: "italic" }}>
-                      "{data?.card_generic_by_pk.flavor_text}"
+                      "{data?.card_details_by_pk.flavor_text}"
                     </Typography>
                   )}
                 </CardContent>
@@ -191,27 +191,27 @@ const CardPage = (props) => {
                   <Divider />
                   <CardContent>
                     <Grid container display="flex" spacing={1}>
-                      {data?.card_generic_by_pk.type && (
+                      {data?.card_details_by_pk.type && (
                         <Grid item sm={4}>
                           <StatCard
                             title="Type"
-                            text={data?.card_generic_by_pk.type}
+                            text={data?.card_details_by_pk.type}
                           />
                         </Grid>
                       )}
-                      {data?.card_generic_by_pk.subtype && (
+                      {data?.card_details_by_pk.subtype && (
                         <Grid item sm={4}>
                           <StatCard
                             title="Subtype"
-                            text={data?.card_generic_by_pk.subtype}
+                            text={data?.card_details_by_pk.subtype}
                           />
                         </Grid>
                       )}
-                      {data?.card_generic_by_pk.kind && (
+                      {data?.card_details_by_pk.kind && (
                         <Grid item sm={4}>
                           <StatCard
                             title="Kind"
-                            text={data?.card_generic_by_pk.kind}
+                            text={data?.card_details_by_pk.kind}
                           />
                         </Grid>
                       )}
@@ -232,36 +232,36 @@ const CardPage = (props) => {
                   <Divider />
                   <CardContent>
                     <Grid container spacing={1}>
-                      {data?.card_generic_by_pk.cost !== null && (
+                      {data?.card_details_by_pk.cost !== null && (
                         <Grid item sm={4}>
                           <StatCard
                             title="Value"
-                            text={data?.card_generic_by_pk.cost}
+                            text={data?.card_details_by_pk.cost}
                           />
                         </Grid>
                       )}
-                      {data?.card_generic_by_pk.cost_text && (
+                      {data?.card_details_by_pk.cost_text && (
                         <Grid item sm={4}>
                           <StatCard
                             title="Cost"
-                            text={data?.card_generic_by_pk.cost_text}
+                            text={data?.card_details_by_pk.cost_text}
                           />
                         </Grid>
                       )}
-                      {data?.card_generic_by_pk.attack && (
+                      {data?.card_details_by_pk.attack && (
                         <Grid item sm={4}>
                           <StatCard
                             title="Attack"
-                            text={data?.card_generic_by_pk.attack}
+                            text={data?.card_details_by_pk.attack}
                             color={brown[500]}
                           />
                         </Grid>
                       )}
-                      {data?.card_generic_by_pk.defence && (
+                      {data?.card_details_by_pk.defence && (
                         <Grid item sm={4}>
                           <StatCard
                             title="Health"
-                            text={data?.card_generic_by_pk.defence}
+                            text={data?.card_details_by_pk.defence}
                             color={red[500]}
                           />
                         </Grid>
@@ -286,19 +286,19 @@ const CardPage = (props) => {
                       <Grid item sm={4}>
                         <StatCard
                           title="Set"
-                          text={data?.card_generic_by_pk.set_code}
+                          text={data?.card_details_by_pk.set_code}
                         />
                       </Grid>
                       <Grid item sm={4}>
                         <StatCard
                           title="Card ID"
-                          text={data?.card_generic_by_pk.card_id}
+                          text={data?.card_details_by_pk.card_id}
                         />
                       </Grid>
                       <Grid item sm={4}>
                         <StatCard
                           title="Rarity"
-                          text={data?.card_generic_by_pk.rarity}
+                          text={data?.card_details_by_pk.rarity}
                         />
                       </Grid>
                     </Grid>
@@ -311,11 +311,11 @@ const CardPage = (props) => {
         <Grid item sm={7}>
           <Card variant="outlined">
             <CardHeader
-              title={`${data?.card_generic_by_pk.name} (#${
-                data?.card_generic_by_pk.set_code +
-                data?.card_generic_by_pk.card_id
+              title={`${data?.card_details_by_pk.name} (#${
+                data?.card_details_by_pk.set_code +
+                data?.card_details_by_pk.card_id
               }) ${
-                data?.card_generic_by_pk.set || data?.card_generic_by_pk.set
+                data?.card_details_by_pk.set || data?.card_details_by_pk.set
               }`}
               action={
                 <>
@@ -336,7 +336,7 @@ const CardPage = (props) => {
                     {new Intl.NumberFormat("en-US", {
                       style: "currency",
                       currency: "USD",
-                    }).format(data?.card_generic_by_pk.price || 0)}
+                    }).format(data?.card_details_by_pk.price || 0)}
                   </Typography>
                 </Box>
                 <Box sx={{ mb: 2, ml: 2 }}>
@@ -345,7 +345,7 @@ const CardPage = (props) => {
                     {new Intl.NumberFormat("en-US", {
                       style: "currency",
                       currency: "USD",
-                    }).format(data?.card_generic_by_pk.price_foil || 0)}
+                    }).format(data?.card_details_by_pk.price_foil || 0)}
                   </Typography>
                 </Box>
                 <Box sx={{ mb: 2, ml: 2 }}>
@@ -354,7 +354,7 @@ const CardPage = (props) => {
                     {new Intl.NumberFormat("en-US", {
                       style: "currency",
                       currency: "USD",
-                    }).format(data?.card_generic_by_pk.price_other || 0)}
+                    }).format(data?.card_details_by_pk.price_other || 0)}
                   </Typography>
                 </Box>
               </Box>

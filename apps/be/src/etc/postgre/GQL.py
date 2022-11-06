@@ -27,7 +27,7 @@ class GQL:
                             defence,
                             kind
                           ):
-            HASURA_URL = "https://lotrtcgwebscrapper.herokuapp.com/v1/graphql"
+            HASURA_URL = "https://card-catalogue-dev.herokuapp.com/v1/graphql"
 
             transport = RequestsHTTPTransport(
                 url=HASURA_URL,
@@ -56,7 +56,7 @@ class GQL:
                                                $defence: float8!,
                                                $kind: String!,
                                              ) {
-              insert_card_generic(objects: {tcg: $tcg,
+              insert_card_details(objects: {tcg: $tcg,
                                               api_id: $api_id,
                                               name: $name, 
                                               image: $image,
@@ -108,15 +108,15 @@ class GQL:
     
     # BULK INSERT
     def gqlInsertCards(self, objects):
-      HASURA_URL = "https://lotrtcgwebscrapper.herokuapp.com/v1/graphql"
+      HASURA_URL = "https://card-catalogue-dev.herokuapp.com/v1/graphql"
       transport = RequestsHTTPTransport(
           url=HASURA_URL,
           verify=True,
           retries=3,
       )
       client = Client(transport=transport, fetch_schema_from_transport=True)
-      query = gql("""mutation MyMutation($objects: [card_generic_insert_input!]!) {
-            insert_card_generic(objects: $objects) {
+      query = gql("""mutation MyMutation($objects: [card_details_insert_input!]!) {
+            insert_card_details(objects: $objects) {
               affected_rows
             }
           }""")

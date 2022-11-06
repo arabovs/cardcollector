@@ -13,7 +13,7 @@ import isNode from "is-node";
 import ws from "ws";
 
 const wsLink = new WebSocketLink({
-  uri: "wss://lotrtcgwebscrapper.herokuapp.com/v1/graphql",
+  uri: "wss://card-catalogue-dev.herokuapp.com/v1/graphql",
   options: {
     reconnect: true,
   },
@@ -21,7 +21,7 @@ const wsLink = new WebSocketLink({
 });
 
 const httpLink = createHttpLink({
-  uri: "https://lotrtcgwebscrapper.herokuapp.com/v1/graphql",
+  uri: "https://card-catalogue-dev.herokuapp.com/v1/graphql",
   fetch,
 });
 

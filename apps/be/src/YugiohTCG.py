@@ -1,6 +1,7 @@
 import requests
 import sys
 from etc.postgre.GQL import GQL
+from etc.helpers.helper import helper
 
 #%20
 
@@ -23,11 +24,9 @@ def cardSearch(url):
 
             
     yugioh_cards = requests.get(url).json()
-    i = 1
+    i = 0
+    bulk = {}
     for card in yugioh_cards["data"]:           
-        if i < 1945:
-            i+=1
-            continue
         # Card sets - some cards have [] others {} and some None ( we skip in this case)
         if "card_sets" not in card.keys():
             print("Skipping " + str(i))
@@ -79,30 +78,33 @@ def cardSearch(url):
                 if card["def"] is not None:
                     card_def_cleaned = float(card["def"])
 
-            print("Inserted " + str(i)) 
+            #print("Inserted " + str(i)) 
+            bulk[i] = helper.returnObject(
+                  "yugioh",
+                  str(card.get("id","")),
+                  card.get("name",""),
+                  card["card_images"][0]["image_url"],
+                  card["card_sets"][y]["set_name"],
+                  set_code,
+                  set_id,
+                  card["card_sets"][y]["set_rarity_code"].replace("(","").replace(")","").title(),
+                  card["card_prices"][0]["cardmarket_price"],
+                  card["card_prices"][0]["tcgplayer_price"],
+                  card["card_prices"][0]["ebay_price"],
+                  card["type"],
+                  card["race"],
+                  game_text_cleaned,
+                  flavor_text_cleaned,
+                  level_cleaned,
+                  str(level_cleaned),
+                  card_atk_cleaned,
+                  card_def_cleaned,
+                  card.get("archetype",None)
+            )
             i += 1 
-            gql_connector.gqlInsertGenericCard(
-                                                "yugioh",
-                                                str(card.get("id","")),
-                                                card.get("name",""),
-                                                card["card_images"][0]["image_url"],
-                                                card["card_sets"][y]["set_name"],
-                                                set_code,
-                                                set_id,
-                                                card["card_sets"][y]["set_rarity_code"].replace("(","").replace(")","").title(),
-                                                card["card_prices"][0]["cardmarket_price"],
-                                                card["card_prices"][0]["tcgplayer_price"],
-                                                card["card_prices"][0]["ebay_price"],
-                                                card["type"],
-                                                card["race"],
-                                                game_text_cleaned,
-                                                flavor_text_cleaned,
-                                                level_cleaned,
-                                                str(level_cleaned),
-                                                card_atk_cleaned,
-                                                card_def_cleaned,
-                                                card.get("archetype",None)
-                                                )
+            if i == 500:
+                gql_connector.gqlInsertCards(list(bulk.values()))
+                i = 0
                                
 for url in urls:
     cardSearch(url)

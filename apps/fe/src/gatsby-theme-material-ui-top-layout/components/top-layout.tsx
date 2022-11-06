@@ -32,7 +32,7 @@ export const useGameSelectorContext = () => {
 const GameSelector = () => {
   const { data, loading, error } = useSubscription(gql`
     subscription GamesQuery {
-      card_generic(distinct_on: tcg) {
+      card_details(distinct_on: tcg) {
         tcg
       }
     }
@@ -57,7 +57,7 @@ const GameSelector = () => {
           );
         }}
       >
-        {data.card_generic.map(({ tcg }) => (
+        {data.card_details.map(({ tcg }) => (
           <MenuItem value={tcg}>
             <ListItemIcon>
               <TcgIcon tcg={tcg}></TcgIcon>
