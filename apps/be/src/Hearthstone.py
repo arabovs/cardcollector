@@ -5,6 +5,7 @@ from datetime import datetime
 
 from etc.postgre.GQL import GQL
 from etc.hearthstone.metadata import metadata
+from etc.helpers.helper import helper
 
 AUTH_URL = 'https://oauth.battle.net/token'
 GAME_CODE = "hs"
@@ -137,9 +138,11 @@ def cleanupCard(card):
 def insertIntoDatabase(cards):
     print(str(datetime.now()) + " Inserting cards")
     #for card in cards: # for metadata
+    i = 0
+    bulk = {}
     for card in cards["cards"]: # for all cards
         card = cleanupCard(card) # clean up required for all cards as part standartization
-        gql_connector.gqlInsertGenericCard(
+        bulk[i] = helper.returnObject(
                 GAME_CODE,
                 str(card.get("slug","")),
                 card.get("name",""),
@@ -161,6 +164,8 @@ def insertIntoDatabase(cards):
                 card["health"],
                 card.get("classId",None),
         )
+        i+=1
+    gql_connector.gqlInsertCards(list(bulk.values()))
     print(str(datetime.now()) + " Insertion Complete")
 
 # loops through pages of 500 cards
@@ -171,8 +176,8 @@ for url in url_pages:
         print(str(datetime.now()) + " Connecting to Blizzard API. Try: " + str(retry))
         api_result = tryConnetion(url)
         if api_result == None:
-            print(str(datetime.now()) + " Sleeping 20s...")
-            time.sleep(60)
+            print(str(datetime.now()) + " Sleeping 15s...")
+            time.sleep(15)
             continue
         else:
             cards = api_result
