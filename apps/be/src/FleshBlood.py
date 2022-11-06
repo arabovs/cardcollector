@@ -8,7 +8,13 @@ gql_connector = GQL()
 
 #https://api.gwentapi.com/v0?
 urls = [
-        'https://api.fabdb.net/cards?per_page=100&page=1',
+        #'https://api.fabdb.net/cards?per_page=100&page=1',
+        'https://api.fabdb.net/cards?per_page=100&page=2',
+        'https://api.fabdb.net/cards?per_page=100&page=3',
+        'https://api.fabdb.net/cards?per_page=100&page=4',
+        'https://api.fabdb.net/cards?per_page=100&page=5',
+        'https://api.fabdb.net/cards?per_page=100&page=6',
+        'https://api.fabdb.net/cards?per_page=100&page=7',
     ]
 
 def cardSearch(url):
