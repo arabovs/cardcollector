@@ -123,30 +123,28 @@ def insertIntoDatabase(cards):
     #for card in cards: # for metadata
     for card in cards["cards"]: # for all cards
         card = cleanupCard(card) # clean up required for all cards as part standartization
-        if card["cardTypeId"] == "Minion":
-            print(card["minionTypeId"])
-        #gql_connector.gqlInsertGenericCard(
-        #        "hearthstone",
-        #        str(card.get("slug","")),
-        #        card.get("name",""),
-        #        card.get("image",""),
-        #        str(card.get("cardSetId",None)),
-        #        str(card.get("cardSetIdOld","")),
-        #        str(card.get("id",None)),
-        #        str(card.get("rarityId",None)),
-        #        None,
-        #        None,
-        #        None,
-        #        str(card.get("cardTypeId",None)),
-        #        card.get("minionTypeId",None), 
-        #        card.get("text",None),
-        #        card.get("flavorText",None),
-        #        card["manaCost"],
-        #        None,
-        #        card["attack"],
-        #        card["health"],
-        #        card.get("classId",None),
-        #)
+        gql_connector.gqlInsertGenericCard(
+                "hearthstone",
+                str(card.get("slug","")),
+                card.get("name",""),
+                card.get("image",""),
+                str(card.get("cardSetId",None)),
+                str(card.get("cardSetIdOld","")),
+                str(card.get("id",None)),
+                str(card.get("rarityId",None)),
+                None,
+                None,
+                None,
+                str(card.get("cardTypeId",None)),
+                card.get("minionTypeId",None), 
+                card.get("text",None),
+                card.get("flavorText",None),
+                card["manaCost"],
+                None,
+                card["attack"],
+                card["health"],
+                card.get("classId",None),
+        )
 
 # loops through pages of 500 cards
 for url in url_pages:
