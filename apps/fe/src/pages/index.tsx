@@ -116,49 +116,49 @@ const IndexPage = () => {
   const filterTypesQuery = useQuery(
     gql`
       query FilterTypes($tcg: String_comparison_exp!) {
-        type: card_generic(
+        type: card_details(
           distinct_on: type
           where: { tcg: $tcg, type: { _is_null: false } }
         ) {
           type
         }
-        subtype: card_generic(
+        subtype: card_details(
           distinct_on: subtype
           where: { tcg: $tcg, subtype: { _is_null: false } }
         ) {
           subtype
         }
-        kind: card_generic(
+        kind: card_details(
           distinct_on: kind
           where: { tcg: $tcg, kind: { _is_null: false } }
         ) {
           kind
         }
-        cost: card_generic(
+        cost: card_details(
           distinct_on: cost
           where: { tcg: $tcg, cost: { _is_null: false } }
         ) {
           cost
         }
-        attack: card_generic(
+        attack: card_details(
           distinct_on: attack
           where: { tcg: $tcg, attack: { _is_null: false } }
         ) {
           attack
         }
-        defence: card_generic(
+        defence: card_details(
           distinct_on: defence
           where: { tcg: $tcg, defence: { _is_null: false } }
         ) {
           defence
         }
-        set: card_generic(
+        set: card_details(
           distinct_on: set
           where: { tcg: $tcg, set: { _is_null: false } }
         ) {
           set
         }
-        rarity: card_generic(
+        rarity: card_details(
           distinct_on: rarity
           where: { tcg: $tcg, rarity: { _is_null: false } }
         ) {
@@ -178,8 +178,8 @@ const IndexPage = () => {
   }, {});
   const paginationCountQuery = useQuery(
     gql`
-      query PaginationCount($where: card_generic_bool_exp = {}) {
-        card_generic_aggregate(where: $where) {
+      query PaginationCount($where: card_details_bool_exp = {}) {
+        card_details_aggregate(where: $where) {
           aggregate {
             count
           }
@@ -215,13 +215,13 @@ const IndexPage = () => {
 
   const { data, error, loading } = useSubscription(
     gql`
-      subscription (
-        $where: card_generic_bool_exp
-        $order_by: [card_generic_order_by!]
+      subscription(
+        $where: card_details_bool_exp
+        $order_by: [card_details_order_by!]
         $limit: Int
         $offset: Int
       ) {
-        card_generic(
+        card_details(
           where: $where
           order_by: $order_by
           limit: $limit
@@ -333,10 +333,10 @@ const IndexPage = () => {
           xl={isFilterOpen ? 10.5 : 12}
         >
           <Grid item sm={10}>
-            {paginationCountQuery.data?.card_generic_aggregate && (
+            {paginationCountQuery.data?.card_details_aggregate && (
               <Typography variant="subtitle2">
                 {
-                  paginationCountQuery.data?.card_generic_aggregate.aggregate
+                  paginationCountQuery.data?.card_details_aggregate.aggregate
                     .count
                 }{" "}
                 items
@@ -405,7 +405,7 @@ const IndexPage = () => {
                 </Card>
               </Grid>
             ))}
-          {data?.card_generic.map((item) => (
+          {data?.card_details.map((item) => (
             <Grid item xs={6} md={3} xl={1.5} key={item.id}>
               <GameCard
                 id={item.id}
@@ -419,7 +419,7 @@ const IndexPage = () => {
             {paginationCountQuery?.data && (
               <Pagination
                 count={Math.ceil(
-                  paginationCountQuery.data?.card_generic_aggregate.aggregate
+                  paginationCountQuery.data?.card_details_aggregate.aggregate
                     .count / limitItems
                 )}
                 page={page}

@@ -80,7 +80,7 @@ def cardSearch(urls):
                                        "mtg",
                                        card.get("id",""),
                                        card.get("name",""),
-                                       card["image_uris"]["small"],
+                                       card["image_uris"]["normal"],
                                        card.get("set_name",""),
                                        card.get("set",""),
                                        card.get("collector_number",""),

@@ -27,7 +27,7 @@ class GQL:
                             defence,
                             kind
                           ):
-            HASURA_URL = "https://lotrtcgwebscrapper.herokuapp.com/v1/graphql"
+            HASURA_URL = "https://card-catalogue-dev.herokuapp.com/v1/graphql"
 
             transport = RequestsHTTPTransport(
                 url=HASURA_URL,
@@ -56,7 +56,7 @@ class GQL:
                                                $defence: float8!,
                                                $kind: String!,
                                              ) {
-              insert_card_generic(objects: {tcg: $tcg,
+              insert_card_details(objects: {tcg: $tcg,
                                               api_id: $api_id,
                                               name: $name, 
                                               image: $image,
@@ -104,120 +104,28 @@ class GQL:
             }
             result = client.execute(query, variable_values=params)
             return result
-        
-        
-        
-
-    def gqlInsertCard(self,
-                          card_name,
-                          set,
-                          card_price,
-                          price_foil,
-                          price_tng,
-                          source, card_id,
-                          card_img,kind,
-                          culture,
-                          twilight,
-                          type,
-                          card_number,
-                          lore,
-                          text,
-                          strength,
-                          vitality,
-                          resistance,
-                          rarity,
-                          signet,
-                          site,
-                          subtype,
-                          home,
-                          ):
-            HASURA_URL = "https://lotrtcgwebscrapper.herokuapp.com/v1/graphql"
-
-            transport = RequestsHTTPTransport(
-                url=HASURA_URL,
-                verify=True,
-                retries=3,
-            )
-            client = Client(transport=transport, fetch_schema_from_transport=True)
-            query = gql("""mutation MyMutation($card_name: String!,
-                                               $set: String!,
-                                               $card_price: float8!,
-                                               $price_foil: float8!, 
-                                               $price_tng: float8!,
-                                               $source: String!,
-                                               $card_id: String!,
-                                               $card_img: String!,
-                                               $kind: String!,
-                                               $culture: String!,
-                                               $twilight: String!,
-                                               $card_number: String!,
-                                               $type: String!,
-                                               $lore: String!,
-                                               $text: String!,
-                                               $strength: String!,
-                                               $vitality: String!,
-                                               $resistance: String!,
-                                               $rarity: String!,
-                                               $signet: String!,
-                                               $site: String!,
-                                               $subtype: String!,
-                                               $home: String!) {
-              insert_lotr_all_cards_pricing(objects: {card_name: $card_name,
-                                              set: $set,
-                                              card_price: $card_price,
-                                              price_foil: $price_foil, 
-                                              price_tng: $price_tng,
-                                              card_id: $card_id,
-                                              card_img: $card_img,
-                                              kind: $kind,
-                                              culture: $culture,
-                                              twilight: $twilight,
-                                              type: $type,
-                                              card_number: $card_number,
-                                              source: $source,
-                                              lore: $lore,
-                                              text: $text,
-                                              strength: $strength,
-                                              vitality: $vitality,
-                                              resistance: $resistance,
-                                              rarity: $rarity,
-                                              signet: $signet,
-                                              site: $site,
-                                              subtype: $subtype,
-                                              home: $home,
-                                              }) {
-                affected_rows
-              }
-            }""")
-            params = {
-                "card_name": card_name,
-                "set": set,
-                "card_price": card_price,
-                "price_foil": price_foil,
-                "price_tng": price_tng,
-                "card_id": card_id,
-                "card_img": card_img,
-                "kind": kind,
-                "culture": culture,
-                "twilight": twilight,
-                "type": type,
-                "card_number": card_number,
-                "source": source,
-                "lore": lore,
-                "text": text,
-                "strength": strength,
-                "vitality": vitality,
-                "resistance": resistance,
-                "rarity": rarity,
-                "signet": signet,
-                "site": site,
-                "subtype": subtype,
-                "home": home,
-
+    
+    
+    # BULK INSERT
+    def gqlInsertCards(self, objects):
+      HASURA_URL = "https://card-catalogue-dev.herokuapp.com/v1/graphql"
+      transport = RequestsHTTPTransport(
+          url=HASURA_URL,
+          verify=True,
+          retries=3,
+      )
+      client = Client(transport=transport, fetch_schema_from_transport=True)
+      query = gql("""mutation MyMutation($objects: [card_details_insert_input!]!) {
+            insert_card_details(objects: $objects) {
+              affected_rows
             }
-            result = client.execute(query, variable_values=params)
-            return result
-
+          }""")
+      variables = {'objects': objects}
+      #r = requests.post(url, json={'query': query , 'variables': variables})
+      result = client.execute(query, variable_values=variables)
+      return result
+    
+    
 
     def gqlFindCardbyName(self, card_name):
         query = gql("""query MyQuery($card_name: String!) {
