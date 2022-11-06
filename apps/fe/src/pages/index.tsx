@@ -29,36 +29,6 @@ import { useGameSelectorContext } from "../gatsby-theme-material-ui-top-layout/c
 import { GameCard } from "../components/GameCard";
 import labels from "./../constants/labels.json";
 
-export const filter_type_label = {
-  set: {
-    "0": "Promotional",
-    "1": "The Fellowship of the Ring",
-    "2": "Mines of Moria",
-    "3": "Realms of the Elf-lords",
-    "4": "The Two Towers",
-    "5": "Battle of Helm's Deep",
-    "6": "Ents of Fangorn",
-    "7": "The Return of the King",
-    "8": "Siege of Gondor",
-    "9": "Reflections",
-    "10": "Mount Doom",
-    "11": "Shadows",
-    "12": "Black Rider",
-    "13": "Bloodlines",
-    "14": "Expanded Middle-earth",
-    "15": "Hunters",
-    "16": "The Wraith Collection",
-    "17": "Rise of Saruman",
-    "18": "Treachery & Deceit",
-  },
-  rarity: {
-    C: "Common",
-    U: "Uncommon",
-    R: "Rare",
-    P: "Promo",
-  },
-};
-
 const CardFilter = ({
   filters = [],
   filterName,
@@ -118,11 +88,7 @@ const CardFilter = ({
                 }
               >
                 <ListItemText
-                  primary={
-                    (filter_type_label[type.key] &&
-                      filter_type_label[type.key][type.value]) ||
-                    type.value
-                  }
+                  primary={type.value}
                   primaryTypographyProps={{ noWrap: true }}
                 />
               </ListItem>
