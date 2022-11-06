@@ -1,15 +1,16 @@
 import requests
 import json
 import time
+from datetime import datetime
 
 from etc.postgre.GQL import GQL
 from etc.hearthstone.metadata import metadata
 
 AUTH_URL = 'https://oauth.battle.net/token'
-
+GAME_CODE = "hs"
 
 url_pages = [
-#"https://us.api.blizzard.com/hearthstone/cards?locale=en_US&pageSize=500",
+"https://us.api.blizzard.com/hearthstone/cards?locale=en_US&pageSize=500",
 "https://us.api.blizzard.com/hearthstone/cards?locale=en_US&page=2&pageSize=500",
 "https://us.api.blizzard.com/hearthstone/cards?locale=en_US&page=3&pageSize=500",
 "https://us.api.blizzard.com/hearthstone/cards?locale=en_US&page=4&pageSize=500",
@@ -26,21 +27,36 @@ gql_connector = GQL() # initialise postgre connector
 # Get token from Blizzard's AUTH_URL
 def getAuthToken():
     params = {
-        'client_secret': 'pd6Ig2jOWTKAg0F5svIdT7wX3iajDqMN',
+        'client_secret': 'bPF7i3iMBs6GrsSUaaHTRnFhn25ZCHvI',
         'grant_type': 'client_credentials',
         'client_id': '7af929a351344362909d803901df5897',
     }
 
-    print("Getting Access Token...")
+    print(str(datetime.now()) + " Getting Access Token...")
     response = requests.post(AUTH_URL, data=params)
     access_token = json.loads(response.text.replace("'", "\""))["access_token"]
-    print("Access Token: " + access_token)
+    print(str(datetime.now()) + " Access Token: " + access_token)
     return access_token
+
+AUTH_TOKEN = getAuthToken()
 
 # Fetch JSON from Blizzard's endpoint
 def getJSONfromApi(access_token, endpoint):
-    cards = requests.get(endpoint + "\&access_token=" + access_token).json()
-    return cards
+    api_result = requests.get(endpoint + "\&access_token=" + access_token).json()
+    return api_result
+
+# Initialise cards JSON 
+cards = None
+api_result = None
+
+def tryConnetion(url):
+    try:
+        api_result = getJSONfromApi(AUTH_TOKEN,url)
+        return api_result
+    except:
+        print(str(datetime.now()) + " Failed to connect to Blizzard API")
+        return None
+    
 
 # takes a card objects and cleans various fields as per db model
 def cleanupCard(card):
@@ -119,12 +135,12 @@ def cleanupCard(card):
 
 # insert into db
 def insertIntoDatabase(cards):
-    print("Inserting cards")
+    print(str(datetime.now()) + " Inserting cards")
     #for card in cards: # for metadata
     for card in cards["cards"]: # for all cards
         card = cleanupCard(card) # clean up required for all cards as part standartization
         gql_connector.gqlInsertGenericCard(
-                "hearthstone",
+                GAME_CODE,
                 str(card.get("slug","")),
                 card.get("name",""),
                 card.get("image",""),
@@ -145,10 +161,22 @@ def insertIntoDatabase(cards):
                 card["health"],
                 card.get("classId",None),
         )
+    print(str(datetime.now()) + " Insertion Complete")
 
 # loops through pages of 500 cards
 for url in url_pages:
-    insertIntoDatabase(getJSONfromApi(getAuthToken(), url))
-    print("Cards Inserted")
-    time.sleep(60)
+    print(str(datetime.now()) + " Trying to get data from endpoint: " + str(url))
+    retry_count = 10 
+    for retry in range(retry_count):
+        print(str(datetime.now()) + " Connecting to Blizzard API. Try: " + str(retry))
+        api_result = tryConnetion(url)
+        if api_result == None:
+            print(str(datetime.now()) + " Sleeping 20s...")
+            time.sleep(60)
+            continue
+        else:
+            cards = api_result
+            print(str(datetime.now()) + " Success! Insertion in Progress")
+            insertIntoDatabase(cards)
+            break
 
