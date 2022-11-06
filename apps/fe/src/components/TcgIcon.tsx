@@ -3,7 +3,7 @@ import * as React from "react";
 export const TcgIcon = ({ tcg }) => {
   return (
     <>
-      {tcg === "hearthstone" && (
+      {tcg === "hs" && (
         <img src="https://i.imgur.com/mWlj4DN.png" height="29px" width="106" />
       )}
       {tcg === "lotr" && (

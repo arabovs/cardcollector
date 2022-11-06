@@ -48,7 +48,7 @@
     "attack": "Attack",
     "defence": "Defence"
   },
-  "hearthstone": {
+  "hs": {
     "type": "Card Type",
     "subtype": "Minion Type",
     "kind": "Class",
