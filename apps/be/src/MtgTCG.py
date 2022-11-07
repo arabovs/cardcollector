@@ -3,15 +3,20 @@ import time
 from etc.postgre.GQL import GQL
 import re
 import scrython
+from etc.helpers.helper import helper
+import json
 
 # initialise imports
 gql_connector = GQL()
+URL_API_BULK = "https://api.scryfall.com/bulk-data"
+
 
 #urls = [
 #    'https://api.scryfall.com/cards/search?q=!"Snapcaster%20Mage"&unique=prints',
 #    'https://api.scryfall.com/cards/search?q=!"Abrupt%20Decay"&unique=prints',
 #]
-
+# https://api.scryfall.com/bulk-data
+# https://api.scryfall.com/bulk-data/27bf3214-1271-490b-bdfe-c0be6c23d02e
 def checkField(field):
     if type(field) == "int":
         return type(field)
@@ -24,8 +29,11 @@ def checkField(field):
 
 
 def cardSearch(urls):
-    i = 1
+    i = 0
+    bulk = {}
     for url in urls:
+        print(type(url))
+        break
         card = requests.get(url).json()
         if "object" in card.keys() and card["object"] == "error":
             print("Skipping " + str(i) + ": " + card.get("name",url))
@@ -76,8 +84,7 @@ def cardSearch(urls):
               toughness_cleaned = None
 
             print("Number " + str(i) + " : " + url)
-            gql_connector.gqlInsertGenericCard(
-                                       "mtg",
+            bulk[i] = helper.returnObject(                                   "mtg",
                                        card.get("id",""),
                                        card.get("name",""),
                                        card["image_uris"]["normal"],
@@ -96,8 +103,11 @@ def cardSearch(urls):
                                        card.get("mana_cost",None),
                                        power_cleaned,
                                        toughness_cleaned,
-                                       None
-                                    )
+                                       None)
+            if i == 500:
+                gql_connector.gqlInsertGenericCard(bulk)
+                i=0
+                bulk={}
             i += 1
 
 def getAllMagicLinks():
@@ -110,7 +120,23 @@ def getAllMagicLinks():
         for x in range(set_card_count):
             urls.append(URL + set_code + "/" + str(x))
     return urls
-        
+
+def getAllMagicCardsNew():
+    bulk_api_uri = ""
+    api_response = requests.get(URL_API_BULK).json()
+    for data in api_response["data"]:
+        if "type" in data:
+            if data["type"] == "oracle_cards":
+                bulk_api_uri = data["uri"]
+    print(bulk_api_uri)
+    api_bulk_response = requests.get(bulk_api_uri).json()
+    if "download_uri" in api_bulk_response.keys():
+        bulk_data = api_bulk_response["download_uri"]
+
+    r = requests.get(bulk_data).json()
+    return r
+
 # Where all magic happens
-cardSearch(getAllMagicLinks())
+#cardSearch()
+getAllMagicCardsNew()
     
