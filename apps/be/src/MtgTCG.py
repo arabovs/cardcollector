@@ -58,6 +58,7 @@ def insertMtgToGQL(cards):
             # 11111111 = *
             # 22222222 = -
             # 33333333 = +
+            # 44444444 = ?
             power_cleaned = ""
             if 'power' in card.keys():
                 if card['power'] == "∞":
@@ -84,26 +85,28 @@ def insertMtgToGQL(cards):
                         continue
             else:
               toughness_cleaned = None
-            card_obj = helper.returnObject(  "mtg",
-                                       card.get("id",""),
-                                       card.get("name",""),
-                                       card["image_uris"]["normal"],
-                                       card.get("set_name",""),
-                                       card.get("set",""),
-                                       card.get("collector_number",""),
-                                       card.get("rarity","").title(),
-                                       prices_cleaned,
-                                       prices_foil_cleaned,
-                                       prices_etched_cleaned,
-                                       card_type,
-                                       card_subtype,
-                                       card.get("oracle_text",None),
-                                       card.get("flavor_text",None),
-                                       card.get("cmc",None),
-                                       card.get("mana_cost",None),
-                                       power_cleaned,
-                                       toughness_cleaned,
-                                       None)
+            card_obj = helper.returnObject(  
+                                       "mtg",                            # card_details.tcg
+                                       card.get("id",""),                # card_details.api_id
+                                       card.get("name",""),              # card_details.name
+                                       card["image_uris"]["normal"],     # card_details.image
+                                       card.get("set_name",""),          # card_details.set
+                                       card.get("set",""),               # card_details.set_id
+                                       card.get("collector_number",""),  # card_details.card_id
+                                       card.get("rarity","").title(),    # card_details.rarity
+                                       prices_cleaned,                   # card_details.price
+                                       prices_foil_cleaned,              # card_details.price_foil
+                                       prices_etched_cleaned,            # card_details.price_other
+                                       card_type,                        # card_details.type
+                                       card_subtype,                     # card_details.subtype
+                                       card.get("oracle_text",None),     # card_details.game_text
+                                       card.get("flavor_text",None),     # card_details.flavor_text
+                                       card.get("cmc",None),             # card_details.cost
+                                       card.get("mana_cost",None),       # card_details.cost_text
+                                       power_cleaned,                    # card_details.attack
+                                       toughness_cleaned,                # card_details.defence
+                                       None                              # card_details.kind
+                                    )
             bulk[i] = card_obj
             i+=1
             if i == 500:
@@ -119,14 +122,14 @@ def getScryfallApiBulkOracle(url):
     api_response = requests.get(URL_API_BULK).json()
     for data in api_response["data"]:
         if "type" in data:
-            if data["type"] == "oracle_cards":
+            if data["type"] == "default_cards":
                 bulk_api_uri = data["download_uri"]
-    print(bulk_api_uri)
+    print(str(datetime.now()) + " Scryfall latest default_cards endpoing: " + bulk_api_uri)
     retryConnection(bulk_api_uri)
     api_bulk_response = requests.get(bulk_api_uri).json()
     tryConnetion(api_bulk_response)
 
-# Fetch JSON from Blizzard's endpoint
+# Fetch JSON from Scryfall's bulk endpoint
 def getJSONfromApi(url):
     api_result = requests.get(url).json()
     return api_result

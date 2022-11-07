@@ -80,26 +80,26 @@ def cardSearch(url):
 
             #print("Inserted " + str(i)) 
             bulk[i] = helper.returnObject(
-                  "yugioh",
-                  str(card.get("id","")),
-                  card.get("name",""),
-                  card["card_images"][0]["image_url"],
-                  card["card_sets"][y]["set_name"],
-                  set_code,
-                  set_id,
-                  card["card_sets"][y]["set_rarity_code"].replace("(","").replace(")","").title(),
-                  card["card_prices"][0]["cardmarket_price"],
-                  card["card_prices"][0]["tcgplayer_price"],
-                  card["card_prices"][0]["ebay_price"],
-                  card["type"],
-                  card["race"],
-                  game_text_cleaned,
-                  flavor_text_cleaned,
-                  level_cleaned,
-                  str(level_cleaned),
-                  card_atk_cleaned,
-                  card_def_cleaned,
-                  card.get("archetype",None)
+                  "yugioh", 																		# card_details.tcg
+                  str(card.get("id","")),                                                           # card_details.api_id
+                  card.get("name",""),                                                              # card_details.name
+                  card["card_images"][0]["image_url"],                                              # card_details.image
+                  card["card_sets"][y]["set_name"],                                                 # card_details.set
+                  set_code,                                                                         # card_details.set_id
+                  set_id,                                                                           # card_details.card_id
+                  card["card_sets"][y]["set_rarity_code"].replace("(","").replace(")","").title(),  # card_details.rarity          
+                  card["card_prices"][0]["cardmarket_price"],                                       # card_details.price
+                  card["card_prices"][0]["tcgplayer_price"],                                        # card_details.price_foil
+                  card["card_prices"][0]["ebay_price"],                                             # card_details.price_other
+                  card["type"],                                                                     # card_details.type
+                  card["race"],                                                                     # card_details.subtype
+                  game_text_cleaned,                                                                # card_details.game_text
+                  flavor_text_cleaned,                                                              # card_details.flavor_text
+                  level_cleaned,                                                                    # card_details.cost
+                  str(level_cleaned),                                                               # card_details.cost_text
+                  card_atk_cleaned,                                                                 # card_details.attack
+                  card_def_cleaned,                                                                 # card_details.defence
+                  card.get("archetype",None)                                                        # card_details.kind
             )
             i += 1 
             if i == 500:

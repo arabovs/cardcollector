@@ -232,27 +232,26 @@ def scrapeLatestPricing():
     
                 # Insert to hasura
                 gql_connector.gqlInsertGenericCard(
-                  "lotr",
-                  card_dict.get("card_id",""),
-                  card_dict.get("card_name",""),
-                  card_dict.get("card_image",""),
-                  editions_dict[card_dict.get("set","")],
-                  card_dict.get("set","s"),
-                  card_dict.get("rarity","") + card_dict.get("card_number",""),
-                  rarity_dict[card_dict.get("rarity","")],
-                  float(card_price),
-                  float(price_foil),
-                  float(price_tng),
-                  card_dict.get("card_type",None),
-                  card_dict.get("subtype",None),
-                  card_dict.get("game_text",None),
-                  card_dict.get("lore",None),
-                  twilight_cleaned,
-                  ##### WILL RESULT IN A BUG 100% below line
-                  card_dict.get("site",None),
-                  strength_cleaned,
-                  vitality_cleaned,
-                  card_dict.get("kind",None),
+                  "lotr",												                          			# card_details.tcg		
+                  card_dict.get("card_id",""),                                  # card_details.api_id
+                  card_dict.get("card_name",""),                                # card_details.name
+                  card_dict.get("card_image",""),                               # card_details.image
+                  editions_dict[card_dict.get("set","")],                       # card_details.set
+                  card_dict.get("set","s"),                                     # card_details.set_id
+                  card_dict.get("rarity","") + card_dict.get("card_number",""), # card_details.card_id
+                  rarity_dict[card_dict.get("rarity","")],                      # card_details.rarity
+                  float(card_price),                                            # card_details.price
+                  float(price_foil),                                            # card_details.price_foil
+                  float(price_tng),                                             # card_details.price_other
+                  card_dict.get("card_type",None),                              # card_details.type
+                  card_dict.get("subtype",None),                                # card_details.subtype
+                  card_dict.get("game_text",None),                              # card_details.game_text
+                  card_dict.get("lore",None),                                   # card_details.flavor_text
+                  twilight_cleaned,                                             # card_details.cost
+                  card_dict.get("site",None),                                   # card_details.cost_text
+                  strength_cleaned,                                             # card_details.attack
+                  vitality_cleaned,                                             # card_details.defence
+                  card_dict.get("kind",None),                                   # card_details.kind                    
                 )
                 print("Inserted" + str(i) + ": " + card_dict.get("card_name",""))
                 
