@@ -5,6 +5,7 @@ import re
 import scrython
 from etc.helpers.helper import helper
 import json
+from datetime import datetime
 
 # initialise imports
 gql_connector = GQL()
@@ -28,19 +29,14 @@ def checkField(field):
         return None
 
 
-def cardSearch(urls):
+def insertMtgToGQL(cards):
     i = 0
     bulk = {}
-    for url in urls:
-        print(type(url))
-        break
-        card = requests.get(url).json()
+    for card in cards:
         if "object" in card.keys() and card["object"] == "error":
-            print("Skipping " + str(i) + ": " + card.get("name",url))
             i+=1
             continue
         if "image_uris" not in card.keys():
-            print("No Image " + str(i) + ": " + card.get("name",url))
             i+=1
             continue
         else:
@@ -67,8 +63,11 @@ def cardSearch(urls):
                 if card['power'] == "∞":
                     power_cleaned = 'Infinity'
                 else:
-                    special_case = card["power"].replace("*","11111111").replace("+","33333333").replace("-","22222222")
-                    power_cleaned = int(special_case)
+                    special_case = card["power"].replace("*","11111111").replace("+","33333333").replace("-","22222222").replace("?","44444444")
+                    try:
+                        power_cleaned = float(special_case)
+                    except:
+                        continue
             else:
               power_cleaned = None
 
@@ -78,13 +77,14 @@ def cardSearch(urls):
                 if card['toughness'] == "∞":
                     toughness_cleaned = 'Infinity' 
                 else:
-                    special_case = card["toughness"].replace("*","11111111").replace("+","33333333").replace("-","22222222")
-                    toughness_cleaned = int(special_case)
+                    special_case = card["toughness"].replace("*","11111111").replace("+","33333333").replace("-","22222222").replace("?","44444444")
+                    try:
+                        toughness_cleaned = float(special_case)
+                    except:
+                        continue
             else:
               toughness_cleaned = None
-
-            print("Number " + str(i) + " : " + url)
-            bulk[i] = helper.returnObject(                                   "mtg",
+            card_obj = helper.returnObject(  "mtg",
                                        card.get("id",""),
                                        card.get("name",""),
                                        card["image_uris"]["normal"],
@@ -99,44 +99,63 @@ def cardSearch(urls):
                                        card_subtype,
                                        card.get("oracle_text",None),
                                        card.get("flavor_text",None),
-                                       card.get("cmc",0),
+                                       card.get("cmc",None),
                                        card.get("mana_cost",None),
                                        power_cleaned,
                                        toughness_cleaned,
                                        None)
+            bulk[i] = card_obj
+            i+=1
             if i == 500:
-                gql_connector.gqlInsertGenericCard(bulk)
+                gql_connector.gqlInsertCards(list(bulk.values()))
+                print(str(datetime.now()) + " Inserting bulk of 500")
                 i=0
                 bulk={}
-            i += 1
+    print(str(datetime.now()) + " Insertion complete")
+                
 
-def getAllMagicLinks():
-    urls = []
-    URL = "https://api.scryfall.com/cards/" #https://api.scryfall.com/cards/grn/81
-    all_sets = scrython.sets.Sets()
-    for i, set_object in enumerate(all_sets.data()):
-        set_code = all_sets.data(i,"code")
-        set_card_count = all_sets.data(i,"card_count")
-        for x in range(set_card_count):
-            urls.append(URL + set_code + "/" + str(x))
-    return urls
-
-def getAllMagicCardsNew():
+def getScryfallApiBulkOracle(url):
     bulk_api_uri = ""
     api_response = requests.get(URL_API_BULK).json()
     for data in api_response["data"]:
         if "type" in data:
             if data["type"] == "oracle_cards":
-                bulk_api_uri = data["uri"]
+                bulk_api_uri = data["download_uri"]
     print(bulk_api_uri)
+    retryConnection(bulk_api_uri)
     api_bulk_response = requests.get(bulk_api_uri).json()
-    if "download_uri" in api_bulk_response.keys():
-        bulk_data = api_bulk_response["download_uri"]
+    tryConnetion(api_bulk_response)
 
-    r = requests.get(bulk_data).json()
-    return r
+# Fetch JSON from Blizzard's endpoint
+def getJSONfromApi(url):
+    api_result = requests.get(url).json()
+    return api_result
+
+def tryConnetion(url):
+    try:
+        api_result = getJSONfromApi(url)
+        return api_result
+    except:
+        print(str(datetime.now()) + " Failed to connect to Scryfall API")
+        return None
+    print(str(datetime.now()) + " Trying to get data from endpoint: " + str(url))
+
+def retryConnection(url):
+    retry_count = 10 
+    for retry in range(retry_count):
+        print(str(datetime.now()) + " Connecting to Scryfall API. Try: " + str(retry + 1))
+        api_result = tryConnetion(url)
+        if api_result == None:
+            print(str(datetime.now()) + " Sleeping 15s...")
+            time.sleep(15)
+            continue
+        else:
+            cards = api_result
+            print(str(datetime.now()) + " Success! Insertion in Progress")
+            insertMtgToGQL(cards)
+            break
 
 # Where all magic happens
-#cardSearch()
-getAllMagicCardsNew()
+getScryfallApiBulkOracle(URL_API_BULK)
+
     

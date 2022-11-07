@@ -173,7 +173,7 @@ for url in url_pages:
     print(str(datetime.now()) + " Trying to get data from endpoint: " + str(url))
     retry_count = 10 
     for retry in range(retry_count):
-        print(str(datetime.now()) + " Connecting to Blizzard API. Try: " + str(retry))
+        print(str(datetime.now()) + " Connecting to Blizzard API. Try: " + str(retry + 1))
         api_result = tryConnetion(url)
         if api_result == None:
             print(str(datetime.now()) + " Sleeping 15s...")
