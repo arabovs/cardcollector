@@ -3,8 +3,6 @@ import sys
 from etc.postgre.GQL import GQL
 from etc.helpers.helper import helper
 
-#%20
-
 gql_connector = GQL() 
 
 #https://api.gwentapi.com/v0?
