@@ -2,6 +2,8 @@ import requests
 import sys
 from etc.postgre.GQL import GQL
 from etc.helpers.helper import helper
+from datetime import datetime
+
 
 #%20
 
@@ -26,6 +28,7 @@ def cardSearch(url):
     yugioh_cards = requests.get(url).json()
     i = 0
     bulk = {}
+    print(str(datetime.now()) + " Inserting cards")
     for card in yugioh_cards["data"]:           
         # Card sets - some cards have [] others {} and some None ( we skip in this case)
         if "card_sets" not in card.keys():
@@ -105,6 +108,7 @@ def cardSearch(url):
             if i == 500:
                 gql_connector.gqlInsertCards(list(bulk.values()))
                 i = 0
+    print(str(datetime.now()) + " Insertion complete")
                                
 for url in urls:
     cardSearch(url)

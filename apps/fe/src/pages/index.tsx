@@ -255,12 +255,7 @@ const IndexPage = () => {
   return (
     <Box sx={{ mt: 2, mb: 2, pl: 1, pr: 1 }}>
       <Grid container spacing={1}>
-        <Grid
-          item
-          xs={8}
-          sm={10}
-          sx={{ display: "flex", alignItems: "center" }}
-        >
+        <Grid item xs={8} sm={8} sx={{ display: "flex", alignItems: "center" }}>
           <IconButton sx={{ mr: 1 }} onClick={() => setFilterOpen((p) => !p)}>
             <FilterList />
           </IconButton>
@@ -275,9 +270,9 @@ const IndexPage = () => {
             autoComplete={"off"}
           />
         </Grid>
-        <Grid item xs={4} sm={2}>
+        <Grid item xs={4} sm={4} sx={{ display: "flex", alignItems: "center" }}>
           <FormControl fullWidth size="small">
-            <Box display="flex">
+            <Box display="flex" sx={{ ml: 2, sm: 4, xs: 8 }}>
               <Box>
                 <InputLabel id="demo-simple-select-label">Order By</InputLabel>
                 <Select
@@ -304,10 +299,10 @@ const IndexPage = () => {
                   <MenuItem value={"rarity"}>Rarity</MenuItem>
                 </Select>
               </Box>
-              <Box>
-                <InputLabel id="demo-simple-select-label">Sort</InputLabel>
+              <Box sx={{ ml: 2, sm: 4, xs: 8 }}>
+                <InputLabel id="demo-simple-select-label2">Sort</InputLabel>
                 <Select
-                  labelId="demo-simple-select-label"
+                  labelId="demo-simple-select-label2"
                   label="ascdesc"
                   fullWidth
                   size="small"
