@@ -104,6 +104,7 @@ const IndexPage = () => {
   const [isFilterOpen, setFilterOpen] = useState(true);
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [orderBy, setOrderBy] = useState(null);
+  const [isAsc, setAsc] = useState(null);
   const [limitItems, setLimitItems] = useState(48);
   const [page, setPage] = React.useState(1);
   const handlePageChange = (event, value: number) => {
@@ -244,7 +245,7 @@ const IndexPage = () => {
             ...queryFilters,
           },
         },
-        order_by: { price: orderBy },
+        order_by: { set: isAsc },
         limit: limitItems,
         offset: limitItems * page - limitItems,
       },
@@ -276,27 +277,57 @@ const IndexPage = () => {
         </Grid>
         <Grid item xs={4} sm={2}>
           <FormControl fullWidth size="small">
-            <InputLabel id="demo-simple-select-label">Sort</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              label="Sort"
-              fullWidth
-              size="small"
-              value={orderBy}
-              onChange={(e) => setOrderBy(e.target.value)}
-              endAdornment={
-                orderBy && (
-                  <InputAdornment position="end" sx={{ mr: 1 }}>
-                    <IconButton size="small" onClick={() => setOrderBy(null)}>
-                      <Close fontSize={"small"} />
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }
-            >
-              <MenuItem value={"asc"}>Price low to high</MenuItem>
-              <MenuItem value={"desc"}>Price high to low</MenuItem>
-            </Select>
+            <Box display="flex">
+              <Box>
+                <InputLabel id="demo-simple-select-label">Order By</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  label="Sort"
+                  fullWidth
+                  size="small"
+                  value={orderBy}
+                  onChange={(e) => setOrderBy(e.target.value)}
+                  endAdornment={
+                    orderBy && (
+                      <InputAdornment position="end" sx={{ mr: 1 }}>
+                        <IconButton
+                          size="small"
+                          onClick={() => setOrderBy(null)}
+                        >
+                          <Close fontSize={"small"} />
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }
+                >
+                  <MenuItem value={"set"}>Set</MenuItem>
+                  <MenuItem value={"rarity"}>Rarity</MenuItem>
+                </Select>
+              </Box>
+              <Box>
+                <InputLabel id="demo-simple-select-label">Sort</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  label="ascdesc"
+                  fullWidth
+                  size="small"
+                  value={isAsc}
+                  onChange={(e) => setAsc(e.target.value)}
+                  endAdornment={
+                    isAsc && (
+                      <InputAdornment position="end" sx={{ mr: 1 }}>
+                        <IconButton size="small" onClick={() => setAsc(null)}>
+                          <Close fontSize={"small"} />
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }
+                >
+                  <MenuItem value={"asc"}>Ascending</MenuItem>
+                  <MenuItem value={"desc"}>Descending</MenuItem>
+                </Select>
+              </Box>
+            </Box>
           </FormControl>
         </Grid>
       </Grid>
