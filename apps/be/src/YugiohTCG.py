@@ -4,7 +4,7 @@ from etc.postgre.GQL import GQL
 from etc.helpers.helper import helper
 
 gql_connector = GQL() 
-
+# need to commit
 #https://api.gwentapi.com/v0?
 urls = [
         'https://db.ygoprodeck.com/api/v7/cardinfo.php',
