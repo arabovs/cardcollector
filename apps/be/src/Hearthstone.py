@@ -144,26 +144,26 @@ def insertIntoDatabase(cards):
     for card in cards["cards"]: # for all cards
         card = cleanupCard(card) # clean up required for all cards as part standartization
         bulk[i] = helper.returnObject(
-                GAME_CODE,                             # card_details.tcg
-                str(card.get("slug","")),              # card_details.api_id
-                card.get("name",""),                   # card_details.name
-                card.get("image",""),                  # card_details.image
-                str(card.get("cardSetId",None)),       # card_details.set
-                str(card.get("cardSetIdOld","")),      # card_details.set_id
-                str(card.get("id",None)),              # card_details.card_id
-                str(card.get("rarityId",None)),        # card_details.rarity
-                None,                                  # card_details.price
-                None,                                  # card_details.price_foil
-                None,                                  # card_details.price_other
-                str(card.get("cardTypeId",None)),      # card_details.type
-                card.get("minionTypeId",None),         # card_details.subtype
-                card.get("text",None),                 # card_details.game_text
-                card.get("flavorText",None),           # card_details.flavor_text
-                card["manaCost"],                      # card_details.cost
-                None,                                  # card_details.cost_text
-                card["attack"],                        # card_details.attack
-                card["health"],                        # card_details.defence
-                card.get("classId",None),              # card_details.kind
+                GAME_CODE,                               # card_details.tcg
+                str(card.get("slug","")),                # card_details.api_id
+                card.get("name",""),                     # card_details.name
+                card.get("image",""),                    # card_details.image
+                str(card.get("cardSetId",None)),         # card_details.set
+                str(card.get("cardSetIdOld","")),        # card_details.set_id
+                str(card.get("id",None)),                # card_details.card_id
+                str(card.get("rarityId",None)),          # card_details.rarity
+                None,                                    # card_details.price
+                None,                                    # card_details.price_foil
+                None,                                    # card_details.price_other
+                str(card.get("cardTypeId",None)),        # card_details.type
+                card.get("minionTypeId",None),           # card_details.subtype
+                card.get("text",None),                   # card_details.game_text
+                card.get("flavorText",None),             # card_details.flavor_text
+                card["manaCost"],                        # card_details.cost
+                None,                                    # card_details.cost_text
+                card["attack"],                          # card_details.attack
+                card["health"],                          # card_details.defence
+                card.get("classId",None),                # card_details.kind
         )
         i+=1
     gql_connector.gqlInsertCards(list(bulk.values()))
