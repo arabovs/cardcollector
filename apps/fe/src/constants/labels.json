@@ -68,5 +68,17 @@
     "cost": "Cost",
     "attack": "Attack",
     "defence": "Defense"
+  },
+  "lor": {
+    "type": "Card Type",
+    "subtype": "Minion Type",
+    "kind": "Class",
+    "set": "Set",
+    "set_code": "Set Code",
+    "card_id": "Set Number",
+    "rarity": "Rarity",
+    "cost": "Mana Cost",
+    "attack": "Attack",
+    "defence": "Health"
   }
 }
