@@ -196,9 +196,9 @@ def scrapeLatestPricing():
                   i+=1
                   continue
                 URL_PRICE = createNewURL(set, card_name_cleaned)
-                card_price = getPriceFromURL(URL_PRICE) 
-                price_foil = getPriceFromURL(URL_PRICE + "-foil") 
-                price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
+                #card_price = getPriceFromURL(URL_PRICE) 
+                #price_foil = getPriceFromURL(URL_PRICE + "-foil") 
+                #price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
                 
                 if "rarity" not in card_dict.keys():
                   card_dict["rarity"] = "R"
@@ -215,6 +215,10 @@ def scrapeLatestPricing():
                   strength_cleaned = float(card_dict["strength"])
                 if "vitality" in card_dict.keys():
                   vitality_cleaned = float(card_dict["vitality"])
+                if "resistance" in card_dict.keys():
+                  strength_cleaned = int(card_dict["strength"])
+                if "homesite" in card_dict.keys():
+                  vitality_cleaned = int(card_dict["vitality"])                
                   
                   
                 twilight_cleaned = None
@@ -240,9 +244,9 @@ def scrapeLatestPricing():
                   card_dict.get("set","s"),                                     # card_details.set_id
                   card_dict.get("rarity","") + card_dict.get("card_number",""), # card_details.card_id
                   rarity_dict[card_dict.get("rarity","")],                      # card_details.rarity
-                  float(card_price),                                            # card_details.price
-                  float(price_foil),                                            # card_details.price_foil
-                  float(price_tng),                                             # card_details.price_other
+                  0, #float(card_price),                                        # card_details.price
+                  0, #float(price_foil),                                        # card_details.price_foil
+                  0, #float(price_tng),                                         # card_details.price_other
                   card_dict.get("card_type",None),                              # card_details.type
                   card_dict.get("subtype",None),                                # card_details.subtype
                   card_dict.get("game_text",None),                              # card_details.game_text
@@ -251,17 +255,14 @@ def scrapeLatestPricing():
                   card_dict.get("site",None),                                   # card_details.cost_text
                   strength_cleaned,                                             # card_details.attack
                   vitality_cleaned,                                             # card_details.defence
-                  card_dict.get("kind",None),                                   # card_details.kind                    
+                  card_dict.get("kind",None),                                   # card_details.kind       
+                  card_dict.get("resistance",None),                               # card_details.lotr_resistance
+                  None,
+                  card_dict.get("culture",None),                                  # card_details.lotr_culture   
+                  card_dict.get("home_site",None),                                   # card_details.lotr_home_site
+                      
                 )
                 print("Inserted" + str(i) + ": " + card_dict.get("card_name",""))
-                
-                
-              ##################### LEGACY SHIT WILL REMOVE AFTER IM DONE WITH ALL FIELDS
-               #gql_connector.gqlInsertCard(
-               #                        card_dict.get("kind",""),
-               #                        card_dict.get("culture",""),
-               #                        card_dict.get("resistance",""),
-               #                         card_dict.get("home_site",""))
               else:
                   # need to find a way to handle this better
                 print("Skipping " + str(i) + ": " + card_dict.get("card_name",""))

@@ -25,7 +25,11 @@ class GQL:
                             cost_text,
                             attack,
                             defence,
-                            kind
+                            kind,
+                            lotr_resistance,
+                            keywords,
+                            lotr_culture,
+                            lotr_home_site
                           ):
             HASURA_URL = "https://card-catalogue-dev.herokuapp.com/v1/graphql"
 
@@ -55,8 +59,13 @@ class GQL:
                                                $attack: float8!,
                                                $defence: float8!,
                                                $kind: String!,
+                                               $lotr_resistance: Int!,
+                                               $keywords: String!,
+                                               $lotr_culture: String!,
+                                               $lotr_home_site: Int!
                                              ) {
-              insert_card_details(objects: {tcg: $tcg,
+              insert_card_details(objects: {  
+                                              tcg: $tcg,
                                               api_id: $api_id,
                                               name: $name, 
                                               image: $image,
@@ -75,7 +84,11 @@ class GQL:
                                               cost_text: $cost_text,
                                               attack: $attack,
                                               defence: $defence,
-                                              kind: $kind
+                                              kind: $kind,
+                                              lotr_resistance: $lotr_resistance,
+                                              keywords: $keywords,
+                                              lotr_culture: $lotr_culture,
+                                              lotr_home_site: $lotr_home_site,
                                               }) {
                 affected_rows
               }
@@ -100,7 +113,11 @@ class GQL:
                 "cost_text": cost_text,
                 "attack": attack,
                 "defence": defence,
-                "kind": kind,          
+                "kind": kind,    
+                "lotr_resistance": lotr_resistance,
+                "keywords": keywords,
+                "lotr_culture": lotr_culture,
+                "lotr_home_site": lotr_home_site,                      
             }
             result = client.execute(query, variable_values=params)
             return result
