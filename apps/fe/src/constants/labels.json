@@ -9,7 +9,8 @@
     "rarity": "Rarity",
     "cost": "Twillight",
     "attack": "Strength",
-    "defence": "Vitality"
+    "defence": "Vitality",
+    "lotr_resistance": "Resitance"
   },
   "mtg": {
     "type": "Type",

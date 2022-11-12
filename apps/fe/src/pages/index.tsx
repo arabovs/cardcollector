@@ -115,7 +115,10 @@ const IndexPage = () => {
   }, [selectedGame]);
   const filterTypesQuery = useQuery(
     gql`
-      query FilterTypes($tcg: String_comparison_exp!) {
+      query FilterTypes(
+        $tcg: String_comparison_exp!
+        $include_lotr_resistance: Boolean!
+      ) {
         type: card_details(
           distinct_on: type
           where: { tcg: $tcg, type: { _is_null: false } }
@@ -164,9 +167,20 @@ const IndexPage = () => {
         ) {
           rarity
         }
+        lotr_resistance: card_details(
+          distinct_on: lotr_resistance
+          where: { tcg: $tcg, lotr_resistance: { _is_null: false } }
+        ) @include(if: $include_lotr_resistance) {
+          lotr_resistance
+        }
       }
     `,
-    { variables: { tcg: { _eq: selectedGame } } }
+    {
+      variables: {
+        tcg: { _eq: selectedGame },
+        include_lotr_resistance: selectedGame === "lotr",
+      },
+    }
   );
   const queryFilters = selectedFilters.reduce((acc, filter) => {
     return {
@@ -201,21 +215,19 @@ const IndexPage = () => {
   const filterTypes = (
     (filterTypesQuery.data && Object.entries(filterTypesQuery.data)) ||
     []
-  )
-    .filter(([_, value]) => value.length !== 0)
-    .map(([key, value]) => ({
+  ).map(([key, value]) => ({
+    key,
+    label: labels[selectedGame][key],
+    values: value.map((item) => ({
       key,
+      value: item[key],
       label: labels[selectedGame][key],
-      values: value.map((item) => ({
-        key,
-        value: item[key],
-        label: labels[selectedGame][key],
-      })),
-    }));
+    })),
+  }));
 
   const { data, error, loading } = useSubscription(
     gql`
-      subscription(
+      subscription (
         $where: card_details_bool_exp
         $order_by: [card_details_order_by!]
         $limit: Int
