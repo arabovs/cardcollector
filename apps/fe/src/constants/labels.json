@@ -23,7 +23,8 @@
     "cost": "Mana Value",
     "cost_text": "Mana Cost",
     "attack": "Power",
-    "defence": "Toughness"
+    "defence": "Toughness",
+    "keywords": "Keywords"
   },
   "pokemon": {
     "type": "Card Type",

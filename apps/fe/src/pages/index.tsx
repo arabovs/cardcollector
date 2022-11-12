@@ -118,6 +118,7 @@ const IndexPage = () => {
       query FilterTypes(
         $tcg: String_comparison_exp!
         $include_lotr_resistance: Boolean!
+        $include_keywords: Boolean!
       ) {
         type: card_details(
           distinct_on: type
@@ -173,12 +174,19 @@ const IndexPage = () => {
         ) @include(if: $include_lotr_resistance) {
           lotr_resistance
         }
+        keywords: card_details(
+          distinct_on: keywords
+          where: { tcg: $tcg, keywords: { _is_null: false } }
+        ) @include(if: $include_keywords) {
+          keywords
+        }
       }
     `,
     {
       variables: {
         tcg: { _eq: selectedGame },
         include_lotr_resistance: selectedGame === "lotr",
+        include_keywords: selectedGame === "mtg",
       },
     }
   );
