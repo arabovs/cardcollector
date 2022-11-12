@@ -225,7 +225,10 @@ const IndexPage = () => {
     []
   ).map(([key, value]) => ({
     key,
-    label: labels[selectedGame][key],
+    label: labels[selectedGame][key] || (
+      // remove when game fields fixed
+      <div style={{ color: "red" }}>{key}</div>
+    ),
     values: value.map((item) => ({
       key,
       value: item[key],
