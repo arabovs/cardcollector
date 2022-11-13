@@ -1,13 +1,11 @@
 from operator import concat
 from urllib import response
 from requests import request
-import json
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 from etc.postgre.GQL import GQL
 from etc.lotrtcg.metadata import HsMetadata
-import subprocess
 import re
 from os.path  import basename
 
@@ -150,12 +148,9 @@ def scrapeLatestPricing():
         rows = cards.find_all('tr')
         for row in rows:
             if i > 0:
-              if i < 504:
-                i+=1
-                continue
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
-              card_name = str(row.find('td', class_= 'col1').string).replace("•","")
+              card_name = str(row.find('td', class_= 'col1').string).replace(" (AI)","").replace(" (M)","").replace(" (T)","").replace(" (P)","").replace(" (AFD)","").replace(" (D)","").replace(" (AFD)","").replace(" (SPD)","").replace(" (W)","").replace(" (F)","").replace(" (F)","").replace(" (O)","")
               card_id_regex_number = re.compile(r"^([^a-zA-Z]*)\w+(\d+)") 
               card_name_cleaned = cleanCardName(card_name = row.find('td', class_= 'col1').string) 
               

@@ -8,7 +8,7 @@ gql_connector = GQL()
 #https://api.gwentapi.com/v0?
 urls = [
         'https://db.ygoprodeck.com/api/v7/cardinfo.php',
-        #'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Pot%20Of%20Greed',
+        #'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Cyber%20Saurus',
         #'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Dark%20Magician',
         #'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Dark%20Magician%20Girl',
         #'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Mystic%20Tomato',
@@ -97,7 +97,11 @@ def cardSearch(url):
                   str(level_cleaned),                                                               # card_details.cost_text
                   card_atk_cleaned,                                                                 # card_details.attack
                   card_def_cleaned,                                                                 # card_details.defence
-                  card.get("archetype",None)                                                        # card_details.kind
+                  card.get("archetype",None),                                                       # card_details.kind
+                  None,                                                                             # card_details.lotr_resistance
+                  None,                                                                             # card_details.keywords (FEATURE                
+                  None,                                                                             # card_details.lotr_culture   
+                  None,                                                                             # card_details.lotr_home_site
             )
             i += 1 
             if i == 500:
