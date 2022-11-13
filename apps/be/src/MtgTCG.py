@@ -85,6 +85,15 @@ def insertMtgToGQL(cards):
                         continue
             else:
               toughness_cleaned = None
+              
+            keywords_cleaned = ""
+            if "keywords" in card.keys():
+                for keyword in card["keywords"]:
+                    keywords_cleaned = keywords_cleaned + "|" + keyword
+            else:
+                keywords_cleaned = None
+    
+    
             card_obj = helper.returnObject(  
                                        "mtg",                            # card_details.tcg
                                        card.get("id",""),                # card_details.api_id
@@ -105,7 +114,11 @@ def insertMtgToGQL(cards):
                                        card.get("mana_cost",None),       # card_details.cost_text
                                        power_cleaned,                    # card_details.attack
                                        toughness_cleaned,                # card_details.defence
-                                       None                              # card_details.kind
+                                       None,                             # card_details.kind
+                                       None,                             # card_details.lotr_resistance ( NOT USED )
+                                       keywords_cleaned,                 # card_details.keywords
+                                       None,                             # card_details.lotr_culture ( NOT USED )
+                                       None,                             # card_details.lotr_home_site ( NOT USED )                         
                                     )
             bulk[i] = card_obj
             i+=1

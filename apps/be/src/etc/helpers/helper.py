@@ -21,7 +21,11 @@ class helper:
                     cost_text,
                     attack,
                     defence,
-                    kind
+                    kind,
+                    lotr_resistance,
+                    keywords,
+                    lotr_culture,
+                    lotr_home_site,
                 ):
         return {    "tcg": tcg,
                     "api_id": api_id,   
@@ -43,4 +47,8 @@ class helper:
                     "attack": attack,       
                     "defence": defence,       
                     "kind": kind,
+                    "lotr_resistance": lotr_resistance,
+                    "keywords" : keywords,
+                    "lotr_culture": lotr_culture,
+                    "lotr_home_site": lotr_home_site,
                 }

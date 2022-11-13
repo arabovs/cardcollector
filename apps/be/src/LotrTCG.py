@@ -216,9 +216,7 @@ def scrapeLatestPricing():
                 if "vitality" in card_dict.keys():
                   vitality_cleaned = float(card_dict["vitality"])
                 if "resistance" in card_dict.keys():
-                  strength_cleaned = int(card_dict["strength"])
-                if "homesite" in card_dict.keys():
-                  vitality_cleaned = int(card_dict["vitality"])                
+                  strength_cleaned = int(card_dict["resistance"])
                   
                   
                 twilight_cleaned = None
@@ -256,10 +254,10 @@ def scrapeLatestPricing():
                   strength_cleaned,                                             # card_details.attack
                   vitality_cleaned,                                             # card_details.defence
                   card_dict.get("kind",None),                                   # card_details.kind       
-                  card_dict.get("resistance",None),                               # card_details.lotr_resistance
-                  None,
-                  card_dict.get("culture",None),                                  # card_details.lotr_culture   
-                  card_dict.get("home_site",None),                                   # card_details.lotr_home_site
+                  card_dict.get("resistance",None),                             # card_details.lotr_resistance
+                  None,                                                         # card_details.keywords (FEATURE)
+                  card_dict.get("culture",None),                                # card_details.lotr_culture   
+                  card_dict.get("home_site",None),                              # card_details.lotr_home_site
                       
                 )
                 print("Inserted" + str(i) + ": " + card_dict.get("card_name",""))

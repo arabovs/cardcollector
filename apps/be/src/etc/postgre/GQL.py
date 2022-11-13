@@ -62,7 +62,7 @@ class GQL:
                                                $lotr_resistance: Int!,
                                                $keywords: String!,
                                                $lotr_culture: String!,
-                                               $lotr_home_site: Int!
+                                               $lotr_home_site: String!
                                              ) {
               insert_card_details(objects: {  
                                               tcg: $tcg,
