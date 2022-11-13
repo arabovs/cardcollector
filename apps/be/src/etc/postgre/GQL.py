@@ -5,7 +5,8 @@ from gql import Client, gql
 
 class GQL:
 
-    def gqlInsertGenericCard(self,
+    def gqlInsertGenericCard(
+                            self,
                             tcg,
                             api_id,
                             name,
@@ -37,7 +38,10 @@ class GQL:
                 url=HASURA_URL,
                 verify=True,
                 retries=3,
+                headers={'x-hasura-admin-secret':'UV7IwHyrnytgUyqT2E5oWixWLxD01gNJ4tDgtCjEqtl2MXPLisCPRWAqsU1FsgXW'},
             )
+
+
             client = Client(transport=transport, fetch_schema_from_transport=True)
             query = gql("""mutation MyMutation($tcg: String!,
                                                $api_id: String!,
@@ -54,7 +58,7 @@ class GQL:
                                                $subtype: String!,
                                                $game_text: String!,
                                                $flavor_text: String!,
-                                               $cost: Int!,
+                                               $cost: float8!,
                                                $cost_text: String!,
                                                $attack: float8!,
                                                $defence: float8!,
@@ -130,6 +134,7 @@ class GQL:
           url=HASURA_URL,
           verify=True,
           retries=3,
+          headers={'x-hasura-admin-secret':'UV7IwHyrnytgUyqT2E5oWixWLxD01gNJ4tDgtCjEqtl2MXPLisCPRWAqsU1FsgXW'},
       )
       client = Client(transport=transport, fetch_schema_from_transport=True)
       query = gql("""mutation MyMutation($objects: [card_details_insert_input!]!) {
@@ -141,21 +146,3 @@ class GQL:
       #r = requests.post(url, json={'query': query , 'variables': variables})
       result = client.execute(query, variable_values=variables)
       return result
-    
-    
-
-    def gqlFindCardbyName(self, card_name):
-        query = gql("""query MyQuery($card_name: String!) {
-          lotr_all_cards_pricing(where: {card_name: {_ilike: $card_name}}) {
-                id
-                card_name
-                card_price
-                price_foil
-                price_tng
-          }
-        }""")
-        params = {
-            "card_name": ("%"+card_name+"%"),
-        }
-        result = client.execute(query, variable_values=params)
-        return result

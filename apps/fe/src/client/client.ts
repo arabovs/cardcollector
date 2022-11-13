@@ -1,31 +1,43 @@
-import React from "react";
-import {
-  ApolloClient,
-  InMemoryCache,
-  createHttpLink,
-  split,
-} from "@apollo/client";
-
-import fetch from "isomorphic-fetch";
-import { WebSocketLink } from "@apollo/client/link/ws";
+import { ApolloClient, InMemoryCache, HttpLink, split } from "@apollo/client";
 import { getMainDefinition } from "@apollo/client/utilities";
-import isNode from "is-node";
 import ws from "ws";
+import isNode from "is-node";
+import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+import { createClient } from "graphql-ws";
+import { setContext } from "@apollo/client/link/context";
+import fetch from "isomorphic-fetch";
 
-const wsLink = new WebSocketLink({
-  uri: "wss://card-catalogue-dev.herokuapp.com/v1/graphql",
-  options: {
-    reconnect: true,
-  },
-  webSocketImpl: isNode ? ws : null,
+const wsLink = new GraphQLWsLink(
+  createClient({
+    url: "wss://card-catalogue-dev.herokuapp.com/v1/graphql",
+    webSocketImpl: isNode ? ws : null,
+    connectionParams: () => {
+      return {
+        headers: {
+          "x-hasura-admin-secret":
+            "UV7IwHyrnytgUyqT2E5oWixWLxD01gNJ4tDgtCjEqtl2MXPLisCPRWAqsU1FsgXW",
+        },
+      };
+    },
+  })
+);
+
+const authLink = setContext((_, { headers }) => {
+  return {
+    headers: {
+      ...headers,
+      "x-hasura-admin-secret":
+        "UV7IwHyrnytgUyqT2E5oWixWLxD01gNJ4tDgtCjEqtl2MXPLisCPRWAqsU1FsgXW",
+    },
+    fetch,
+  };
 });
 
-const httpLink = createHttpLink({
+const httpLink = new HttpLink({
   uri: "https://card-catalogue-dev.herokuapp.com/v1/graphql",
-  fetch,
 });
 
-const link = split(
+const splitLink = split(
   ({ query }) => {
     const definition = getMainDefinition(query);
     return (
@@ -34,10 +46,10 @@ const link = split(
     );
   },
   wsLink,
-  httpLink
+  authLink.concat(httpLink)
 );
 
 export const client = new ApolloClient({
-  link: link,
+  link: splitLink,
   cache: new InMemoryCache(),
 });

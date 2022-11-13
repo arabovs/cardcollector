@@ -164,6 +164,10 @@ def insertIntoDatabase(cards):
                 card["attack"],                          # card_details.attack
                 card["health"],                          # card_details.defence
                 card.get("classId",None),                # card_details.kind
+                None,
+                None,                                    # card_details.keywords
+                None,
+                None,
         )
         i+=1
     gql_connector.gqlInsertCards(list(bulk.values()))

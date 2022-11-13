@@ -21,7 +21,6 @@ def record_participation():
          ).encode("utf8"),
      )
 
-
     r = urlopen(req)
     if r.status != 200:
         raise Exception(r.status, r.reason)
