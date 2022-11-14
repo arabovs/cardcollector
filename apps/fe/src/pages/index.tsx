@@ -34,9 +34,21 @@ const CardFilter = ({
   filterName,
   selectedFilters,
   setSelectedFilters,
+  filterTypeOf,
 }) => {
   const [isFilterTypeOpen, setFilterTypeOpen] = useState(false);
   const [searchKeyword, setSearchKeyWord] = useState("");
+  const [numberFrom, setNumberFrom] = useState(null);
+  const [numberTo, setNumberTo] = useState(null);
+  React.useEffect(() => {
+    if (
+      filterTypeOf === "number" &&
+      (numberFrom === null || numberTo === null)
+    ) {
+      setNumberFrom(filters[0].value);
+      setNumberTo(filters[filters.length - 1].value);
+    }
+  }, []);
   return (
     <>
       <ListItemButton onClick={() => setFilterTypeOpen((p) => !p)}>
@@ -49,17 +61,53 @@ const CardFilter = ({
       <Collapse in={isFilterTypeOpen} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           <ListItem sx={{ pl: 4 }}>
-            <TextField
-              variant="outlined"
-              placeholder="Search"
-              size="small"
-              fullWidth
-              value={searchKeyword}
-              onChange={(e) => setSearchKeyWord(e.target.value)}
-            />
+            {filterTypeOf === "string" && (
+              <TextField
+                variant="outlined"
+                placeholder="Search"
+                size="small"
+                fullWidth
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyWord(e.target.value)}
+              />
+            )}
+            {filterTypeOf === "number" && (
+              <>
+                <TextField
+                  variant="outlined"
+                  placeholder="From"
+                  size="small"
+                  fullWidth
+                  value={numberFrom}
+                  onChange={(e) => setNumberFrom(Number(e.target.value))}
+                  type="number"
+                  inputProps={{
+                    min: filters[0].value,
+                    max: numberTo,
+                  }}
+                />
+                <Box sx={{ ml: 1, mr: 1 }}>to</Box>
+                <TextField
+                  variant="outlined"
+                  placeholder="To"
+                  size="small"
+                  fullWidth
+                  value={numberTo}
+                  onChange={(e) => setNumberTo(Number(e.target.value))}
+                  type="number"
+                  inputProps={{
+                    min: numberFrom,
+                    max: filters[filters.length - 1].value,
+                  }}
+                />
+              </>
+            )}
           </ListItem>
           {filters
             .filter((type) => {
+              if (filterTypeOf === "number") {
+                return type.value >= numberFrom && type.value <= numberTo;
+              }
               return String(type.value)
                 ?.toLowerCase()
                 ?.includes(searchKeyword.toLowerCase());
@@ -259,10 +307,10 @@ const IndexPage = () => {
         label: labels[selectedGame][key],
       })),
     }));
-
+  console.log(filterTypes);
   const { data, error, loading } = useSubscription(
     gql`
-      subscription(
+      subscription (
         $where: card_details_bool_exp
         $order_by: [card_details_order_by!]
         $limit: Int
@@ -362,6 +410,7 @@ const IndexPage = () => {
                       filters={filterType.values}
                       selectedFilters={selectedFilters}
                       setSelectedFilters={setSelectedFilters}
+                      filterTypeOf={typeof filterType.values[0].value}
                     />
                   ))}
                 </List>
