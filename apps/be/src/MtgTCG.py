@@ -14,8 +14,6 @@ URL_API_BULK = "https://api.scryfall.com/bulk-data"
 
 
 urls = [
-#    'https://api.scryfall.com/cards/search?q=!"Snapcaster%20Mage"&unique=prints',
-#    'https://api.scryfall.com/cards/search?q=!"Abrupt%20Decay"&unique=prints',
      'https://api.scryfall.com/cards/search?q=!%22Tarmogoyf%22&unique=prints'
 ]
 # https://api.scryfall.com/bulk-data
@@ -53,36 +51,36 @@ def insertMtgToGQL(cards):
             # 22222222 = -
             # 33333333 = +
             # 44444444 = ?
-            power_cleaned = ""
+            power_cleaned = 0
             if 'power' in card.keys():
-                for char in card['power']:
-                    if not char.isnumeric():
-                        card['power_text'] = card['power']
-                        card['power'] = None
-                        break   
-                if card['power'] == "∞":
-                    power_cleaned = 'Infinity'
+                if not card['power'].isdigit():
+                    card['power_text'] = card['power']
+                    card['power'] = None
+                elif card['power'] == "∞":
+                    power_cleaned = 'Infinity' 
+                else:
+                    power_cleaned = card['power']
             else:
               power_cleaned = None
 
             # Toughness clean-up
-            toughness_cleaned = ""
+            toughness_cleaned = 0
             if 'toughness' in card.keys():
-                for char in card['toughness']:
-                    if not char.isnumeric():
-                        card['toughness_text'] = card['toughness']
-                        card['toughness'] = None
-                        break
-
-                if card['toughness'] == "∞":
+                if not card['toughness'].isdigit():
+                    card['toughness_text'] = card['toughness']
+                    card['toughness'] = None
+                elif card['toughness'] == "∞":
                     toughness_cleaned = 'Infinity' 
+                else:
+                    toughness_cleaned = card['toughness']
             else:
               toughness_cleaned = None
               
             keywords_cleaned = ""
             if "keywords" in card.keys():
-                for keyword in card["keywords"]:
-                    keywords_cleaned = keywords_cleaned + "|" + keyword
+                if len(card["keywords"]) > 0:
+                    for keyword in card["keywords"]:
+                        keywords_cleaned = keywords_cleaned + "|" + keyword
             else:
                 keywords_cleaned = None
     
@@ -167,6 +165,6 @@ def retryConnection(url):
             break
 
 # Where all magic happens
-getScryfallApiBulkOracle(urls)
+getScryfallApiBulkOracle(URL_API_BULK)
 
     
