@@ -56,7 +56,7 @@ class GQL:
                                                $subtype: String!,
                                                $game_text: String!,
                                                $flavor_text: String!,
-                                               $cost: Int!,
+                                               $cost: float!,
                                                $cost_text: String!,
                                                $attack: float8!,
                                                $defence: float8!,

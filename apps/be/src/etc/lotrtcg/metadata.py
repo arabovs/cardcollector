@@ -32,7 +32,8 @@ class HsMetadata():
       "0": "Promotional",
       "lotr promotional": "Promotional",
       "T": "Tengwar",
-      "": "empty",
+      "": "AFD",
+      "AFD": "AFD"
     }
     
     def __init__(self):

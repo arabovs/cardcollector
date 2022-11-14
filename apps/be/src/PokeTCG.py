@@ -99,6 +99,7 @@ def insertCard(card):
                                        None, # pokemon monsters' attack/s are included in card_text_cleaned. BUG we should find a way
                                        hp_cleaned, 
                                        card_kind_cleaned,
+                                       None,
                                     )
             
 

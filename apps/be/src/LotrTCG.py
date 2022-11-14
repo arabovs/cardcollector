@@ -150,7 +150,7 @@ def scrapeLatestPricing():
     for cards in cards_table:
         rows = cards.find_all('tr')
         for row in rows:
-            if i > 0:
+            if i > 151:
               # Basic Card info from Grand Page
               card_id = str(row.find('td').string)
               card_name = str(row.find('td', class_= 'col1').string)
@@ -176,6 +176,9 @@ def scrapeLatestPricing():
               #price_foil = getPriceFromURL(URL_PRICE + "-foil") 
               #price_tng  = getPriceFromURL(URL_PRICE + "-tengwar")
               
+              if "card_type" not in card_dict:
+                i+=1
+                continue
               # Site's culture and kind
               if card_dict["card_type"] == " Site":
                 card_dict["culture"] = "Site"
@@ -212,7 +215,13 @@ def scrapeLatestPricing():
               for key, value in card_dict.items():
                 if(key in ["culture","kind","set","card_type","lore","signet"]): 
                   card_dict[key] = value.title()
+              
+              # Faramir, Captain of Ithilien is buggy
+              if card_dict["set"] == "None":
+                card_dict["set"] = "AFD"
                 
+              # Some promotional proxies
+
               # Download images from lotrtcgwiki
               #    filename = card_dict.get("card_image","").replace("https://lotrtcgwiki.com/wiki/_media/","")
               #    img_data = requests.get(card_dict.get("card_image","")).content
@@ -248,8 +257,8 @@ def scrapeLatestPricing():
                 None,                                                         # card_details.keywords (FEATURE)
                 card_dict.get("culture",None),                                # card_details.lotr_culture   
                 card_dict.get("home_site",None),                              # card_details.lotr_home_site
-                None,
-                None
+                None,                                                         # card_details.mtg_attack_text
+                None                                                          # card_details.mtg_attack_text
                     
               )
               print(str(datetime.now()) + " Inserted " + str(i) + ": " + card_dict.get("card_name",""))
