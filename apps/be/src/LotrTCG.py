@@ -248,6 +248,8 @@ def scrapeLatestPricing():
                 None,                                                         # card_details.keywords (FEATURE)
                 card_dict.get("culture",None),                                # card_details.lotr_culture   
                 card_dict.get("home_site",None),                              # card_details.lotr_home_site
+                None,
+                None
                     
               )
               print(str(datetime.now()) + " Inserted " + str(i) + ": " + card_dict.get("card_name",""))

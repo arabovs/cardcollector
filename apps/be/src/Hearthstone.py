@@ -184,6 +184,8 @@ def insertIntoDatabase(cards):
                 card.get("keywords_cleaned",None),       # card_details.keywords
                 None,                                    # card_details.lotr_culture
                 None,                                    # card_details.lotr_home_site
+                None,
+                None,
         )
         i+=1
     gql_connector.gqlInsertCards(list(bulk.values()))

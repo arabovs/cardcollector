@@ -115,59 +115,106 @@ const IndexPage = () => {
   }, [selectedGame]);
   const filterTypesQuery = useQuery(
     gql`
-      query FilterTypes($tcg: String_comparison_exp!) {
+      query FilterTypes(
+        $tcg: String_comparison_exp!
+        $include_type: Boolean = true
+        $include_subtype: Boolean = true
+        $include_kind: Boolean = true
+        $include_cost: Boolean = true
+        $include_attack: Boolean = true
+        $include_defence: Boolean = true
+        $include_set: Boolean = true
+        $include_rarity: Boolean = true
+        $include_lotr_resistance: Boolean = false
+        $include_keywords: Boolean = false
+        $include_mtg_attack_text: Boolean = false
+        $include_mtg_defense_text: Boolean = false
+      ) {
         type: card_details(
           distinct_on: type
           where: { tcg: $tcg, type: { _is_null: false } }
-        ) {
+        ) @include(if: $include_type) {
           type
         }
         subtype: card_details(
           distinct_on: subtype
           where: { tcg: $tcg, subtype: { _is_null: false } }
-        ) {
+        ) @include(if: $include_subtype) {
           subtype
         }
         kind: card_details(
           distinct_on: kind
           where: { tcg: $tcg, kind: { _is_null: false } }
-        ) {
+        ) @include(if: $include_kind) {
           kind
         }
         cost: card_details(
           distinct_on: cost
           where: { tcg: $tcg, cost: { _is_null: false } }
-        ) {
+        ) @include(if: $include_cost) {
           cost
         }
         attack: card_details(
           distinct_on: attack
           where: { tcg: $tcg, attack: { _is_null: false } }
-        ) {
+        ) @include(if: $include_attack) {
           attack
         }
         defence: card_details(
           distinct_on: defence
           where: { tcg: $tcg, defence: { _is_null: false } }
-        ) {
+        ) @include(if: $include_defence) {
           defence
         }
         set: card_details(
           distinct_on: set
           where: { tcg: $tcg, set: { _is_null: false } }
-        ) {
+        ) @include(if: $include_set) {
           set
         }
         rarity: card_details(
           distinct_on: rarity
           where: { tcg: $tcg, rarity: { _is_null: false } }
-        ) {
+        ) @include(if: $include_rarity) {
           rarity
+        }
+        lotr_resistance: card_details(
+          distinct_on: lotr_resistance
+          where: { tcg: $tcg, lotr_resistance: { _is_null: false } }
+        ) @include(if: $include_lotr_resistance) {
+          lotr_resistance
+        }
+        keywords: card_details(
+          distinct_on: keywords
+          where: { tcg: $tcg, keywords: { _is_null: false } }
+        ) @include(if: $include_keywords) {
+          keywords
+        }
+        mtg_attack_text: card_details(
+          distinct_on: mtg_attack_text
+          where: { tcg: $tcg, mtg_attack_text: { _is_null: false } }
+        ) @include(if: $include_mtg_attack_text) {
+          mtg_attack_text
+        }
+        mtg_defense_text: card_details(
+          distinct_on: mtg_defense_text
+          where: { tcg: $tcg, mtg_defense_text: { _is_null: false } }
+        ) @include(if: $include_mtg_defense_text) {
+          mtg_defense_text
         }
       }
     `,
-    { variables: { tcg: { _eq: selectedGame } } }
+    {
+      variables: {
+        tcg: { _eq: selectedGame },
+        ...Object.keys(labels[selectedGame]).reduce(
+          (acc, curr) => ({ ...acc, [`include_${curr}`]: true }),
+          {}
+        ),
+      },
+    }
   );
+
   const queryFilters = selectedFilters.reduce((acc, filter) => {
     return {
       ...acc,
