@@ -944,6 +944,18 @@ metadata = {
   ],
   "sets": [
     {
+      "id": 17,
+      "name": "Hero Skins",
+    },
+    {
+      "id": 3,
+      "name": "METADATA BUG",
+    },
+    {
+      "id": 4,
+      "name": "METADATA BUG",
+    },
+    {
       "id": 1869,
       "name": "Path of Arthas",
       "slug": "path-of-arthas",
