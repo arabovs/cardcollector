@@ -63,6 +63,19 @@ def tryConnetion(url):
 # takes a card objects and cleans various fields as per db model
 def cleanupCard(card):
     
+    # clean up keywordIds
+    keywords_cleaned = ""
+    if "keywordIds" in card:
+        for keywordId in card["keywordIds"]:
+            for metaKey in metadata["keywords"]:
+                for key, value in metaKey.items():
+                    if key == "id" and value == keywordId:
+                        keywords_cleaned = keywords_cleaned + "|" + metaKey["name"]
+        keywords_cleaned = keywords_cleaned[1:]
+    else:
+        keywords_cleaned = None
+    card["keywords_cleaned"] = keywords_cleaned
+    
     # clean up classId classes
     if "classId" in card:
         for type in metadata["classes"]:
@@ -142,6 +155,9 @@ def insertIntoDatabase(cards):
     i = 0
     bulk = {}
     for card in cards["cards"]: # for all cards
+        #print(card)
+        if i == 500:
+            break
         card = cleanupCard(card) # clean up required for all cards as part standartization
         bulk[i] = helper.returnObject(
                 GAME_CODE,                               # card_details.tcg
@@ -164,10 +180,14 @@ def insertIntoDatabase(cards):
                 card["attack"],                          # card_details.attack
                 card["health"],                          # card_details.defence
                 card.get("classId",None),                # card_details.kind
+                None,                                    # card_details.lotr_resistance
+                card.get("keywords_cleaned",None),       # card_details.keywords
+                None,                                    # card_details.lotr_culture
+                None,                                    # card_details.lotr_home_site
         )
         i+=1
     gql_connector.gqlInsertCards(list(bulk.values()))
-    print(str(datetime.now()) + " Insertion Complete")
+    print(str(datetime.now()) + " Insertion Complete bulk of 500")
 
 # loops through pages of 500 cards
 for url in url_pages:
