@@ -102,6 +102,8 @@ def cardSearch(url):
                   None,                                                                             # card_details.keywords (FEATURE                
                   None,                                                                             # card_details.lotr_culture   
                   None,                                                                             # card_details.lotr_home_site
+                  None,
+                  None,
             )
             i += 1 
             if i == 500:
