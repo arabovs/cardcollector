@@ -31,7 +31,8 @@ class HsMetadata():
       "19": "Treachery and Deceit",
       "0": "Promotional",
       "lotr promotional": "Promotional",
-      "": "empty"
+      "T": "Tengwar",
+      "": "empty",
     }
     
     def __init__(self):
