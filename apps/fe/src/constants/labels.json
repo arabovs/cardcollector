@@ -9,7 +9,10 @@
     "rarity": "Rarity",
     "cost": "Twillight",
     "attack": "Strength",
-    "defence": "Vitality"
+    "defence": "Vitality",
+    "lotr_resistance": "Resistance",
+    "lotr_culture": "Culture",
+    "lotr_home_site": "Home Site"
   },
   "mtg": {
     "type": "Type",
@@ -22,7 +25,10 @@
     "cost": "Mana Value",
     "cost_text": "Mana Cost",
     "attack": "Power",
-    "defence": "Toughness"
+    "defence": "Toughness",
+    "keywords": "Keywords",
+    "mtg_attack_text": "Power ??",
+    "mtg_defense_text": "Power ??"
   },
   "pokemon": {
     "type": "Card Type",
@@ -58,7 +64,8 @@
     "rarity": "Rarity",
     "cost": "Mana Cost",
     "attack": "Attack",
-    "defence": "Health"
+    "defence": "Health",
+    "keywords": "Keywords"
   },
   "fnb": {
     "set": "Set",

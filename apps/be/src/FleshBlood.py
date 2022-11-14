@@ -79,6 +79,12 @@ def cardSearch(url):
                                attack_cleaned, #
                                defense_cleaned, 
                                None,
+                               None,
+                               None,
+                               None,
+                               None,
+                               None,
+                               None,
                             )
         
 for url in urls:        
