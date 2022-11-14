@@ -29,7 +29,9 @@ class GQL:
                             lotr_resistance,
                             keywords,
                             lotr_culture,
-                            lotr_home_site
+                            lotr_home_site,
+                            mtg_attack_text,
+                            mtg_defense_text
                           ):
             HASURA_URL = "https://card-catalogue-dev.herokuapp.com/v1/graphql"
 
@@ -62,7 +64,9 @@ class GQL:
                                                $lotr_resistance: Int!,
                                                $keywords: String!,
                                                $lotr_culture: String!,
-                                               $lotr_home_site: String!
+                                               $lotr_home_site: String!,
+                                               $mtg_attack_text: String!,
+                                               $mtg_defense_text: String!
                                              ) {
               insert_card_details(objects: {  
                                               tcg: $tcg,
@@ -89,6 +93,8 @@ class GQL:
                                               keywords: $keywords,
                                               lotr_culture: $lotr_culture,
                                               lotr_home_site: $lotr_home_site,
+                                              mtg_attack_text: $mtg_attack_text,
+                                              mtg_defense_text: $mtg_defense_text
                                               }) {
                 affected_rows
               }
@@ -117,7 +123,9 @@ class GQL:
                 "lotr_resistance": lotr_resistance,
                 "keywords": keywords,
                 "lotr_culture": lotr_culture,
-                "lotr_home_site": lotr_home_site,                      
+                "lotr_home_site": lotr_home_site, 
+                "mtg_attack_text": mtg_attack_text,
+                "mtg_defense_text": mtg_defense_text                   
             }
             result = client.execute(query, variable_values=params)
             return result
