@@ -26,6 +26,8 @@ class helper:
                     keywords,
                     lotr_culture,
                     lotr_home_site,
+                    mtg_attack_text,
+                    mtg_defense_text,
                 ):
         return {    "tcg": tcg,
                     "api_id": api_id,   
@@ -51,4 +53,6 @@ class helper:
                     "keywords" : keywords,
                     "lotr_culture": lotr_culture,
                     "lotr_home_site": lotr_home_site,
+                    "mtg_attack_text": mtg_attack_text,
+                    "mtg_defense_text": mtg_defense_text,
                 }

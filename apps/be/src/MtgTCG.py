@@ -12,21 +12,13 @@ gql_connector = GQL()
 URL_API_BULK = "https://api.scryfall.com/bulk-data"
 
 
-#urls = [
-#    'https://api.scryfall.com/cards/search?q=!"Snapcaster%20Mage"&unique=prints',
-#    'https://api.scryfall.com/cards/search?q=!"Abrupt%20Decay"&unique=prints',
-#]
+
+urls = [
+     'https://api.scryfall.com/cards/search?q=!%22Tarmogoyf%22&unique=prints'
+]
 # https://api.scryfall.com/bulk-data
 # https://api.scryfall.com/bulk-data/27bf3214-1271-490b-bdfe-c0be6c23d02e
-def checkField(field):
-    if type(field) == "int":
-        return type(field)
-    if type(field) == "str":
-        return type(field)
-    if type(field) == "float":
-        return type(field)
-    if type(field) is None:
-        return None
+
 
 
 def insertMtgToGQL(cards):
@@ -59,37 +51,36 @@ def insertMtgToGQL(cards):
             # 22222222 = -
             # 33333333 = +
             # 44444444 = ?
-            power_cleaned = ""
+            power_cleaned = 0
             if 'power' in card.keys():
-                if card['power'] == "∞":
-                    power_cleaned = 'Infinity'
+                if not card['power'].isdigit():
+                    card['power_text'] = card['power']
+                    card['power'] = None
+                elif card['power'] == "∞":
+                    power_cleaned = 'Infinity' 
                 else:
-                    special_case = card["power"].replace("*","11111111").replace("+","33333333").replace("-","22222222").replace("?","44444444")
-                    try:
-                        power_cleaned = float(special_case)
-                    except:
-                        continue
+                    power_cleaned = card['power']
             else:
               power_cleaned = None
 
             # Toughness clean-up
-            toughness_cleaned = ""
+            toughness_cleaned = 0
             if 'toughness' in card.keys():
-                if card['toughness'] == "∞":
+                if not card['toughness'].isdigit():
+                    card['toughness_text'] = card['toughness']
+                    card['toughness'] = None
+                elif card['toughness'] == "∞":
                     toughness_cleaned = 'Infinity' 
                 else:
-                    special_case = card["toughness"].replace("*","11111111").replace("+","33333333").replace("-","22222222").replace("?","44444444")
-                    try:
-                        toughness_cleaned = float(special_case)
-                    except:
-                        continue
+                    toughness_cleaned = card['toughness']
             else:
               toughness_cleaned = None
               
             keywords_cleaned = ""
             if "keywords" in card.keys():
-                for keyword in card["keywords"]:
-                    keywords_cleaned = keywords_cleaned + "|" + keyword
+                if len(card["keywords"]) > 0:
+                    for keyword in card["keywords"]:
+                        keywords_cleaned = keywords_cleaned + "|" + keyword
             else:
                 keywords_cleaned = None
     
@@ -118,7 +109,9 @@ def insertMtgToGQL(cards):
                                        None,                             # card_details.lotr_resistance ( NOT USED )
                                        keywords_cleaned,                 # card_details.keywords
                                        None,                             # card_details.lotr_culture ( NOT USED )
-                                       None,                             # card_details.lotr_home_site ( NOT USED )                         
+                                       None,                             # card_details.lotr_home_site ( NOT USED )
+                                       card.get("power_text",None),      # card_details.mtg_attack_text
+                                       card.get("toughness_text",None),  # card_details.mtg_toughness_text                   
                                     )
             bulk[i] = card_obj
             i+=1
