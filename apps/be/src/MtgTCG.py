@@ -7,13 +7,11 @@ from datetime import datetime
 
 # initialise imports
 gql_connector = GQL()
+
+
+# Scryfall endpoints
 URL_API_BULK = "https://api.scryfall.com/bulk-data"
-
-
-
 urls =  'https://api.scryfall.com/cards/search?q=!%22Tarmogoyf'
-# https://api.scryfall.com/bulk-data
-# https://api.scryfall.com/bulk-data/27bf3214-1271-490b-bdfe-c0be6c23d02e
 
 
 
@@ -41,16 +39,8 @@ def insertMtgToGQL(cards):
             prices_cleaned = 0 if card["prices"]["usd"] is None else float(card["prices"]["usd"])
             prices_foil_cleaned = 0 if card["prices"]["usd_foil"] is None else float(card["prices"]["usd_foil"])
             prices_etched_cleaned = 0 if card["prices"]["usd_etched"] is None else float(card["prices"]["usd_etched"])
-            
+
             # Power clean-up
-            # 11111111 = *
-            # 22222222 = -
-            # 33333333 = +
-            # 44444444 = ?
-            if "." not in str(card["cmc"]):
-                if not str(card["cmc"]).isdigit():
-                    print(card["cmc"])
-            
             power_cleaned = 0
             if 'power' in card.keys():
                 if not card['power'].isdigit():
@@ -116,7 +106,7 @@ def insertMtgToGQL(cards):
             bulk[i] = card_obj
             i+=1
             if i == 500:
-                #gql_connector.gqlInsertCards(list(bulk.values()))
+                gql_connector.gqlInsertCards(list(bulk.values()))
                 print(str(datetime.now()) + " Inserting bulk of 500")
                 i=0
                 bulk={}
