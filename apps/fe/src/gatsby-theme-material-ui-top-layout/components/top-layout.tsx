@@ -25,6 +25,7 @@ const GameSelector = () => {
     }
   `);
   const game = useSelectedGameContext();
+  if (!game) return null;
   if (loading) return null;
   if (error) return <div>{error.message}</div>;
   return (
@@ -56,7 +57,7 @@ const GameSelector = () => {
   );
 };
 
-export const Navigation = ({ children, game }) => (
+export const Navigation = ({ children }) => (
   <>
     <AppBar color="default" position="static" variant="outlined">
       <Toolbar>
