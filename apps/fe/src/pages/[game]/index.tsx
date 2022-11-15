@@ -149,12 +149,14 @@ const CardFilter = ({
 
 const IndexPage = ({ params }) => {
   const { game } = params;
+  console.log({ game });
   const [searchField, setSearchField] = useState("");
   const [isFilterOpen, setFilterOpen] = useState(true);
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [orderBy, setOrderBy] = useState(null);
   const [limitItems, setLimitItems] = useState(48);
   const [page, setPage] = React.useState(1);
+  if (!game) return null;
   const handlePageChange = (event, value: number) => {
     setPage(value);
   };
