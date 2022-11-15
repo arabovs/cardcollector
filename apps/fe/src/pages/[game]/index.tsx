@@ -149,7 +149,6 @@ const CardFilter = ({
 
 const IndexPage = ({ params }) => {
   const { game } = params;
-  console.log({ game });
   const [searchField, setSearchField] = useState("");
   const [isFilterOpen, setFilterOpen] = useState(true);
   const [selectedFilters, setSelectedFilters] = useState([]);
@@ -306,7 +305,6 @@ const IndexPage = ({ params }) => {
         label: labels[game][key],
       })),
     }));
-  console.log(filterTypes);
   const { data, error, loading } = useSubscription(
     gql`
       subscription (
