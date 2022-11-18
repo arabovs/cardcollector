@@ -13,21 +13,8 @@ import {
 import { Box } from "@mui/system";
 import { Link } from "gatsby-theme-material-ui";
 import { TcgIcon } from "../../components/TcgIcon";
-
-const GameSelectorContext = createContext(null);
-
-const GameSelectorProvider = ({ children }) => {
-  const [selectedGame, setSelectedGame] = useState("lotr");
-  return (
-    <GameSelectorContext.Provider value={{ selectedGame, setSelectedGame }}>
-      {children}
-    </GameSelectorContext.Provider>
-  );
-};
-export const useGameSelectorContext = () => {
-  const selected = useContext(GameSelectorContext);
-  return selected;
-};
+import { navigate } from "gatsby";
+import { useSelectedGameContext } from "../../../gatsby-browser";
 
 const GameSelector = () => {
   const { data, loading, error } = useSubscription(gql`
@@ -37,14 +24,15 @@ const GameSelector = () => {
       }
     }
   `);
-  const { selectedGame, setSelectedGame } = useGameSelectorContext();
+  const game = useSelectedGameContext();
+  if (!game) return null;
   if (loading) return null;
   if (error) return <div>{error.message}</div>;
   return (
     <>
       <Select
-        value={selectedGame}
-        onChange={(e) => setSelectedGame(e.target.value)}
+        value={game}
+        onChange={(e) => navigate(`/${e.target.value}`)}
         size="small"
         sx={{ ml: 2 }}
         renderValue={(selected) => {
@@ -69,22 +57,24 @@ const GameSelector = () => {
   );
 };
 
+export const Navigation = ({ children }) => (
+  <>
+    <AppBar color="default" position="static" variant="outlined">
+      <Toolbar>
+        <Link to="/" color="inherit" sx={{ textDecoration: "none" }}>
+          <Typography variant="h5">Cardcatalogue</Typography>
+        </Link>
+        <GameSelector />
+      </Toolbar>
+    </AppBar>
+    {children}
+  </>
+);
+
 export default function TopLayout({ children, theme }) {
   return (
     <ThemeTopLayout theme={theme}>
-      <ApolloProvider client={client}>
-        <GameSelectorProvider>
-          <AppBar color="default" position="static" variant="outlined">
-            <Toolbar>
-              <Link to="/" color="inherit" sx={{ textDecoration: "none" }}>
-                <Typography variant="h5">Cardcatalogue</Typography>
-              </Link>
-              <GameSelector />
-            </Toolbar>
-          </AppBar>
-          {children}
-        </GameSelectorProvider>
-      </ApolloProvider>
+      <ApolloProvider client={client}>{children}</ApolloProvider>
     </ThemeTopLayout>
   );
 }

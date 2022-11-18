@@ -29,10 +29,10 @@ import {
 import { blue, brown, red } from "@mui/material/colors";
 import { alpha, Box } from "@mui/system";
 import React, { useState } from "react";
-import demoChart from "./../../res/demo-chart.png";
-import DataGridDemo from "../../components/DataGridDemo";
-import { useGameSelectorContext } from "../../gatsby-theme-material-ui-top-layout/components/top-layout";
-import { GameCard } from "../../components/GameCard";
+import demoChart from "./../../../res/demo-chart.png";
+import DataGridDemo from "../../../components/DataGridDemo";
+import { GameCard } from "../../../components/GameCard";
+import { usegameContext } from "../../../../gatsby-browser";
 
 const CardCollapse = ({
   title,
@@ -88,11 +88,10 @@ const StatCard = ({ title, text, color = null }) => (
 );
 
 const CardPage = (props) => {
-  const { id } = props.params;
+  const { id, game } = props.params;
   const [isPropertiesOpen, setPropertiesOpen] = useState(true);
   const [isDetailsOpen, setDetailsOpen] = useState(false);
   const [isStatsOpen, setStatsOpen] = useState(false);
-  const { selectedGame } = useGameSelectorContext();
   const { data, error } = useQuery(
     gql`
       query CardById($id: uuid!) {
@@ -138,7 +137,7 @@ const CardPage = (props) => {
         where: {
           id: { _neq: data?.card_details_by_pk.id },
           name: { _ilike: `%${data?.card_details_by_pk.name}%` },
-          tcg: { _eq: selectedGame },
+          tcg: { _eq: game },
         },
       },
       skip: data?.card_details_by_pk.name ? false : true,

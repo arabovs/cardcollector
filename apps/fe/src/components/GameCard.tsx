@@ -9,11 +9,13 @@ import {
 import { Link } from "gatsby";
 import { CardActionArea } from "gatsby-theme-material-ui";
 import React from "react";
+import { useSelectedGameContext } from "../../gatsby-browser";
 
 export const GameCard = ({ id, image, name, set }) => {
+  const selected = useSelectedGameContext();
   return (
     <Card variant="outlined">
-      <CardActionArea component={Link} to={`/card/${id}`}>
+      <CardActionArea component={Link} to={`card/${id}`}>
         <CardMedia component="img" image={image} />
         <CardContent>
           <Tooltip title={name}>
